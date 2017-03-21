@@ -16,5 +16,6 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::get('/users/confirm/{confirm_code}');
 
 Route::get('/home', 'HomeController@index');
