@@ -79,7 +79,10 @@
                                 @endif
                             </div>
                         </div>
-
+                        @role('admin')
+    <p>This is visible to users with the admin role. Gets translated to 
+    </p>
+@endrole
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
