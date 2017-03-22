@@ -65,12 +65,18 @@
 
                             <div class="col-md-6">
                                 <select id="role" class="form-control" name="role" value="{{ old('role') }}" required>
+                                @permission('student-crud')
                                     <option value="student">Kursant</option>
+                                @endpermission
+                                @permission('instructor-crud')
                                     <option value="instructor">Instruktor</option>
+                                @endpermission
+                                @permission('officce-crud')
                                     <option value="officce">Biuro</option>
-                                    
-                                        <option value="admin">Admin</option>
-                                    
+                                @endpermission
+                                @permission('admin-crud')
+                                    <option value="admin">Admin</option>
+                                @endpermission
                                 </select>
                                 @if ($errors->has('role'))
                                     <span class="help-block">
@@ -79,10 +85,6 @@
                                 @endif
                             </div>
                         </div>
-                        @role('admin')
-    <p>This is visible to users with the admin role. Gets translated to 
-    </p>
-@endrole
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
