@@ -94,4 +94,21 @@ class RegisterController extends Controller
         return $this->registered($request, $user)
                         ?: redirect($this->redirectPath());
     }
+
+    public function confirm(Request $request, $code)
+    {
+        $user = User::where('confirm_code', $code)->first();
+        //dd($user);
+        if ($user) {
+            if ($user->confirmed) {
+                //return redirect('/')->withErrors("To konto jest już potwierdzone");
+            }
+            //$user->confirmed = 1;
+            //$user->save();
+            $request->session()->put(['cuid' => $user->id, 'ccode' => $code]);
+            //return view('auth.connect',compact('user'));
+        }
+
+    }
+       
 }

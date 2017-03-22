@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::loginUsingId(2);
+//Auth::loginUsingId(2);
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,6 +18,6 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('auth/{provider?}', 'Auth\LoginController@redirectToProvider');
 Route::get('auth/{provider?}/callback', 'Auth\LoginController@handleProviderCallback');
-Route::get('/auth/confirm/{confirm_code}');
+Route::get('/register/confirm/{confirm_code}', 'Auth\RegisterController@confirm')->name('confirmEmail');
 
 Route::get('/home', 'HomeController@index');
