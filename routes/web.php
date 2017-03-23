@@ -11,9 +11,13 @@
 |
 */
 //Auth::loginUsingId(2);
+//config(['database.connections.mysql.prefix' => 'test']);
+//dd(config('database.connections.mysql.prefix'));
+//dd(config('database.connections.mysql.database'));
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 Auth::routes();
 Route::get('auth/{provider?}', 'Auth\LoginController@redirectToProvider');
