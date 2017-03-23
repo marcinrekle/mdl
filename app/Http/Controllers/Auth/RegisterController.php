@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use App\Mail\UserConfirmation;
+use Auth;
+use App\Mail\emailConfirmation;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -89,7 +90,7 @@ class RegisterController extends Controller
         $data = $this->create($request->all());
         $user = User::findOrFail($data['id']);
 
-        Mail::to($user->email)->send(new UserConfirmation($user));
+        Mail::to($user->email)->send(new emailConfirmation($user));
 
         return $this->registered($request, $user)
                         ?: redirect($this->redirectPath());
@@ -97,18 +98,43 @@ class RegisterController extends Controller
 
     public function confirm(Request $request, $code)
     {
+        if(!Auth::guest()) return redirect('/home');
         $user = User::where('confirm_code', $code)->first();
-        //dd($user);
         if ($user) {
             if ($user->confirmed) {
-                //return redirect('/')->withErrors("To konto jest już potwierdzone");
+                return redirect('/')->withInfo("To konto jest już potwierdzone");
             }
-            //$user->confirmed = 1;
-            //$user->save();
             $request->session()->put(['cuid' => $user->id, 'ccode' => $code]);
-            //return view('auth.connect',compact('user'));
+            return view('auth.confirm')->with(
+                ['code' => $code]
+            );
         }
+        return redirect('/')->withInfo("Kod weryfikacyjny jest niepoprawny");
+    }
 
+    public function confirmSetPassword(Request $request)
+    {
+        $code = $request->session()->pull('ccode', null);
+        $uid = $request->session()->pull('cuid', null);
+        
+        if( !$code || !$uid ){
+            return redirect()->back()->withErrors('Wystąpił błąd odswież stronę');
+        }
+        
+        $user = User::whereId($uid)->where('confirm_code', $code)->first();
+        
+        if ($user) {
+            if ($user->confirmed) {
+                return redirect('/')->withErrors("To konto jest już potwierdzone");
+            }
+
+            $user->confirmed = 1;
+            $user->password = bcrypt($request->password);
+            $user->save();
+            Auth::login($user, true);
+            return redirect('/')->withSuccess("To konto zostało potwierdzone");
+        }
+        return redirect('/')->withErrors("Nie posiadasz u nas konta. Skontaktuj sie z administratorem");
     }
        
 }

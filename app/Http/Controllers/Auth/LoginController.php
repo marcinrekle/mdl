@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Auth;
 
 use Socialite;
 
@@ -43,7 +44,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Redirect the user to the GitHub authentication page.
+     * Redirect the user to the provider authentication page.
      *
      * @return Response
      */
@@ -53,7 +54,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Obtain the user information from GitHub.
+     * Obtain the user information from provider.
      *
      * @return Response
      */
@@ -62,37 +63,34 @@ class LoginController extends Controller
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrConnectUser($request, $user);
         Auth::login($authUser, true);
-        //dd($user);
-        // $user->token;
+        redirect('/');
     }
 
     /**
      * Return user if exists; connect and return if doesn't
      *
      * @param $socialUser
+     * @param $request
      * @return User
      */
     public function findOrConnectUser(Request $request, $socialUser)
     {
-        //var_dump(session()->all());
-        //dd($request->session()->all());
         $authUser = User::where('social_id', $socialUser->id)->first();
-        //var_dump($authUser);
-        
         if ($authUser){
-            //return $authUser;
+            return $authUser;
         }
-        $uid = $request->session()->pull('cuid')  ? :Auth::user()->id;
-        $user = User::whereId($uid)->first();
+
+        $user = User::whereId($request->session()->pull('cuid', 'default'))->where('confirm_code', $request->session()->pull('ccode', 'default'))->whereConfirmed(false)->first();
+        
         if($user){
             $user->social_id = $socialUser->id;
             $user->avatar = $socialUser->avatar;
-            $user->confirmed = true;//change - remove comment
+            $user->password = bcrypt('znatylkosu');
+            $user->confirmed = 1;
             $user->save();
-            return $user;
+            Auth::login($user, true);
+            return redirect('/home')->withSuccess('Konto zostało potwierdzone.');
         }
-        return redirect('/')->withErrors("Niestety nie posiadasz u nas konta");
-
-
+        return redirect('/')->withErrors("Niestety nie posiadasz u nas konta.");
     }
 }
