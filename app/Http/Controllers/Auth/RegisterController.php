@@ -41,7 +41,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('guest');
+        $this->middleware('permission:user-create');
     }
 
     /**
@@ -98,18 +98,18 @@ class RegisterController extends Controller
 
     public function confirm(Request $request, $code)
     {
-        if(!Auth::guest()) return redirect('/home');
+        //if(!Auth::guest()) return redirect('/home');
         $user = User::where('confirm_code', $code)->first();
         if ($user) {
             if ($user->confirmed) {
-                return redirect('/')->withInfo("To konto jest już potwierdzone");
+                return redirect('/home')->withInfo("To konto jest już potwierdzone");
             }
             $request->session()->put(['cuid' => $user->id, 'ccode' => $code]);
             return view('auth.confirm')->with(
                 ['code' => $code]
             );
         }
-        return redirect('/')->withInfo("Kod weryfikacyjny jest niepoprawny");
+        return redirect('/home')->withInfo("Kod weryfikacyjny jest niepoprawny");
     }
 
     public function confirmSetPassword(Request $request)
@@ -132,9 +132,14 @@ class RegisterController extends Controller
             $user->password = bcrypt($request->password);
             $user->save();
             Auth::login($user, true);
-            return redirect('/')->withSuccess("To konto zostało potwierdzone");
+            return redirect('/')->route('confirmedEmail')->withSuccess("To konto zostało potwierdzone");
         }
         return redirect('/')->withErrors("Nie posiadasz u nas konta. Skontaktuj sie z administratorem");
+    }
+
+    public function confirmed()
+    {
+        return view('auth.confirmed');
     }
        
 }

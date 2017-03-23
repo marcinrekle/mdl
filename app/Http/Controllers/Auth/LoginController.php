@@ -62,8 +62,8 @@ class LoginController extends Controller
     {
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrConnectUser($request, $user);
-        Auth::login($authUser, true);
-        redirect('/');
+        Auth::check() ? :Auth::login($authUser, true);
+        return redirect('/home');
     }
 
     /**
@@ -89,7 +89,7 @@ class LoginController extends Controller
             $user->confirmed = 1;
             $user->save();
             Auth::login($user, true);
-            return redirect('/home')->withSuccess('Konto zostało potwierdzone.');
+            return redirect()->route('confirmedEmail')->withSuccess('Konto zostało potwierdzone.');
         }
         return redirect('/')->withErrors("Niestety nie posiadasz u nas konta.");
     }

@@ -77,7 +77,7 @@
                 </div>
             </div>
         </nav>
-
+        @include('partials._notifications')
         @yield('content')
     </div>
 
