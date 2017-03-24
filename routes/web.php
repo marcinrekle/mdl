@@ -26,4 +26,8 @@ Route::get('/register/confirm/{confirm_code}', 'Auth\RegisterController@confirm'
 Route::post('/register/confirm/', 'Auth\RegisterController@confirmSetPassword')->middleware('guest')->name('confirmSetPassword');
 Route::get('/register/confirmed/', 'Auth\RegisterController@confirmed')->name('confirmedEmail');
 
-Route::get('/home', 'HomeController@index');
+//Route::get('/student','StudentController@index');
+//Route::get('/student/{id}','StudentController@show');
+Route::resource('student', 'StudentController');
+
+Route::get('/home', 'HomeController@index')->name('home');
