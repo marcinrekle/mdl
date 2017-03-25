@@ -14,7 +14,15 @@ class CreateFieldsTable extends Migration
     public function up()
     {
         Schema::create('fields', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unsigned();
+            $table->string('name',64);
+            $table->string('slug',32);
+            $table->text('description');
+            $table->string('type',32);
+            $table->smallInteger('order');
+            $table->boolean('active');
+            $table->boolean('visible');
+            $table->boolean('required');
             $table->timestamps();
         });
     }

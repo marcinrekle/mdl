@@ -29,5 +29,6 @@ Route::get('/register/confirmed/', 'Auth\RegisterController@confirmed')->name('c
 //Route::get('/student','StudentController@index');
 //Route::get('/student/{id}','StudentController@show');
 Route::resource('student', 'StudentController');
+Route::resource('field', 'FieldController');
 
 Route::get('/home', 'HomeController@index')->name('home');

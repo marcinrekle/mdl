@@ -14,7 +14,8 @@ class FieldController extends Controller
      */
     public function index()
     {
-        //
+        $fields = Field::all();
+        return view('fields.index', compact('fields'));
     }
 
     /**
@@ -24,7 +25,7 @@ class FieldController extends Controller
      */
     public function create()
     {
-        //
+        return view('fields.create');
     }
 
     /**
