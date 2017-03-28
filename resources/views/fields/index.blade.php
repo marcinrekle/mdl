@@ -21,6 +21,7 @@
                 <th>Aktywne</th>
                 <th>Widoczne</th>
                 <th>Wymagane</th>
+                <th>Operacje</th>
               </tr>
 
                 @foreach($fields as $field)
@@ -31,9 +32,19 @@
                   <td>{{ $field->description }}</td>
                   <td>{{ $field->type }}</td>
                   <td>{{ $field->order }}</td>
-                  <td>{{ $field->active }}</td>
-                  <td>{{ $field->visible }}</td>
-                  <td>{{ $field->required }}</td>
+                  <td>{{ Form::checkbox('required',1, $field->active,['disabled']) }}</td>
+                  <td>{{ Form::checkbox('required',1, $field->visible,['disabled']) }}</td>
+                  <td>{{ Form::checkbox('required',1, $field->require,['disabled']) }}</td>
+                  <td>
+                  {{ Html::linkRoute('field.edit', 'Edytuj', $field->id, ['class' => 'btn btn-primary'])}}
+                  {!! Form::model($field, [
+                    'method' => 'DELETE',
+                    'route' => ['field.destroy', $field->id],
+                    'style' => 'display:inline-block'
+                  ]) !!}
+                    {{ Html::link('#', 'Usuń', ['class' => 'btn btn-danger'])}}
+                  {!! Form::close() !!}
+                  </td>
                 </tr>
                 @endforeach
 

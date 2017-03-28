@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Field;
 use Illuminate\Http\Request;
+use Validator;
 
 class FieldController extends Controller
 {
@@ -25,7 +26,9 @@ class FieldController extends Controller
      */
     public function create()
     {
-        return view('fields.create');
+        //$opts = ['method' => 'POST', 'route' => 'field.store', 'btn_text' => 'Dodaj', 'panel_title' => 'Dodawanie pola'];
+        $field = new Field();
+        return view('fields.create',compact('field'));
     }
 
     /**
@@ -36,7 +39,13 @@ class FieldController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        //dump($data);
+        //dd($validator);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $field = Field::create($data);
+        return redirect()->route('field.index')->withSuccess('Pole utworzono');
     }
 
     /**
@@ -58,7 +67,8 @@ class FieldController extends Controller
      */
     public function edit(Field $field)
     {
-        //
+        //$opts = ['method' => 'PATCH', 'route' => 'field.update', 'btn_text' => 'Aktualizuj', 'panel_title' => 'Aktualizacja pola'];
+        return view('fields.edit', compact('field'));
     }
 
     /**
@@ -70,7 +80,14 @@ class FieldController extends Controller
      */
     public function update(Request $request, Field $field)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $field = Field::findOrFail($field->id);
+        $field->fill($data)->save();
+        return redirect()->route('field.index')->withSuccess('Edycja zakończona pomyślnie');
+
+
     }
 
     /**
@@ -81,6 +98,22 @@ class FieldController extends Controller
      */
     public function destroy(Field $field)
     {
-        //
+        $field = Field::findOrFail($field->id);
+        //$field->delete();
+        return redirect()->route('field.index')->withSuccess('Pole usunięte');
+    }
+
+     protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name'          => 'required|max:64',
+            'slug'          => 'required|max:32',
+            'description'   => 'required',
+            'type'          => 'required',
+            'order'         => 'required|max:32',
+            'active'        => '',
+            'visible'       => '',
+            'required'      => '',
+        ]);
     }
 }

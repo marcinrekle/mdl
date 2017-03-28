@@ -19,10 +19,10 @@ class CreateFieldsTable extends Migration
             $table->string('slug',32);
             $table->text('description');
             $table->string('type',32);
-            $table->smallInteger('order');
-            $table->boolean('active');
-            $table->boolean('visible');
-            $table->boolean('required');
+            $table->smallInteger('order')->default(0);
+            $table->boolean('active')->default(0);
+            $table->boolean('visible')->default(0);
+            $table->boolean('require')->default(0);
             $table->timestamps();
         });
     }
