@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-//Auth::loginUsingId(2);
+Auth::loginUsingId(2);
 //config(['database.connections.mysql.prefix' => 'test']);
 //dd(config('database.connections.mysql.prefix'));
 //dd(config('database.connections.mysql.database'));

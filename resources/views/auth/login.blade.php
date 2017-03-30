@@ -64,5 +64,6 @@
             </div>
         </div>
     </div>
+    @include('auth._social')
 </div>
 @endsection
