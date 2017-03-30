@@ -11,6 +11,7 @@
 |
 */
 Auth::loginUsingId(2);
+//dd(Auth::user()->attrs->values['address']);
 //config(['database.connections.mysql.prefix' => 'test']);
 //dd(config('database.connections.mysql.prefix'));
 //dd(config('database.connections.mysql.database'));

@@ -30,4 +30,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+
+    public function attrs()
+    {
+        return $this->hasOne('App\UserAttrs');
+    }
+
 }

@@ -15,7 +15,7 @@ class CreateUserAttrsTable extends Migration
     {
         Schema::create('user_attrs', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
-            $table->text('value',512);
+            $table->text('values',512);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
