@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Role;
 use Auth;
 use App\Mail\emailConfirmation;
 use Illuminate\Support\Facades\Mail;
@@ -67,14 +68,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'avatar' => '/img/defaultUser.png',
             'confirm_code' => str_random(32),
-
         ]);
+        $user->attrs()->create(['values' => $data['attrs']]);
+        $role = Role::whereName($data['role'])->first();
+        $user->attachRole($role);
+        return $user;
     }
 
     /**

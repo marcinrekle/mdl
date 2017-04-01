@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\User;
+use App\Field;
+use Validator;
+
 class UserController extends Controller
 {
     /**
@@ -56,7 +60,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        //dd($id);
+        $user = User::whereId($id)->first();
+        $fields = Field::whereActive(1)->get();
+        return view('auth.edit', compact('user','fields'));
     }
 
     /**
@@ -68,7 +75,25 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users,id',
+        ]);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $user = User::findOrFail($id)->load('attrs');
+        //dump($user);
+        $user->fill($data);
+        $user->attrs->fill($data)->save();
+        //$user->attrs['values'] = $data['values'];
+        //$user->attrs->save();
+        //dd($user);
+        $user->push();
+        //$user->save();
+        //dump($user);
+        //dd('stop');
+        return redirect()->back();
+        //dd($user);
     }
 
     /**

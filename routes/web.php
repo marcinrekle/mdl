@@ -26,6 +26,8 @@ Route::get('auth/{provider?}/callback', 'Auth\LoginController@handleProviderCall
 Route::get('/register/confirm/{confirm_code}', 'Auth\RegisterController@confirm')->middleware('guest')->name('confirmEmail');
 Route::post('/register/confirm/', 'Auth\RegisterController@confirmSetPassword')->middleware('guest')->name('confirmSetPassword');
 Route::get('/register/confirmed/', 'Auth\RegisterController@confirmed')->name('confirmedEmail');
+Route::get('/user/{id}/edit', 'UserController@edit')->name('userEdit');
+Route::patch('/user/{id}', 'UserController@update')->name('userUpdate');
 
 //Route::get('/student','StudentController@index');
 //Route::get('/student/{id}','StudentController@show');

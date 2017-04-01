@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'social_id', 'avatar', 'remember_token', 'social_token', 'confirmed', 'confirm_code'
+        'name', 'email', 'password', 'social_id', 'avatar', 'remember_token', 'social_token', 'confirmed', 'confirm_code',
     ];
 
     /**
@@ -34,6 +34,11 @@ class User extends Authenticatable
     public function attrs()
     {
         return $this->hasOne('App\UserAttrs');
+    }
+
+    public function role()
+    {
+        return $this->hasOne('App\Role');
     }
 
 }

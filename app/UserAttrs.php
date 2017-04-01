@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserAttrs extends Model
 {
+    protected $primaryKey = 'user_id';
     // Cast attributes JSON to array
     protected $casts = [
         'values' => 'array'
@@ -16,10 +17,13 @@ class UserAttrs extends Model
 	 *
 	 * @var array
 	 */
-	protected $guarded = [];
+	//protected $guarded = [];
+
+	protected $fillable = ['values'];
 
     public function user()
     {
     	return $this->belongsTo('App\User');
     }
+
 }
