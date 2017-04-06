@@ -44,7 +44,12 @@ class FieldController extends Controller
         //dump($data);
         //dd($validator);
         if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $data['options'] = json_encode($data['options'],JSON_UNESCAPED_SLASHES);
+        $data['options'] = preg_replace('/\\\"/',"\"", $data['options']);
+        //$data['options'] = $data['options']->toArray();
         $field = Field::create($data);
+        dd($data,$field);
+        return redirect()->back();
         return redirect()->route('field.index')->withSuccess('Pole utworzono');
     }
 

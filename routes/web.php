@@ -33,5 +33,6 @@ Route::patch('/user/{id}', 'UserController@update')->name('userUpdate');
 //Route::get('/student/{id}','StudentController@show');
 Route::resource('student', 'StudentController');
 Route::resource('field', 'FieldController');
+Route::resource('user', 'UserController');
 
 Route::get('/home', 'HomeController@index')->name('home');

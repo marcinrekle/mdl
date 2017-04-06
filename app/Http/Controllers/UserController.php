@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Field;
+use App\Role;
 use Validator;
 
 class UserController extends Controller
@@ -17,7 +18,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = Role::find(4)->users()->with('attrs')->get();//add active check
+        return view('user.index', compact('users'));
+        dd($users);
     }
 
     /**

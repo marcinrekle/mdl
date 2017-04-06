@@ -42,7 +42,9 @@
       'input' => 'Pole tekstowe',
       'select' => 'Pole wyboru',
       'textarea' => 'Pole opisowe',
-      'radio' => 'Pole wyboru'],
+      'radio' => 'Pole wyboru radio',
+      'checkbox' => 'Pole wyboru checkbox',
+      'number' => 'Pole typu liczba'],
       'input', [
       'class' => 'form-control',
       'required',
@@ -100,6 +102,18 @@
   @if ($errors->has('require'))
     <span class="help-block">
         <strong>{{ $errors->first('require') }}</strong>
+    </span>
+  @endif
+  </div>
+</div>
+
+<div class="form-group{{ $errors->has('options') ? ' has-error' : '' }}">
+  {{ Form::label('options', 'options', ['class' => 'col-md-4 control-label']) }}
+  <div class="col-md-6">
+  {{ Form::textarea('options', old('options'), ['class' => 'form-control', 'size' => '30x5',]) }}
+  @if ($errors->has('options'))
+    <span class="help-block">
+        <strong>{{ $errors->first('options') }}</strong>
     </span>
   @endif
   </div>

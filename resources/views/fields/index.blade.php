@@ -21,10 +21,12 @@
                 <th>Aktywne</th>
                 <th>Widoczne</th>
                 <th>Wymagane</th>
+                <th>Parametry</th>
                 <th>Operacje</th>
               </tr>
 
                 @foreach($fields as $field)
+
                 <tr>
                   <td>{{ $loop->index+1 }}</td>
                   <td>{{ $field->name }}</td>
@@ -35,6 +37,7 @@
                   <td>{{ Form::checkbox('required',1, $field->active,['disabled']) }}</td>
                   <td>{{ Form::checkbox('required',1, $field->visible,['disabled']) }}</td>
                   <td>{{ Form::checkbox('required',1, $field->require,['disabled']) }}</td>
+                  <td>{{ json_encode($field->options) }}</td>
                   <td>
                   {{ Html::linkRoute('field.edit', 'Edytuj', $field->id, ['class' => 'btn btn-primary'])}}
                   {!! Form::model($field, [

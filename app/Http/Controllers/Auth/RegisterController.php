@@ -75,7 +75,7 @@ class RegisterController extends Controller
             'avatar' => '/img/defaultUser.png',
             'confirm_code' => str_random(32),
         ]);
-        $user->attrs()->create(['values' => $data['attrs']]);
+        $user->attrs()->create(['values' => $data['values']]);
         $role = Role::whereName($data['role'])->first();
         $user->attachRole($role);
         return $user;
