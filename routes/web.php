@@ -34,5 +34,6 @@ Route::patch('/user/{id}', 'UserController@update')->name('userUpdate');
 Route::resource('student', 'StudentController');
 Route::resource('field', 'FieldController');
 Route::resource('user', 'UserController');
+Route::resource('payment', 'PaymentController');
 
 Route::get('/home', 'HomeController@index')->name('home');

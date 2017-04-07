@@ -14,7 +14,9 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        $payments = Payment::with('users')->get();
+        return view('payment.index', compact('payments'));
+        dd($payments);
     }
 
     /**
@@ -24,7 +26,7 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        //
+        return view('payment.create');
     }
 
     /**
@@ -81,5 +83,15 @@ class PaymentController extends Controller
     public function destroy(Payment $payment)
     {
         //
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'user_id'    => 'required|exists:users,id',
+            'payment_date'  => 'required|date',
+            'payment_for'  => 'required|in:course,doctor',
+            'amount'        => 'required|numeric|min:10|max:5000',
+        ]);
     }
 }
