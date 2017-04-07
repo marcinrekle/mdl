@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
+use App\User;
+use Validator;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -14,9 +16,9 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::with('users')->get();
+        $payments = Payment::with('user')->get();
         return view('payment.index', compact('payments'));
-        dd($payments);
+        //dd($payments);
     }
 
     /**
@@ -24,9 +26,13 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($user_id = null)
     {
-        return view('payment.create');
+        //$user_id = 4;
+        $user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
+        $payment_for = ['course' => 'Za kurs', 'doctor' => 'Za lekarza'];
+        //dd($user);
+        return view('payment.create',compact('user', 'payment_for'));
     }
 
     /**
@@ -37,7 +43,11 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $payment = Payment::create($data);
+        return redirect()->route('payment.index')->withSuccess('Dodano płatność');
     }
 
     /**
@@ -59,7 +69,7 @@ class PaymentController extends Controller
      */
     public function edit(Payment $payment)
     {
-        //
+        dd($payment);
     }
 
     /**

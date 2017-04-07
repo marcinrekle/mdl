@@ -13,7 +13,7 @@ class Payment extends Model
      */
     protected $fillable = ['payment_date', 'user_id','payment_for', 'amount'];
 
-    public function users()
+    public function user()
     {
     	return $this->belongsTo('App\User');
     }

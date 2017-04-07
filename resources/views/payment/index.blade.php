@@ -24,7 +24,7 @@
 
                 <tr>
                   <td>{{ $loop->index+1 }}</td>
-                  <td>{{ $payment->users->name }}</td>
+                  <td>{{ $payment->user->name }}</td>
                   <td>{{ $payment->payment_date }}</td>
                   <td>{{ $payment->amount }}</td>
                   <td>{{ $payment->payment_for }}</td>
