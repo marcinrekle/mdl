@@ -68,7 +68,8 @@ class DriveController extends Controller
      */
     public function edit(Drive $drive, $user_id = null)
     {
-        $user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
+        //$user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
+        $user = Role::find(3)->users->pluck('name', 'id');
         return view('drive.edit', compact('drive','user'));
     }
 
@@ -85,7 +86,7 @@ class DriveController extends Controller
         $data['date'] = implode($data['date'],' ');
         $validator = $this->validator($data);
         if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
-        $payment->update($data);
+        $drive->update($data);
         return redirect()->back();
     }
 
