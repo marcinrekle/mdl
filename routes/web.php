@@ -35,5 +35,6 @@ Route::resource('student', 'StudentController');
 Route::resource('field', 'FieldController');
 Route::resource('user', 'UserController');
 Route::resource('payment', 'PaymentController');
+Route::resource('drive', 'DriveController');
 
 Route::get('/home', 'HomeController@index')->name('home');

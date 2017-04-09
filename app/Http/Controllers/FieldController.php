@@ -48,8 +48,8 @@ class FieldController extends Controller
         $data['options'] = preg_replace('/\\\"/',"\"", $data['options']);
         //$data['options'] = $data['options']->toArray();
         $field = Field::create($data);
-        dd($data,$field);
-        return redirect()->back();
+        //dd($data,$field);
+        //return redirect()->back();
         return redirect()->route('field.index')->withSuccess('Pole utworzono');
     }
 

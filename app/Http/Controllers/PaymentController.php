@@ -67,9 +67,12 @@ class PaymentController extends Controller
      * @param  \App\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function edit(Payment $payment)
+    public function edit(Payment $payment, $user_id = null)
     {
-        dd($payment);
+        //dd($payment);
+        $user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
+        $payment_for = ['course' => 'Za kurs', 'doctor' => 'Za lekarza'];
+        return view('payment.edit', compact('payment','payment_for','user'));
     }
 
     /**
@@ -81,7 +84,11 @@ class PaymentController extends Controller
      */
     public function update(Request $request, Payment $payment)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $payment->update($data);
+        return redirect()->back();
     }
 
     /**
@@ -92,7 +99,8 @@ class PaymentController extends Controller
      */
     public function destroy(Payment $payment)
     {
-        //
+        $payment->delete();
+        return redirect()->back();
     }
 
     protected function validator(array $data)

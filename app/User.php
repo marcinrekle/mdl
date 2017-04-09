@@ -46,4 +46,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Payment');
     }
 
+    public function drives()
+    {
+        return $this->hasMany('App\Drive');
+    }
+
 }

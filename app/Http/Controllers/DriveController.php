@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Drive;
+use App\Role;
+use App\User;
+use Validator;
 use Illuminate\Http\Request;
 
 class DriveController extends Controller
@@ -14,7 +17,8 @@ class DriveController extends Controller
      */
     public function index()
     {
-        //
+        $drives = Drive::all();
+        return view('drive.index', compact('drives'));
     }
 
     /**
@@ -22,9 +26,11 @@ class DriveController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($user_id = null)
     {
-        //
+        $user = Role::find(3)->users->pluck('name', 'id');
+        //dd($user);
+        return view('drive.create', compact('user'));
     }
 
     /**
@@ -35,7 +41,12 @@ class DriveController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $data['date'] = implode($data['date'],' ');
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $drive = Drive::create($data);
+        return redirect()->route('drive.index')->withSuccess('Dodano jazdę');
     }
 
     /**
@@ -55,9 +66,10 @@ class DriveController extends Controller
      * @param  \App\Drive  $drive
      * @return \Illuminate\Http\Response
      */
-    public function edit(Drive $drive)
+    public function edit(Drive $drive, $user_id = null)
     {
-        //
+        $user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
+        return view('drive.edit', compact('drive','user'));
     }
 
     /**
@@ -69,7 +81,12 @@ class DriveController extends Controller
      */
     public function update(Request $request, Drive $drive)
     {
-        //
+        $data = $request->all();
+        $data['date'] = implode($data['date'],' ');
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $payment->update($data);
+        return redirect()->back();
     }
 
     /**
@@ -81,5 +98,14 @@ class DriveController extends Controller
     public function destroy(Drive $drive)
     {
         //
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'user_id'    => 'required|exists:users,id',
+            'date'  => 'required|date_format:Y-m-d H:i',
+            'hours_count'  => 'required|numeric|min:0.5|max:8',
+        ]);
     }
 }
