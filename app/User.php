@@ -51,4 +51,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Drive');
     }
 
+    public function hours()
+    {
+        return $this->hasMany('App\Hour');
+    }
+
 }
