@@ -44,6 +44,10 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         &nbsp;
+                        <li><a href="{{route('user.index')}}">Użytkownicy</a></li>
+                        <li><a href="{{route('drive.index')}}">Jazdy</a></li>
+                        <li><a href="{{route('hour.index')}}">Godziny</a></li>
+                        <li><a href="{{route('payment.index')}}">Płatności</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

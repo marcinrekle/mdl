@@ -3,8 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Drive;
-use App\User;
 
 class Hour extends Model
 {

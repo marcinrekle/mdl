@@ -16,6 +16,7 @@
                 <th>Instruktor</th>
                 <th>Data</th>
                 <th>Ilość godzin</th>
+                <th>Kursańci</th>
                 <th>Operacje</th>
               </tr>
 
@@ -26,6 +27,13 @@
                   <td>{{ $drive->user->name }}</td>
                   <td>{{ $drive->date }}</td>
                   <td>{{ $drive->hours_count }}</td>
+                  <td>
+                    @if( $drive->hours->count() )
+                      @foreach( $drive->hours as $hour )
+                        {{$hour->user->name}} 
+                      @endforeach
+                    @endif
+                  </td>
                   <td>
                   {{ Html::linkRoute('drive.edit', 'Edytuj', $drive->id, ['class' => 'btn btn-primary'])}}
                   {!! Form::model($drive, [

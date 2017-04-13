@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Hour;
+use App\Drive;
+use App\User;
+use App\Role;
+use Validator;
 use Illuminate\Http\Request;
 
 class HourController extends Controller
@@ -14,7 +18,9 @@ class HourController extends Controller
      */
     public function index()
     {
-        //
+        $hours = Hour::with(['user','drive.user'])->get();
+        //dd($hours);
+        return view('hour.index', compact('hours'));
     }
 
     /**
@@ -24,7 +30,19 @@ class HourController extends Controller
      */
     public function create()
     {
-        //
+        //$drive = Drive::where('date','>',Carbon::now());
+        $drive = Drive::with(['user','hours'])->get();
+        //dump($drive);
+        $drive = $drive->filter(function ($item, $key){
+            return $item->hours->sum('count') < $item->hours_count;
+        });
+        $drive = $drive->mapWithKeys(function ($item){
+            //return  [$item->id => "$item->date - {$item->user->name}"];
+            return  [$item->id => "$item->date - {$item->user->name}"];
+        });
+        //dd($drive);
+        $user = Role::find(4)->users->pluck('name', 'id');
+        return view('hour.create', compact('drive', 'user'));
     }
 
     /**
@@ -35,7 +53,11 @@ class HourController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $hour = Hour::create($data);
+        return redirect()->route('hour.create')->withSuccess('Dodano kursanta do jazdy');
     }
 
     /**
@@ -57,7 +79,11 @@ class HourController extends Controller
      */
     public function edit(Hour $hour)
     {
-        //
+        $drive = $hour->drive;
+        //dd($drive->hours->pluck('user_id','id'));
+        $drive = [$drive->id => "$drive->date - {$drive->user->name}"];
+        $user = Role::find(4)->users->pluck('name', 'id');
+        return view('hour.edit', compact('hour', 'drive','user'));
     }
 
     /**
@@ -69,7 +95,13 @@ class HourController extends Controller
      */
     public function update(Request $request, Hour $hour)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $unique = Hour::where([['user_id',$data['user_id']],['drive_id',$data['drive_id']]])->get();
+        if($unique) return redirect()->back()->withErrors('Kursant już bierze udział w tej jeździe')->withInput();
+        $hour->update($data);
+        return redirect()->back();
     }
 
     /**
@@ -81,5 +113,16 @@ class HourController extends Controller
     public function destroy(Hour $hour)
     {
         //
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            //'user_id'    => 'required|exists:users,id|unique:hours,user_id,NULL,id,drive_id,'.$data['drive_id'],
+            'user_id'    => 'required|exists:users,id',
+            'count'  => 'required|numeric|min:0.5|max:8',
+            //'drive_id'    => 'required|exists:users,id|unique:hours,drive_id,NULL,id,user_id,'.$data['user_id'],
+            'drive_id'    => 'required|exists:drives,id',
+        ]);
     }
 }

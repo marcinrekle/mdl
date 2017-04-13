@@ -3,8 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\User;
-use App\Hour;
 
 class Drive extends Model
 {
@@ -22,6 +20,6 @@ class Drive extends Model
 
     public function hours()
     {
-        return $this->belongsToMany('App\Hour');
+        return $this->hasMany('App\Hour');
     }
 }

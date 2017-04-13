@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = Role::find(4)->users()->with('attrs')->get();//add active check
+        $users = User::with('attrs')->get();//get all active users
         return view('user.index', compact('users'));
         dd($users);
     }
@@ -52,7 +52,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        //dd(User::find($id)->with('attrs')->first());
+        if( is_numeric($id) ){
+            $user = User::find($id)->with('attrs')->first();
+            return view('user.show', compact('user'));
+        }
+        $users = Role::whereName($id)->with('users.attrs')->get()->toArray();
+        $role = Role::with('users.attrs')->where('name', $id)->get();
+        dd($users,$role);
+        $role = $id;
+        return view('user.role_show', compact('users','role'));
     }
 
     /**

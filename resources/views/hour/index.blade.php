@@ -6,31 +6,33 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Jazdy <a href="{{route('drive.create')}}" class="pull-right"><i class="fa fa-plus"></i>Dodaj</a></h3>
+            <h3 class="panel-title">Godziny <a href="{{route('hour.create')}}" class="pull-right"><i class="fa fa-plus"></i>Dodaj</a></h3>
           </div>
           <div class="panel-body">
               
             <table class="table table-striped">
               <tr>
                 <th>Lp</th>
+                <th>Kursant</th>
+                <th>Ilość godzin</th>
                 <th>Instruktor</th>
                 <th>Data</th>
-                <th>Ilość godzin</th>
                 <th>Operacje</th>
               </tr>
 
-                @foreach($drives as $drive)
+                @foreach($hours as $hour)
 
                 <tr>
                   <td>{{ $loop->index+1 }}</td>
-                  <td>{{ $drive->user->name }}</td>
-                  <td>{{ $drive->date }}</td>
-                  <td>{{ $drive->hours_count }}</td>
+                  <td>{{ $hour->user->name }}</td>
+                  <td>{{ $hour->count }}</td>
+                  <td>{{ $hour->drive->user->name }}</td>
+                  <td>{{ $hour->drive->date }}</td>
                   <td>
-                  {{ Html::linkRoute('drive.edit', 'Edytuj', $drive->id, ['class' => 'btn btn-primary'])}}
-                  {!! Form::model($drive, [
+                  {{ Html::linkRoute('hour.edit', 'Edytuj', $hour->id, ['class' => 'btn btn-primary'])}}
+                  {!! Form::model($hour, [
                     'method' => 'DELETE',
-                    'route' => ['drive.destroy', $drive->id],
+                    'route' => ['hour.destroy', $hour->id],
                     'style' => 'display:inline-block'
                   ]) !!}
                     {{ Html::link('#', 'Usuń', ['class' => 'btn btn-danger'])}}

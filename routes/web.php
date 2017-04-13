@@ -33,8 +33,11 @@ Route::patch('/user/{id}', 'UserController@update')->name('userUpdate');
 //Route::get('/student/{id}','StudentController@show');
 Route::resource('student', 'StudentController');
 Route::resource('field', 'FieldController');
-Route::resource('user', 'UserController');
+Route::resource('user', 'UserController', ['parameters' => [
+	'user' => 'role?'
+]]);
 Route::resource('payment', 'PaymentController');
 Route::resource('drive', 'DriveController');
+Route::resource('hour', 'HourController');
 
 Route::get('/home', 'HomeController@index')->name('home');
