@@ -44,10 +44,39 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         &nbsp;
-                        <li><a href="{{route('user.index')}}">Użytkownicy</a></li>
+                        @permission('user-*')
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Użytkownicy <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                            @permission('user-create')
+                                <li><a href="{{ route('register') }}">Dodaj</a></li>
+                            @endpermission
+                            @permission('student-*')
+                                <li><a href="{{ url('user/student') }}">Kursanci</a></li>
+                            @endpermission
+                            @permission('instructor-*')
+                                <li><a href="{{ url('user/instructor') }}">Instruktorzy</a></li>
+                            @endpermission
+                            @permission('officce-*')
+                                <li><a href="{{ url('user/officce') }}">Pracownicy biurowi</a></li>
+                            @endpermission
+                            @permission('admin-*')
+                                <li><a href="{{ url('user/admin') }}">Admini</a></li>
+                            @endpermission
+                            </ul>
+                        </li>
+                        @endpermission
+                        @permission('drive-*')
                         <li><a href="{{route('drive.index')}}">Jazdy</a></li>
+                        @endpermission
+                        @permission('hour-*')
                         <li><a href="{{route('hour.index')}}">Godziny</a></li>
+                        @endpermission
+                        @permission('payment-*')
                         <li><a href="{{route('payment.index')}}">Płatności</a></li>
+                        @endpermission
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -59,7 +88,7 @@
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ Auth::user()->roles[0]['display_name'] }} <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">

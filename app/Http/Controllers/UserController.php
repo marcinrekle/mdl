@@ -57,9 +57,8 @@ class UserController extends Controller
             $user = User::find($id)->with('attrs')->first();
             return view('user.show', compact('user'));
         }
-        $users = Role::whereName($id)->with('users.attrs')->get()->toArray();
-        $role = Role::with('users.attrs')->where('name', $id)->get();
-        dd($users,$role);
+        $users = Role::whereName($id)->with('users.attrs')->get()[0]['users'];
+        //dd($users);
         $role = $id;
         return view('user.role_show', compact('users','role'));
     }

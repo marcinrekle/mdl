@@ -17,18 +17,15 @@
                 <th>Adres E-mail</th>
                 <th>Operacje</th>
               </tr>
-
-                {{ dd($user }}
-                @foreach($users as $user)
-                <tr>
-                  <td>{{ $loop->index+1 }}</td>
-                  <td>{{ $user->users->name }}</td>
-                  <td>{{ $user->users->email }}</td>
-                  <td>
-
-                  </td>
-                </tr>
-                @endforeach
+              @foreach($users as $user)
+              <tr>
+                <td>{{ $loop->index+1 }}</td>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>
+                </td>
+              </tr>
+              @endforeach
 
             </table>
 
