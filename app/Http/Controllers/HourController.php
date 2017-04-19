@@ -57,7 +57,7 @@ class HourController extends Controller
         $validator = $this->validator($data);
         if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
         $hour = Hour::create($data);
-        return redirect()->route('hour.create')->withSuccess('Dodano kursanta do jazdy');
+        return redirect()->back()->withSuccess('Dodano kursanta do jazdy');
     }
 
     /**
