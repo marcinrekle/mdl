@@ -14,7 +14,7 @@
         <span>
           <a href="{{route('user.show',$hour->user->id)}} ">{{ $hour->user->name." - ".$hour->count." h" }}</a>
         </span>
-        @permission('hour-*')
+        @if( Entrust::can('hours-crud') || ( Entrust::can('hours-delete') && Auth::user()->id == $hour->user->id)) 
         <div class="studentActions">  
           {!! Form::model($hour, [
             'method' => 'DELETE',
@@ -25,18 +25,19 @@
           </div>
           {!! Form::close() !!}
         </div>
-        @endpermission
+        @endif
       </td>
       @endforeach
-      @if((count($drive->hours) < 2 ))
-        @if($drive->hours->pluck('user.id')->search($user->id) === false )
+      @if((count($drive->hours) < 2))
+        @if($drive->hours->pluck('user.id')->search($user->id) === false && $user->canDrive[$key] > 0 )
           <td @if(2-count($drive->hours) > 1) colspan="{{2-count($drive->hours)}}" @endif>
+          @php ($val = $drive->hours_count - $drive->hours->sum('count'))
           {!! Form::open( [
                 'route' => ['hour.store']
           ]) !!}
           {!! Form::hidden('drive_id', $drive->id) !!}
           {!! Form::hidden('user_id', $user->id) !!}
-          {{ Form::number('count', old('count'), ['class' => 'form-control', 'min' => '0.5', 'max' => '8', 'step' => '0.5', 'required',]) }}
+          {{ Form::number('count', old('count',$val), ['class' => 'form-control', 'min' => '0.5', 'max' => $drive->hours_count - $drive->hours->sum('count'), 'step' => '0.5', 'required',]) }}
           {!! Form::button('<span class="fa fa-plus"></span> Dodaj', ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
           {!! Form::close() !!}
           </td>

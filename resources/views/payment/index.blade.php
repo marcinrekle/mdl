@@ -24,10 +24,12 @@
 
                 <tr>
                   <td>{{ $loop->index+1 }}</td>
-                  <td>{{ $payment->user->name }}</td>
+                  <td>
+                    <a href="{{route('user.show',$payment->user->id)}}">{{ $payment->user->name }}</a>
+                  </td>
                   <td>{{ $payment->payment_date }}</td>
                   <td>{{ $payment->amount }}</td>
-                  <td>{{ $payment->payment_for }}</td>
+                  <td>{{ $costNames['cost_'.$payment->payment_for] }}</td>
                   <td>
                   {{ Html::linkRoute('payment.edit', 'Edytuj', $payment->id, ['class' => 'btn btn-primary'])}}
                   {!! Form::model($payment, [

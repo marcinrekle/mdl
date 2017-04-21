@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Payment;
 use App\User;
+use App\Role;
+use App\Field;
 use Validator;
 use Illuminate\Http\Request;
 
@@ -16,8 +18,9 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::with('user')->get();
-        return view('payment.index', compact('payments'));
+        $payments = Payment::with('user')->get()->sortBy('payment_date');
+        $costNames = Field::where("name","like",'%cost%')->orderBy('name')->pluck('slug','name');
+        return view('payment.index', compact('payments','costNames'));
         //dd($payments);
     }
 
@@ -26,12 +29,12 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($user_id = null)
+    public function create()
     {
         //$user_id = 4;
-        $user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
-        $payment_for = ['course' => 'Za kurs', 'doctor' => 'Za lekarza'];
-        //dd($user);
+        //$user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
+        $user = Role::whereName('student')->get()[0]['users']->sortBy('name')->pluck('name','id');
+        $payment_for = Field::where("name","like",'%cost%')->orderBy('name')->pluck('slug','name');
         return view('payment.create',compact('user', 'payment_for'));
     }
 

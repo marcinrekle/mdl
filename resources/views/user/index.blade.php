@@ -22,7 +22,9 @@
                 @foreach($users as $user)
                 <tr>
                   <td>{{ $loop->index+1 }}</td>
-                  <td>{{ $user->name }}</td>
+                  <td>
+                    <a href="{{route('user.show',$user->id)}}">{{ $user->name }}</a>
+                  </td>
                   <td>{{ $user->email }}</td>
                   <td>{{ $user->roles[0]->display_name }}</td>
                   <td>

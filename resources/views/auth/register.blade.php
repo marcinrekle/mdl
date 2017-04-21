@@ -85,6 +85,17 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
+                        {{ Form::label('status', 'Status', ['class' => 'col-md-4 control-label']) }}
+                            <div class="col-md-6">
+                            {{ Form::select('status', ['active' => 'Aktywny','disabled' => 'Nieaktywny'],old('status'), ['class' => 'form-control', 'required','autofocus']) }}
+                            @if ($errors->has('status'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('status') }}</strong>
+                            </span>
+                            @endif
+                            </div>
+                        </div>
                         @if (isset($fields))
                             @include('auth._fields')
                         @endif

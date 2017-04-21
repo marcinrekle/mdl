@@ -24,13 +24,15 @@
 
                 <tr>
                   <td>{{ $loop->index+1 }}</td>
-                  <td>{{ $drive->user->name }}</td>
+                  <td>
+                    <a href="{{route('user.show',$drive->user->id)}}">{{ $drive->user->name }}</a>
+                  </td>
                   <td>{{ $drive->date }}</td>
                   <td>{{ $drive->hours_count }}</td>
                   <td>
                     @if( $drive->hours->count() )
                       @foreach( $drive->hours as $hour )
-                        {{$hour->user->name}} 
+                        <a href="{{route('user.show',$hour->user->id)}}">{{ $hour->user->name }}</a>
                       @endforeach
                     @endif
                   </td>

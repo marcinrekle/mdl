@@ -57,5 +57,27 @@
         </div>
       </div>
     @endif
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Jazdy</h3>
+          </div>
+          <div class="panel-body">
+            @include('user._hours', ['user' => $user])
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Płatności</h3>
+          </div>
+          <div class="panel-body">
+            @include('user._payments', ['user' => $user,'costNames' => $costNames])
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 @stop

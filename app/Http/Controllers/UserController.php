@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Field;
 use App\Role;
+use App\Drive;
 
 use Validator;
 use Carbon\Carbon;
@@ -56,12 +57,13 @@ class UserController extends Controller
     {
         //dd(User::find($id)->with('attrs')->first());
         if( is_numeric($id) ){
+            $role = User::whereId($id)->first()->roles()->get();
+            if($role[0]->name == 'Instructor') $this->show_instructor($id); 
             $user = User::whereId($id)->with('attrs','payments','hours.drive')->first();
             //$paymentsList = $user->payments;
             $payed = $user->payments->groupBy('payment_for')->map(function ($item, $key){
                 return $item->sum('amount');
             });
-            //dd(isset($payed['course']));
             $costNames = Field::where("name","like",'%cost%')->orderBy('name')->pluck('slug','name');
             $drivesPerWeek = collect([200,500,1000]);
             if(isset($payed['course'])){   
@@ -81,7 +83,7 @@ class UserController extends Controller
                         return $key > $week && $key < $week->addWeeks(1);
                     });
                     $studentCanDriveGtThisWeek = $studentCanDriveGtThisWeek->diff($tmp[$i])->keyBy('drive.date');
-                    $tmp[$i] = $tmp[$i]->count();
+                    $tmp[$i] = $user->dpw - $tmp[$i]->count();
                 }
                 $studentCanDrive = $tmp;
                 $user->canDrive = $tmp;
@@ -106,10 +108,79 @@ class UserController extends Controller
             //dd($user);
             return view('user.show', compact('user','costNames','payed','instructors'));
         }
-        $users = Role::whereName($id)->with('users.attrs')->get()[0]['users'];
-        //dd($users);
+        $users = Role::whereName($id)->with('users.attrs')->get()[0]['users']->where('status','active');
         $role = $id;
         return view('user.role_show', compact('users','role'));
+    }
+
+    public function show_instructor($id)
+    {
+        $user = User::whereId($id)->with('attrs','drives.hours.user')->first();
+        $drives = $user->drives->sortByDesc('date');
+        $students = Role::whereName('Student')->with('users.attrs','users.payments','users.hours')->get()[0]['users']->keyBy('id')->sortBy('id');
+        $drives = collect($this->drivesInWeek($drives));
+        $students = $students->filter(function ( $student, $key ) {
+            return $student->hours->sum('count')+$student->attrs->values['old_hours'] < $student->attrs->values['hours']; 
+        });
+        $drivesPerWeek = collect([200,500,1000]);
+        
+        $studentsDrivesPerWeek = $students->map( function( $item, $key) use ($drivesPerWeek) {
+            $payed = $item->payments->groupBy('payment_for')->map(function ($item, $key){
+                return $item->sum('amount');
+            });
+            if(isset($payed['course'])){
+                return $drivesPerWeek->filter( function ($item, $key) use ($payed) {
+                    return $item <= $payed['course'];
+                })->count();    
+            }else{
+                return 0;
+            }
+        });
+
+        for ($i=0; $i < 4; $i++) { 
+            $cantDriveList[$i] = clone $studentsDrivesPerWeek; 
+        }
+
+        for ($i=0; $i < 4; $i++) { 
+            $drivesInWeek[$i] = Drive::where('date', '>', Carbon::parse('this week 0:00')->addWeeks($i))->where('date', '<', Carbon::parse('this week 0:00')->addWeeks($i+1))->with('hours')->get()->keyBy('date');
+        }
+        //dump("canDriveList item ",$cantDriveList);
+        //dump("drivesInWeek item ",$drivesInWeek);
+        //dd($drivesInWeek);
+        collect($drivesInWeek)->each( function ( $item, $key) use ($cantDriveList) {
+            $list = $cantDriveList[$key];
+            //dump($list);
+            //dump("drivesInWeek item ",$item);
+            $item->each( function ( $item, $key) use ( $list) {
+            //dump("key ",$key);
+            //dump("item->hours->keyBy ",$item->hours->keyBy('user_id'));
+                $item->hours->keyBy('user_id')->each( function ( $item, $key) use ($list) {
+                        //dump($key);
+                        //dump($item);
+                    if( isset( $list[$key])) {   
+                        //dump($key);
+                        //dump($list[$key]);
+                        $list[$key]-=1;
+                        //dump($list[$key]);
+                    }
+                });
+            });
+            $cantDriveList[$key] = $list;
+        });
+        dump("cantDriveList",$cantDriveList);
+        foreach ($cantDriveList as &$cdl) {
+            $cdl = $cdl->filter( function ( $item) {
+                return $item <= 0;
+            });
+        }
+        dump("cantDriveList",$cantDriveList);
+        dump("students",$students);
+        for ($i=0; $i < 4; $i++) { 
+            $s = clone $students;
+            $canDriveList[$i] = $s->forget($cantDriveList[$i]->keys()->all())->pluck('name', 'id');
+        }
+        dd($students,$studentsDrivesPerWeek,$cantDriveList,$canDriveList);
+        return view('user.show_instructor', compact('user','students','studentsDrivesPerWeek','cantDriveList'));
     }
 
     /**
@@ -165,5 +236,17 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    protected function drivesInWeek( $items )
+    {
+        for ($i=3; $i >= 0; $i--) {
+            $item[$i] = $items->keyBy('date')->filter( function( $item, $key) use ( $i) {
+                return $key > Carbon::parse('this week 0:00')->addWeeks($i) && $key < Carbon::parse('this week 0:00')->addWeeks($i+1);
+            });
+            $items = $items->diff($item[$i])->keyBy('date');
+        }
+        $item['old'] = $items;
+        return $item;
     }
 }

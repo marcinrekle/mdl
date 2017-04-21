@@ -15,14 +15,31 @@
                 <th>Lp</th>
                 <th>Imię Nazwisko</th>
                 <th>Adres E-mail</th>
+                <th>Status</th>
                 <th>Operacje</th>
               </tr>
               @foreach($users as $user)
               <tr>
                 <td>{{ $loop->index+1 }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
                 <td>
+                  <a href="{{route('user.show',$user->id)}}">{{ $user->name }}</a>
+                </td>
+                <td>{{ $user->email }}</td>
+                <td>{{ $user->status }}</td>
+                <td>
+                  @permission(['user-update','user-crud'])
+                    <a href="{{route('user.edit',[$user->id])}}" class="edit"><i class="fa fa-pencil fa-2x"></i></a>
+                  @endpermission
+                  @permission('user-delete','user-crud')
+                    {!! Form::model($user, [
+                      'method' => 'DELETE',
+                      'route' => ['user.destroy',$user->id]
+                    ]) !!}
+                    <div class="form-group">
+                      <a class="delete" href="#"><i class="fa fa-trash-o fa-2x text-danger"></i></a>
+                    </div>
+                    {!! Form::close() !!} 
+                  @endpermission
                 </td>
               </tr>
               @endforeach

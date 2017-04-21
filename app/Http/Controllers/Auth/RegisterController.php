@@ -74,6 +74,7 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
             'avatar' => '/img/defaultUser.png',
             'confirm_code' => str_random(32),
+            'status' => $data['status'],
         ]);
         $user->attrs()->create(['values' => $data['values']]);
         $role = Role::whereName($data['role'])->first();
