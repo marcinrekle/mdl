@@ -19,7 +19,7 @@
                 <tr>
                   <td>
                     <div class="placeholder">
-                      <img src="{{$instructor->user->avatar}}" class="img-responsive img-circle avatar avatar-big">
+                      <img src="{{$user->avatar}}" class="img-responsive img-circle avatar avatar-big">
                     </div>
                   </td>
                   <td>
@@ -42,7 +42,7 @@
             <h3 class="panel-title">Jazdy</h3>
           </div>
           <div class="panel-body">
-          @include('user._drives',['instructor' => $user])
+          @include('user._drives_instructor',['instructor' => $user, 'canDriveList' => $canDriveList])
           </div>
         </div>
       </div>
