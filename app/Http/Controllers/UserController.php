@@ -10,6 +10,7 @@ use App\Role;
 use App\Drive;
 
 use Validator;
+use Auth;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -53,21 +54,38 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id = null)
     {
         //dd(User::find($id)->with('attrs')->first());
+        if(!$id) $id = (int)Auth::user()->id;
         if( is_numeric($id) ){
             $role = User::whereId($id)->first()->roles()->get();
-            if($role[0]->name == 'Student') return $this->show_student($id); 
-            if($role[0]->name == 'Instructor') return $this->show_instructor($id); 
+            switch ($role[0]->name) {
+                case 'Student':
+                    return $this->show_student($id); 
+                    break;
+                case 'Instructor':
+                    return $this->show_instructor($id); 
+                    break;
+                case 'Officce':
+                    return $this->show_role('student'); 
+                    break;
+                default:
+                    # code...
+                    break;
+            }
         }else{
-            $users = Role::whereName($id)->with('users.attrs')->get()[0]['users']->where('status','active');
-            $role = $id;
-            return view('user.role_show', compact('users','role'));    
+             return $this->show_role($id);   
         }
         
     }
 
+    public function show_role($role)
+    {
+        $users = Role::whereName($role)->with('users.attrs')->get()[0]['users']->where('status','active');
+        return view('user.role_show', compact('users','role'));
+    }
+    
     public function show_student($id)
     {
         $user = User::whereId($id)->with('attrs','payments','hours.drive')->first();

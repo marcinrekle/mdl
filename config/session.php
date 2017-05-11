@@ -148,6 +148,7 @@ return [
     |
     */
 
+    //'domain' => env('SESSION_DOMAIN', url('/')),
     'domain' => env('SESSION_DOMAIN', null),
 
     /*

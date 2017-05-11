@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::loginUsingId(2);
+Auth::loginUsingId(5);
 //dd(Auth::user()->attrs->values['address']);
 //config(['database.connections.mysql.prefix' => 'test']);
 //dd(config('database.connections.mysql.prefix'));
@@ -19,13 +19,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Auth::routes();
 Route::get('auth/{provider?}', 'Auth\LoginController@redirectToProvider');
 Route::get('auth/{provider?}/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('/register/confirm/{confirm_code}', 'Auth\RegisterController@confirm')->middleware('guest')->name('confirmEmail');
 Route::post('/register/confirm/', 'Auth\RegisterController@confirmSetPassword')->middleware('guest')->name('confirmSetPassword');
 Route::get('/register/confirmed/', 'Auth\RegisterController@confirmed')->name('confirmedEmail');
+
+
+
+Route::group(['middleware' => 'auth'], function () {
+
+Route::get('/', 'UserController@show');
+
+
 Route::get('/user/{id}/edit', 'UserController@edit')->name('userEdit');
 Route::patch('/user/{id}', 'UserController@update')->name('userUpdate');
 
@@ -39,3 +46,4 @@ Route::resource('drive', 'DriveController');
 Route::resource('hour', 'HourController');
 
 Route::get('/home', 'HomeController@index')->name('home');
+});

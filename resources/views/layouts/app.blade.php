@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -50,31 +51,31 @@
                                 Użytkownicy <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                            @permission('user-create')
+                            @permission(['user-create','user-crud'])
                                 <li><a href="{{ route('register') }}">Dodaj</a></li>
                             @endpermission
-                            @permission('student-*')
+                            @permission(['student-retrive','student-crud'])
                                 <li><a href="{{ url('user/student') }}">Kursanci</a></li>
                             @endpermission
-                            @permission('instructor-*')
+                            @permission(['instructor-retrive','instructor-crud'])
                                 <li><a href="{{ url('user/instructor') }}">Instruktorzy</a></li>
                             @endpermission
-                            @permission('officce-*')
+                            @permission(['officce-retrive','officce-crud'])
                                 <li><a href="{{ url('user/officce') }}">Pracownicy biurowi</a></li>
                             @endpermission
-                            @permission('admin-*')
+                            @permission(['admin-retrive','admin-crud'])
                                 <li><a href="{{ url('user/admin') }}">Admini</a></li>
                             @endpermission
                             </ul>
                         </li>
                         @endpermission
-                        @permission('drive-*')
+                        @permission(['drive-retrive','drive-crud'])
                         <li><a href="{{route('drive.index')}}">Jazdy</a></li>
                         @endpermission
-                        @permission('hour-*')
+                        @permission(['hour-retrive','hour-crud'])
                         <li><a href="{{route('hour.index')}}">Godziny</a></li>
                         @endpermission
-                        @permission('payment-*')
+                        @permission(['payment-retrive','payment-crud'])
                         <li><a href="{{route('payment.index')}}">Płatności</a></li>
                         @endpermission
                     </ul>
