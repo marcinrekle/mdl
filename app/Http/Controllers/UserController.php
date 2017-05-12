@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $users = User::with('attrs')->get();//get all active users
         return view('user.index', compact('users'));
-        dd($users);
+        //dd($users);
     }
 
     /**

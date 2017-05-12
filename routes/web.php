@@ -44,6 +44,8 @@ Route::resource('user', 'UserController');
 Route::resource('payment', 'PaymentController');
 Route::resource('drive', 'DriveController');
 Route::resource('hour', 'HourController');
+Route::resource('permission', 'PermissionController');
+Route::resource('role', 'RoleController');
 
 Route::get('/home', 'HomeController@index')->name('home');
 });

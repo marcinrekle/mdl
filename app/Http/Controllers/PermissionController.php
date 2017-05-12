@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Permission;
+
 class PermissionController extends Controller
 {
     /**
@@ -13,7 +15,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        $permissions = Permission::all();
+        return view('permission.index', compact('permissions'));
     }
 
     /**
@@ -23,7 +26,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        return view('permission.create');
     }
 
     /**
@@ -34,7 +37,11 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $permission = Permission::create($data);
+        return redirect()->route('permission.index')->withSuccess('Uprawnienie utworzono');
     }
 
     /**
@@ -54,9 +61,9 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Permission $permission)
     {
-        //
+        return view('permission.edit', compact('permission'));
     }
 
     /**
@@ -66,9 +73,13 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $permission->update($data);
+        return redirect()->route('permission.index')->withSuccess('Uprawnienie zaktualizowano');
     }
 
     /**
@@ -77,8 +88,18 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Permission $permission)
     {
-        //
+        $permission->delete();
+        return redirect()->route('permission.index')->withSuccess('Uprawnienie usunięte');
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name'    => 'required|min:3|max:32',
+            'display_name'  => 'required|min:3|max:32',
+            'description'  => '',
+        ]);
     }
 }
