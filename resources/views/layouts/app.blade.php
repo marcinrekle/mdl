@@ -78,6 +78,12 @@
                         @permission(['payment-retrive','payment-crud'])
                         <li><a href="{{route('payment.index')}}">Płatności</a></li>
                         @endpermission
+                        @permission(['role-retrive','role-crud'])
+                        <li><a href="{{route('role.index')}}">Role</a></li>
+                        @endpermission
+                        @permission(['permission-retrive','permission-crud'])
+                        <li><a href="{{route('permission.index')}}">Uprawnienia</a></li>
+                        @endpermission
                     </ul>
 
                     <!-- Right Side Of Navbar -->

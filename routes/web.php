@@ -46,6 +46,8 @@ Route::resource('drive', 'DriveController');
 Route::resource('hour', 'HourController');
 Route::resource('permission', 'PermissionController');
 Route::resource('role', 'RoleController');
+Route::get('/role/{role}/permission','RoleController@permission')->name('role.permission');
+Route::patch('/role/{role}/permission','RoleController@permissionUpdate')->name('role.permissionUpdate');
 
 Route::get('/home', 'HomeController@index')->name('home');
 });

@@ -19,9 +19,8 @@ class PaymentController extends Controller
     public function index()
     {
         $payments = Payment::with('user')->get()->sortBy('payment_date');
-        $costNames = Field::where("name","like",'%cost%')->orderBy('name')->pluck('slug','name');
+        $costNames = $this->getCostNames();
         return view('payment.index', compact('payments','costNames'));
-        //dd($payments);
     }
 
     /**
@@ -34,7 +33,7 @@ class PaymentController extends Controller
         //$user_id = 4;
         //$user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
         $user = Role::whereName('student')->get()[0]['users']->sortBy('name')->pluck('name','id');
-        $payment_for = Field::where("name","like",'%cost%')->orderBy('name')->pluck('slug','name');
+        $payment_for = $this->getCostNames();
         return view('payment.create',compact('user', 'payment_for'));
     }
 
@@ -74,7 +73,7 @@ class PaymentController extends Controller
     {
         //dd($payment);
         $user = $user_id ? [$user_id => User::find($user_id)->pluck('name')->first()] : User::all()->pluck('name', 'id');
-        $payment_for = ['course' => 'Za kurs', 'doctor' => 'Za lekarza'];
+        $payment_for = $this->getCostNames();
         return view('payment.edit', compact('payment','payment_for','user'));
     }
 
@@ -114,5 +113,13 @@ class PaymentController extends Controller
             'payment_for'  => 'required|in:course,doctor',
             'amount'        => 'required|numeric|min:10|max:5000',
         ]);
+    }
+
+    protected function getCostNames(){
+        $costNames = Field::where("name","like",'%cost%')->orderBy('name')->get();
+        return $costNames->map( function($item, $key) {
+            $item->name = str_replace("cost_", '', $item->name);
+            return $item;
+        })->pluck('slug','name');
     }
 }
