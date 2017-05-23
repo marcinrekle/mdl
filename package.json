@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "is-absolute": "^0.2.6",
-    "npm": "^4.5.0"
+    "npm": "^4.6.1"
   }
 }

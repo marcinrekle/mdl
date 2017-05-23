@@ -35,7 +35,7 @@
                     'route' => ['hour.destroy', $hour->id],
                     'style' => 'display:inline-block'
                   ]) !!}
-                    {{ Html::link('#', 'Usuń', ['class' => 'btn btn-danger'])}}
+                    <delete-btn></delete-btn>
                   {!! Form::close() !!}
                   </td>
                 </tr>

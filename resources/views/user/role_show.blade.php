@@ -36,7 +36,7 @@
                       'route' => ['user.destroy',$user->id]
                     ]) !!}
                     <div class="form-group">
-                      <a class="delete" href="#"><i class="fa fa-trash-o fa-2x text-danger"></i></a>
+                      <delete-btn></delete-btn>
                     </div>
                     {!! Form::close() !!} 
                   @endpermission

@@ -33,7 +33,7 @@
                     'route' => ['role.destroy', $role->id],
                     'style' => 'display:inline-block'
                   ]) !!}
-                    {{ Html::link('#', 'Usuń', ['class' => 'btn btn-danger'])}}
+                    <delete-btn></delete-btn>
                   {!! Form::close() !!}
                   {{ Html::linkRoute('role.permission', 'Uprawnienia', $role->id, ['class' => 'btn btn-primary']) }}
                   </td>

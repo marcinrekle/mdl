@@ -35,9 +35,10 @@
                   {!! Form::model($payment, [
                     'method' => 'DELETE',
                     'route' => ['payment.destroy', $payment->id],
-                    'style' => 'display:inline-block'
+                    'style' => 'display:inline-block',
+                    'pid'   => $payment->id,
                   ]) !!}
-                    {{ Html::link('#', 'Usuń', ['class' => 'btn btn-danger'])}}
+                    <delete-btn></delete-btn>
                   {!! Form::close() !!}
                   </td>
                 </tr>

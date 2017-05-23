@@ -22,7 +22,7 @@
             'route' => ['hour.destroy', $hour->id]]) 
           !!}
           <div class="form-group">
-            <a class="deleteStudent" href="#"><i class="fa fa-trash-o fa-2x text-danger"></i></a>
+            <delete-btn></delete-btn>
           </div>
           {!! Form::close() !!}
         </div>
