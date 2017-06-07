@@ -42,15 +42,15 @@ return [
     ],
 
     'facebook' => [
-        'client_id' => '1510886492549477',
-        'client_secret' => '41f683bc22a73c172510e541134e3d87',
-        'redirect' => 'http://mdl.dev/auth/facebook/callback',
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect' => env('FACEBOOK_REDIRECT')
     ],
 
     'gmail' => [
-        'client_id' => '351246343118-ijvcjo42qkot0hae1fsrmp0kf0661uft.apps.googleusercontent.com',
-        'client_secret' => '2rdk-kJb55uaFTtRRSid98Nr',
-        'redirect' => 'http://mdl.dev/auth/gmail/callback',
+        'client_id' => env('GMAIL_CLIENT_ID'),
+        'client_secret' => env('GMAIL_CLIENT_SECRET'),
+        'redirect' => env('GMAIL_REDIRECT'),
     ],
 
 ];

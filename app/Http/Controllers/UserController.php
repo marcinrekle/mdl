@@ -209,6 +209,11 @@ class UserController extends Controller
         return view('user.show_instructor', compact('user','students','studentsDrivesPerWeek','canDriveList'));
     }
 
+    public function show_admin($admin)
+    {
+        
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

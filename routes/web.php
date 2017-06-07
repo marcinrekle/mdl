@@ -10,11 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::loginUsingId(5);
+//dd(public_path());
+//Auth::loginUsingId(5);
 //dd(Auth::user()->attrs->values['address']);
 //config(['database.connections.mysql.prefix' => 'test']);
 //dd(config('database.connections.mysql.prefix'));
 //dd(config('database.connections.mysql.database'));
+//dd(bcrypt('biuro'));
 Route::get('/', function () {
     return view('welcome');
 });

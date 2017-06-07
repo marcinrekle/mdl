@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Role;
+use App\Field;
 use Auth;
 use App\Mail\emailConfirmation;
 use Illuminate\Support\Facades\Mail;
@@ -33,7 +34,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -42,7 +43,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:user-create');
+        $this->middleware('permission:user-create',['except' => ['confirm','confirmed','confirmSetPassword']]);
     }
 
     /**
@@ -72,14 +73,29 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'avatar' => '/img/defaultUser.png',
+            'avatar' => public_path().'/img/defaultUser.png',
             'confirm_code' => str_random(32),
             'status' => $data['status'],
         ]);
-        $user->attrs()->create(['values' => $data['values']]);
+        $values = $data['values'];
+        $values = array_map(function($v){
+            return $v ?: '';
+        },$values);
+        $user->attrs()->create(['values' => $values]);
         $role = Role::whereName($data['role'])->first();
         $user->attachRole($role);
         return $user;
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $fields = Field::whereActive(1)->get();
+        return view('auth.register',compact('fields'));
     }
 
     /**
@@ -107,14 +123,14 @@ class RegisterController extends Controller
         $user = User::where('confirm_code', $code)->first();
         if ($user) {
             if ($user->confirmed) {
-                return redirect('/home')->withInfo("To konto jest już potwierdzone");
+                return redirect('/')->withInfo("To konto jest już potwierdzone");
             }
             $request->session()->put(['cuid' => $user->id, 'ccode' => $code]);
             return view('auth.confirm')->with(
                 ['code' => $code]
             );
         }
-        return redirect('/home')->withInfo("Kod weryfikacyjny jest niepoprawny");
+        return redirect('/')->withInfo("Kod weryfikacyjny jest niepoprawny");
     }
 
     public function confirmSetPassword(Request $request)
@@ -137,7 +153,7 @@ class RegisterController extends Controller
             $user->password = bcrypt($request->password);
             $user->save();
             Auth::login($user, true);
-            return redirect('/')->route('confirmedEmail')->withSuccess("To konto zostało potwierdzone");
+            return redirect()->route('confirmedEmail')->withSuccess("To konto zostało potwierdzone");
         }
         return redirect('/')->withErrors("Nie posiadasz u nas konta. Skontaktuj sie z administratorem");
     }

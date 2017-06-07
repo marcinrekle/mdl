@@ -1,3 +1,5 @@
+<div class="fields">
+<h4>Dodatkowe dane</h4>
 @foreach($fields as $field)
 	<div class="form-group">
 		{{ Form::label($field->name, $field->slug, ['class' => 'col-md-4 control-label']) }}
@@ -12,3 +14,4 @@
         </div>
 	</div>
 @endforeach
+</div>
