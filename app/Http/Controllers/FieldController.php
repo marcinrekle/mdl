@@ -28,6 +28,7 @@ class FieldController extends Controller
     {
         //$opts = ['method' => 'POST', 'route' => 'field.store', 'btn_text' => 'Dodaj', 'panel_title' => 'Dodawanie pola'];
         $field = new Field();
+        $field->options = ['attrs' => ['class' => 'form-control']];
         return view('fields.create',compact('field'));
     }
 
@@ -41,15 +42,9 @@ class FieldController extends Controller
     {
         $data = $request->all();
         $validator = $this->validator($data);
-        //dump($data);
-        //dd($validator);
         if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
-        $data['options'] = json_encode($data['options'],JSON_UNESCAPED_SLASHES);
-        $data['options'] = preg_replace('/\\\"/',"\"", $data['options']);
-        //$data['options'] = $data['options']->toArray();
+        $data['options'] = json_decode($data['options'],true);
         $field = Field::create($data);
-        //dd($data,$field);
-        //return redirect()->back();
         return redirect()->route('field.index')->withSuccess('Pole utworzono');
     }
 
@@ -88,6 +83,7 @@ class FieldController extends Controller
         $data = $request->all();
         $validator = $this->validator($data);
         if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $data['options'] = json_decode($data['options'],true);
         $field = Field::findOrFail($field->id);
         $field->fill($data)->save();
         return redirect()->route('field.index')->withSuccess('Edycja zakończona pomyślnie');
@@ -103,8 +99,7 @@ class FieldController extends Controller
      */
     public function destroy(Field $field)
     {
-        $field = Field::findOrFail($field->id);
-        //$field->delete();
+        $field->delete();
         return redirect()->route('field.index')->withSuccess('Pole usunięte');
     }
 

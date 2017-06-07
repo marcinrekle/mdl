@@ -70,6 +70,9 @@ class UserController extends Controller
                 case 'Officce':
                     return $this->show_role('student'); 
                     break;
+                case 'Admin':
+                    return $this->show_role('admin'); 
+                    break;
                 default:
                     # code...
                     break;
