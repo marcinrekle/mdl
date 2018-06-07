@@ -10,3 +10,4 @@ Homestead.yaml
 .prod
 *.log
 *.lock
+package*.json

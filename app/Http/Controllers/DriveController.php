@@ -17,7 +17,7 @@ class DriveController extends Controller
      */
     public function index()
     {
-        $drives = Drive::all();
+        $drives = Drive::with(['user','']);
         return view('drive.index', compact('drives'));
     }
 
