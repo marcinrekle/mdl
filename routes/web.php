@@ -20,6 +20,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 Route::get('auth/{provider?}', 'Auth\LoginController@redirectToProvider');
@@ -32,24 +33,24 @@ Route::get('/register/confirmed/', 'Auth\RegisterController@confirmed')->name('c
 
 Route::group(['middleware' => 'auth'], function () {
 
-Route::get('/', 'UserController@show');
+//Route::get('/', 'UserController@show');
 
 
-Route::get('/user/{id}/edit', 'UserController@edit')->name('userEdit');
-Route::patch('/user/{id}', 'UserController@update')->name('userUpdate');
+	Route::get('/user/{id}/edit', 'UserController@edit')->name('userEdit');
+	Route::patch('/user/{id}', 'UserController@update')->name('userUpdate');
+	
+	//Route::get('/student','StudentController@index');
+	//Route::get('/student/{id}','StudentController@show');
+	Route::resource('student', 'StudentController');
+	Route::resource('field', 'FieldController');
+	Route::resource('user', 'UserController');
+	Route::resource('payment', 'PaymentController');
+	Route::resource('drive', 'DriveController');
+	Route::resource('hour', 'HourController');
+	Route::resource('permission', 'PermissionController');
+	Route::resource('role', 'RoleController');
+	Route::get('/role/{role}/permission','RoleController@permission')->name('role.permission');
+	Route::patch('/role/{role}/permission','RoleController@permissionUpdate')->name('role.permissionUpdate');
 
-//Route::get('/student','StudentController@index');
-//Route::get('/student/{id}','StudentController@show');
-Route::resource('student', 'StudentController');
-Route::resource('field', 'FieldController');
-Route::resource('user', 'UserController');
-Route::resource('payment', 'PaymentController');
-Route::resource('drive', 'DriveController');
-Route::resource('hour', 'HourController');
-Route::resource('permission', 'PermissionController');
-Route::resource('role', 'RoleController');
-Route::get('/role/{role}/permission','RoleController@permission')->name('role.permission');
-Route::patch('/role/{role}/permission','RoleController@permissionUpdate')->name('role.permissionUpdate');
 
-Route::get('/home', 'HomeController@index')->name('home');
 });

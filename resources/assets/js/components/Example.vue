@@ -1,5 +1,5 @@
 <template>
-    <a href="#" class="btn btn-danger">Usuń</a>
+    <h1>Home</h1>
 </template>
 
 <script>
