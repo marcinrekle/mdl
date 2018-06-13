@@ -44,6 +44,29 @@ class LoginController extends Controller
     }
 
     /**
+     * Login user.
+     *
+     * @return Response
+     */
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email','password');
+        if(!auth::attempt($credentials))
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        $user = auth::user();
+        $token = $user->createToken('MyApp')->accessToken;
+        return response()->json([
+            'message' => 'Successfully logged out',
+            'email'   => $request->input('email'),
+            'password'   => $request->input('password'),
+            'user'   => $user,
+            'token'   => $token,
+        ]);
+    }
+
+    /**
      * Redirect the user to the provider authentication page.
      *
      * @return Response

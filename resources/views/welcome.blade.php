@@ -37,7 +37,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/api.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

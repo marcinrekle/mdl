@@ -1,3 +1,4 @@
 {
-    "/js/app.js": "/js/app.js"
+    "/js/api.js": "/js/api.js",
+    "/css/app.css": "/css/app.css"
 }
