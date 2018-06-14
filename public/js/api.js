@@ -14178,7 +14178,7 @@ __webpack_require__(15);
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_axios___default.a, axios);
 
-axios.defaults.baseURL = 'http://mdl.test/';
+axios.defaults.baseURL = 'http://mdl.test/api/';
 
 Vue.router = __WEBPACK_IMPORTED_MODULE_2__routes_js__["a" /* default */];
 
@@ -49997,7 +49997,7 @@ var routes = [{
     }
 }, {
     path: '/dashboard',
-    //component: require('./views/Dashboard.vue'),
+    component: __webpack_require__(67),
     meta: {
         auth: true
     }
@@ -50166,8 +50166,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            email: null,
-            password: null,
+            email: 'admin@example.com',
+            password: 'admin',
             error: false
         };
     },
@@ -50176,15 +50176,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         login: function login() {
             var app = this;
             this.$auth.login({
-                params: {
+                data: {
                     email: app.email,
                     password: app.password
                 },
-                success: function success() {},
-                error: function error() {},
+                success: function success() {
+                    alert(Vue.auth.token());
+                },
+                error: function error() {
+                    app.error = true;
+                },
                 rememberMe: true,
                 redirect: '/dashboard',
-                fetchUser: true
+                fetchUser: false
             });
         },
         login2: function login2() {
@@ -50192,6 +50196,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('api/auth/login', {
                 email: app.email,
                 password: app.password
+            }).then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                alert(error);
+                console.log(error);
             });
         }
     }
@@ -50223,7 +50232,7 @@ var render = function() {
         on: {
           submit: function($event) {
             $event.preventDefault()
-            return _vm.login2($event)
+            return _vm.login($event)
           }
         }
       },
@@ -50361,6 +50370,8 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "panel panel-default" }, [
     _c("div", { staticClass: "panel-heading" }, [
+      _c("h1", [_vm._v("App")]),
+      _vm._v(" "),
       _c("nav", [
         _c("ul", { staticClass: "list-inline" }, [
           _c(
@@ -51612,6 +51623,139 @@ module.exports = {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = null
+/* template */
+var __vue_template__ = __webpack_require__(68)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Dashboard.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-78b73b2d", Component.options)
+  } else {
+    hotAPI.reload("data-v-78b73b2d", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "panel panel-default" }, [
+    _c("div", { staticClass: "panel-heading" }, [
+      _c("h1", [_vm._v("Dash")]),
+      _vm._v(" "),
+      _c("nav", [
+        _c("ul", { staticClass: "list-inline" }, [
+          _c(
+            "li",
+            [
+              _c("router-link", { attrs: { to: { name: "home" } } }, [
+                _vm._v("Home")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          !_vm.$auth.check()
+            ? _c(
+                "li",
+                { staticClass: "pull-right" },
+                [
+                  _c("router-link", { attrs: { to: { name: "login" } } }, [
+                    _vm._v("Login")
+                  ])
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.$auth.check()
+            ? _c(
+                "li",
+                { staticClass: "pull-right" },
+                [
+                  _c("router-link", { attrs: { to: { name: "register" } } }, [
+                    _vm._v("Register")
+                  ])
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.$auth.check()
+            ? _c("li", { staticClass: "pull-right" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.$auth.logout()
+                      }
+                    }
+                  },
+                  [_vm._v("Logout")]
+                )
+              ])
+            : _vm._e()
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-78b73b2d", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

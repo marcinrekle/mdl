@@ -3,7 +3,7 @@
         <div class="alert alert-danger" v-if="error">
             <p>There was an error, unable to sign in with those credentials.</p>
         </div>
-        <form autocomplete="off" @submit.prevent="login2" method="post">
+        <form autocomplete="off" @submit.prevent="login" method="post">
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required>
@@ -20,8 +20,8 @@
   export default {
     data(){
       return {
-        email: null,
-        password: null,
+        email: 'admin@example.com',
+        password: 'admin',
         error: false
       }
     },
@@ -29,15 +29,15 @@
         login(){
             var app = this
             this.$auth.login({
-                params: {
+                data: {
                     email: app.email,
                     password: app.password
                 }, 
-                success: function () {},
-                error: function () {},
+                success: function () {alert(Vue.auth.token())},
+                error: function () {app.error = true},
                 rememberMe: true,
                 redirect: '/dashboard',
-                fetchUser: true,
+                fetchUser: false,
             });       
         },
         login2(){
@@ -45,6 +45,13 @@
             axios.post('api/auth/login',{
                 email: app.email,
                 password: app.password
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                alert(error);
+                console.log(error);
             });
         }
     }

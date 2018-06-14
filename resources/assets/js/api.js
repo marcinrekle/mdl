@@ -21,7 +21,7 @@ import App from './components/App.vue';
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 
-axios.defaults.baseURL = 'http://mdl.test/';
+axios.defaults.baseURL = 'http://mdl.test/api/';
 
 Vue.router = router;
 

@@ -53,7 +53,7 @@ class LoginController extends Controller
         $credentials = $request->only('email','password');
         if(!auth::attempt($credentials))
             return response()->json([
-                'message' => 'Unauthorized'
+                'error' => 'peszek',
             ], 401);
         $user = auth::user();
         $token = $user->createToken('MyApp')->accessToken;
@@ -62,7 +62,37 @@ class LoginController extends Controller
             'email'   => $request->input('email'),
             'password'   => $request->input('password'),
             'user'   => $user,
-            'token'   => $token,
+        ])->header('Authorization', "Bearer ".$token);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return redirect('/');
+    }
+
+    public function refresh(Request $request)
+    {
+        return response()->json([
+            'test' => 'ok',
+        ]);
+    }
+
+    public function user()
+    {
+        $user = auth::user()->id;
+        return response([
+            'status' => 'success',
+            'data' => $user
         ]);
     }
 

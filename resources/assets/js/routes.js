@@ -22,7 +22,7 @@ let routes = [
     },
     {
         path: '/dashboard',
-        //component: require('./views/Dashboard.vue'),
+        component: require('./components/Dashboard.vue'),
         meta: {
             auth: true
         }

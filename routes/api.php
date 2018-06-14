@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:api'], function () {
+    route::get('auth/user', 'Auth\LoginController@user');
 });
 Route::group(['prefix' => 'auth'], function(){
 	Auth::routes();
+	Route::get('/refresh','Auth\LoginController@refresh');
 });

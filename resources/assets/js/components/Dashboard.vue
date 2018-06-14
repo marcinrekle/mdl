@@ -1,7 +1,7 @@
 <template>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h1>App</h1>
+        <h1>Dash</h1>
             <nav>
                 <ul class="list-inline">
                     <li>
@@ -18,9 +18,6 @@
                     </li>
                 </ul>
             </nav>
-        </div>
-        <div class="panel-body">
-            <router-view></router-view>
         </div>
     </div>
 </template>
