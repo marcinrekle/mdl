@@ -22,7 +22,8 @@
       return {
         email: 'admin@example.com',
         password: 'admin',
-        error: false
+        error: false,
+        _token: ''
       }
     },
     methods: {
@@ -31,13 +32,14 @@
             this.$auth.login({
                 data: {
                     email: app.email,
-                    password: app.password
+                    password: app.password,
+                    _token: window.Laravel.csrfToken
                 }, 
-                success: function () {alert(Vue.auth.token())},
+                success: function () {},
                 error: function () {app.error = true},
                 rememberMe: true,
                 redirect: '/dashboard',
-                fetchUser: false,
+                fetchUser: true,
             });       
         },
         login2(){

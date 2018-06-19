@@ -22,9 +22,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('attrs')->get();//get all active users
-        return view('user.index', compact('users'));
+        $users = User::with('attrs', 'hours.drive', 'payments')->get();//get all active users
         //dd($users);
+        //return view('user.index', compact('users'));
+        return response()->json($users);
     }
 
     /**
@@ -89,6 +90,13 @@ class UserController extends Controller
         return view('user.role_show', compact('users','role'));
     }
     
+    public function student_hours($students)
+    {
+        foreach ($students as $key => $value) {
+            
+        }
+    }
+
     public function show_student($id)
     {
         $user = User::whereId($id)->with('attrs','payments','hours.drive')->first();

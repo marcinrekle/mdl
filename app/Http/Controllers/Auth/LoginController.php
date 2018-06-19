@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Auth;
+use JWTFactory;
+use JWTAuth;
 
 use Socialite;
 
@@ -40,7 +42,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware('guest', ['except' => ['logout', 'user']]);
     }
 
     /**
@@ -51,17 +53,20 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email','password');
-        if(!auth::attempt($credentials))
-            return response()->json([
-                'error' => 'peszek',
-            ], 401);
-        $user = auth::user();
-        $token = $user->createToken('MyApp')->accessToken;
+        if ( ! $token = JWTAuth::attempt($credentials)) {
+            return response([
+                'status' => 'error',
+                'error' => 'invalid.credentials',
+                'msg' => 'Invalid Credentials.'
+            ], 400);
+        }
+        //$user = auth::user();
         return response()->json([
-            'message' => 'Successfully logged out',
-            'email'   => $request->input('email'),
-            'password'   => $request->input('password'),
-            'user'   => $user,
+            'message' => 'Successfully logged in',
+            //'user'   => $user,
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => 3600
         ])->header('Authorization', "Bearer ".$token);
     }
 
@@ -73,24 +78,24 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $this->guard()->logout();
-
-        $request->session()->invalidate();
-
-        return redirect('/');
+        JWTAuth::invalidate();
+        return response([
+            'status' => 'success',
+            'msg' => 'Logged out Successfully.'
+        ], 200);
     }
 
     public function refresh(Request $request)
     {
         return response()->json([
-            'test' => 'ok',
+            'status' => 'refresh',
         ]);
     }
 
     public function user()
     {
-        $user = auth::user()->id;
-        return response([
+        $user = auth()->user();
+        return response()->json([
             'status' => 'success',
             'data' => $user
         ]);
