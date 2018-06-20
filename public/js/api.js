@@ -50403,6 +50403,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -50512,13 +50514,21 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _vm._l(_vm.users, function(user) {
-            return _c("tr", [
-              _c("td", [_vm._v(_vm._s(user.id))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(user.name))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(user.email))])
-            ])
+            return _c(
+              "tr",
+              [
+                _c("td", [_vm._v(_vm._s(user.id))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(user.name))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(user.email))]),
+                _vm._v(" "),
+                _vm._l(user.roles, function(role) {
+                  return _c("td", [_vm._v(_vm._s(role.display_name))])
+                })
+              ],
+              2
+            )
           })
         ],
         2
@@ -50536,7 +50546,9 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", [_vm._v("Imie nazwisko")]),
       _vm._v(" "),
-      _c("th", [_vm._v("email")])
+      _c("th", [_vm._v("email")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Rola")])
     ])
   }
 ]

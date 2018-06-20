@@ -26,11 +26,13 @@
         			<th>Id</th>
         			<th>Imie nazwisko</th>
         			<th>email</th>
+        			<th>Rola</th>
         		</tr>
         		<tr v-for="user in users">
         			<td>{{ user.id }}</td>
         			<td>{{ user.name }}</td>
         			<td>{{ user.email }}</td>
+        			<td v-for="role in user.roles">{{ role.display_name }}</td>
         		</tr>
         	</table>
         </div>

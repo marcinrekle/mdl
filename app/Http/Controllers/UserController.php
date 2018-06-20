@@ -22,10 +22,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('attrs', 'hours.drive', 'payments')->get();//get all active users
+        $permissions = Auth::user()->with('role.permissions')->get();
+        $relations = [];
+        $users = User::with('attrs', 'hours.drive', 'payments', 'roles:id,display_name')->get();//get all active users
         //dd($users);
         //return view('user.index', compact('users'));
-        return response()->json($users);
+        return response()->json($users,$permissions);
     }
 
     /**
