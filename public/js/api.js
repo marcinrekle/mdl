@@ -50389,22 +50389,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -50446,64 +50430,7 @@ var render = function() {
       _c("h1", [_vm._v("Dash")]),
       _vm._v(" "),
       _c("b", [_vm._v("Username:")]),
-      _vm._v(" " + _vm._s(_vm.$auth.user().name) + "\n        "),
-      _c("nav", [
-        _c("ul", { staticClass: "list-inline" }, [
-          _c(
-            "li",
-            [
-              _c("router-link", { attrs: { to: { name: "home" } } }, [
-                _vm._v("Home")
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          !_vm.$auth.check()
-            ? _c(
-                "li",
-                { staticClass: "pull-right" },
-                [
-                  _c("router-link", { attrs: { to: { name: "login" } } }, [
-                    _vm._v("Login")
-                  ])
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.$auth.check()
-            ? _c(
-                "li",
-                { staticClass: "pull-right" },
-                [
-                  _c("router-link", { attrs: { to: { name: "register" } } }, [
-                    _vm._v("Register")
-                  ])
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.$auth.check()
-            ? _c("li", { staticClass: "pull-right" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        _vm.$auth.logout()
-                      }
-                    }
-                  },
-                  [_vm._v("Logout")]
-                )
-              ])
-            : _vm._e()
-        ])
-      ])
+      _vm._v(" " + _vm._s(_vm.$auth.user().name) + "\n    ")
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "panel-body" }, [
@@ -51302,13 +51229,13 @@ module.exports = function () {
             }
 
             data.params.state.rememberMe = data.rememberMe === true;
-            data.params.state = encodeURIComponent(JSON.stringify(data.params.state));
+            data.params.state = JSON.stringify(data.params.state);
 
             for (key in data.params) {
-                params += '&' + key + '=' + data.params[key];
+                params += '&' + key + '=' + encodeURIComponent(data.params[key]);
             }
 
-            window.location = data.url + '?' + params;
+            window.location = data.url + '?' + params.substring(1);
         }
     }
 

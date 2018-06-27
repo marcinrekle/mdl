@@ -60,13 +60,14 @@ class LoginController extends Controller
                 'msg' => 'Invalid Credentials.'
             ], 400);
         }
+        //return response()->json($token);
         //$user = auth::user();
         return response()->json([
             'message' => 'Successfully logged in',
             //'user'   => $user,
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => 3600
+            //'access_token' => $token,
+            //'token_type' => 'bearer',
+            //'expires_in' => 3600
         ])->header('Authorization', "Bearer ".$token);
     }
 
