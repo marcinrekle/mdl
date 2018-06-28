@@ -27,25 +27,17 @@ class UserController extends Controller
         $roles = $roles->filter(function ($item) use ($permissions) {
             $srole = strtolower($item);
             return in_array($srole."-retrive", $permissions) || in_array($srole."-crud", $permissions);
-        });
+        })->all();
         //dump($roles);
         // get users with specific roles specified by perms
         /*$users = Role::whereIn('name',$roles)->with('users')->get()->pluck('users')->flatMap(function($values){
             return $values;
         });*/
         $relations = ['users','users.attrs', 'users.hours.drive', 'users.payments', 'users.roles'];
-        $users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users');
-        $users0 = $users->flatten();
-        $users1 = $users->flatten(1);
-        //dump([$users,$users1,$roles, $permissions]);
-        return response()->json([$users1,$roles, $permissions]);
-        dd();
-        dd('stop');
+        $users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users')->flatten()->all();
+        //dd([$users,$roles, $permissions]);
+        return response()->json(['users' => $users, 'roles' => $roles, 'permissions' => $permissions]);
         $usersAll = User::with($relations)->get();//get all active users
-        //$users2 = $users2->pluck('users');
-        //$users2 = $users2->merge($users2[0]->users,$users[1]->users);
-        //$users2 = $users2[1]->users;
-        //dd($users);
         //return view('user.index', compact('users'));
         return response()->json([$users,$usersAll, $relations, $permissions]);
     }
