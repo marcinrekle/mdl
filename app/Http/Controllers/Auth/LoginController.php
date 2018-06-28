@@ -95,7 +95,11 @@ class LoginController extends Controller
 
     public function user()
     {
-        $user = auth()->user();
+        $au = clone $user = auth()->user();
+        $au->load(['roles:id,name', 'roles.perms:id,name']);
+        //dd($au);
+        $user->role = $au->roles->pluck('name')->all();
+        $user->perms = $au->roles[0]->perms->pluck('name')->all();
         return response()->json([
             'status' => 'success',
             'data' => $user
