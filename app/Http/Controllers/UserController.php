@@ -34,7 +34,9 @@ class UserController extends Controller
             return $values;
         });*/
         $relations = ['users','users.attrs', 'users.hours.drive', 'users.payments', 'users.roles'];
-        $users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users')->flatten()->all();
+        $users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users')->flatten()->keyBy('id')->toArray();
+        //dd($users);
+        //$users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users')->flatten()->all();
         //dd([$users,$roles, $permissions]);
         return response()->json(['users' => $users, 'roles' => $roles, 'permissions' => $permissions]);
         $usersAll = User::with($relations)->get();//get all active users
