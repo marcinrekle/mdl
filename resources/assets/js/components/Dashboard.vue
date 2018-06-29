@@ -40,7 +40,7 @@
                     method: 'GET',
                 })
                 .then((res) => {
-                    this.users = res.data;
+                    this.users = res.data.users;
                 }, (res) => {
                     console.log('error'+res);
                 });

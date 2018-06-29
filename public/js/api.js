@@ -50409,7 +50409,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				url: 'user',
 				method: 'GET'
 			}).then(function (res) {
-				_this.users = res.data;
+				_this.users = res.data.users;
 			}, function (res) {
 				console.log('error' + res);
 			});
@@ -50929,10 +50929,10 @@ module.exports = function () {
         return JSON.parse(decodeURIComponent(data));
     }
 
-    function _check(role) {
+    function _check(role, key) {
         if (this.watch.authenticated === true) {
             if (role) {
-                return __utils.compare(role, this.watch.data[this.options.rolesVar]);
+                return __utils.compare(role, this.watch.data[key || this.options.rolesVar]);
             }
 
             return true;
@@ -51409,8 +51409,8 @@ module.exports = function () {
         return this.watch.data || {};
     };
 
-    Auth.prototype.check = function (role) {
-        return this.options.check.call(this, role);
+    Auth.prototype.check = function (role, key) {
+        return this.options.check.call(this, role, key);
     };
 
     Auth.prototype.impersonating = function () {
