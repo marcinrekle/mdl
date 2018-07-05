@@ -2,8 +2,12 @@ import VueRouter from 'vue-router';
 
 let routes = [
     {
+        name: 'home',
         path: '/',
-        component: require('./components/Example.vue')
+        component: require('./components/auth/Login.vue'),
+        meta: {
+            auth: false
+        }
     },
     {
         path: '/register',
@@ -21,6 +25,7 @@ let routes = [
         }
     },
     {
+        name: 'dashboard',
         path: '/dashboard',
         component: require('./components/Dashboard.vue'),
         meta: {
