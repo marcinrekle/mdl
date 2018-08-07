@@ -20,6 +20,13 @@ class Role extends EntrustRole
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['pivot'];
+
+    /**
 	 * Get the route key for the model.
 	 *
 	 * @return string

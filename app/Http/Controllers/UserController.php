@@ -22,26 +22,43 @@ class UserController extends Controller
      */
     public function index()
     {
+        $fields = Field::all()->keyBy('order'); 
         $permissions = Auth::user()->roles[0]->perms->pluck('name')->all();
-        $roles = Role::all()->pluck('name');
+        $roles = Role::all();
         $roles = $roles->filter(function ($item) use ($permissions) {
-            $srole = strtolower($item);
+            $srole = strtolower($item->name);
             return in_array($srole."-retrive", $permissions) || in_array($srole."-crud", $permissions);
-        })->all();
-        //dump($roles);
+        });
+        $rolesNames = $roles->pluck('name');
         // get users with specific roles specified by perms
         /*$users = Role::whereIn('name',$roles)->with('users')->get()->pluck('users')->flatMap(function($values){
             return $values;
         });*/
         $relations = ['users','users.attrs', 'users.hours.drive', 'users.payments', 'users.roles'];
-        $users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users')->flatten()->keyBy('id')->toArray();
+        $users = Role::whereIn('name',$rolesNames)->with($relations)->get()->pluck('users')->flatten()->keyBy('id')->values();
         //dd($users);
         //$users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users')->flatten()->all();
         //dd([$users,$roles, $permissions]);
-        return response()->json(['users' => $users, 'roles' => $roles, 'permissions' => $permissions]);
+        return response()->json(['users' => $users, 'roles' => $roles, 'permissions' => $permissions, 'fields' => $fields]);
         $usersAll = User::with($relations)->get();//get all active users
         //return view('user.index', compact('users'));
         return response()->json([$users,$usersAll, $relations, $permissions]);
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        $allow_rules = ['required','unique','min','max'];
+        return Validator::make($data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$data['id'],
+            'password' => 'sometimes|required|min:6',
+        ]);
     }
 
     /**
@@ -62,7 +79,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $this->validator($data)->validate();
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'avatar' => public_path().'/img/defaultUser.png',
+            'confirm_code' => str_random(32),
+            'status' => $data['status'],
+        ]);
+        $values = $data['attrs']['values'];
+        $values = array_map(function($v){
+            return $v ?: '';
+        },$values);
+        $user->attrs()->create(['values' => $values]);
+        $role = Role::whereName($data['roles'][0]['name'])->first();
+        $user->attachRole($role);
+        return response()->json(['user' => $user,'msg' => 'Dodano nowego użytkownika']);
     }
 
     /**
@@ -262,18 +296,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         $data = $request->all();
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users,id',
-        ]);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
-        $user = User::findOrFail($id)->load('attrs');
-        //dump($user);
+        $this->validator($data)->validate();
+        $user->load('attrs');
         $user->fill($data);
+        $user->attrs->fill($data['attrs']);//add ->save() 
+        return response()->json([$data,$user]);
         $user->attrs->fill($data)->save();
+        //dump($user);
         //$user->attrs['values'] = $data['values'];
         //$user->attrs->save();
         //dd($user);

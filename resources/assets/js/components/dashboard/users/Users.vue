@@ -2,10 +2,23 @@
 	<div id="users">
 		<div class="card">
     		<div class="card-header">
-    		    <h1>Dash</h1>
-    		    <b>Username:</b> {{ $auth.user().name }}
-    		    </div>
+    		    <h3 class="card-title">Użytkownicy
+    		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showUserEditForm()"><i class="fa fa-user-plus"></i></button>
+    		    </h3>
+    		</div>
     		<div class="card-body">
+    			<div class="input-group mb-3">
+  					<div class="btn-group">
+    					<button 
+    						v-for="role in roles"
+    						:class="['btn', roleShow[role.name] ? 'btn-success' : 'btn-danger']" 
+    						@click="roleShow[role.name] = roleShow[role.name] ? 0 : 1"
+    						type="button"
+    					>
+    							{{role.display_name}}
+    					</button>
+  					</div>
+				</div>
     		    <table class="table table-striped">
     		        <tr>
     		            <th>Id</th>
@@ -17,6 +30,8 @@
     		        <tr 
     		            v-for="user in users" 
     		            :key="user.id"
+    		            v-show="roleShow[user.roles[0].name]"
+    		            :role="roleShow[user.roles[0].name]"
     		        >
     		            <td>{{ user.id }}</td>
     		            <td>{{ user.name }}</td>
@@ -34,7 +49,7 @@
     		    </table>
     		</div>
 		</div>
-		<UserEditForm v-show="ShowUserEditForm" @close="ShowUserEditForm = false" />	
+		<UserEditForm  ref="UserEditForm" v-show="ShowUserEditForm" @close="closeUserEditForm" />	
 	</div>
 </template>
 <script>
@@ -46,7 +61,10 @@
 		data() {
 			return {
 				users: [],
-				ShowUserEditForm : false
+				fields: [],
+				roles: [],
+				ShowUserEditForm : false,
+				roleShow : {'Su' : 0,'Admin' : 0,'Instructor' : 0,'Officce' : 0,'Student' : 1, }
 			}
 		},
 		mounted() {
@@ -60,12 +78,14 @@
                 })
                 .then((res) => {
                     this.users = res.data.users;
+                    this.fields = res.data.fields;
+                    this.roles = res.data.roles;
                 }, (res) => {
-                    console.log('error'+res);
+                    console.log('error '+res);
                 });
 			},
             deleteUser(user) {
-                let confirmed = confirm('Skasowac '+user.name+' ?');
+                let confirmed = confirm('Usunąć '+user.name+' ?');
                 if(confirmed){
                     this.$http({
                         url: 'user/'+user.id,
@@ -80,14 +100,21 @@
                 }
             },
             showUserEditForm(user){
-                let cuser = this.$children[0].user;
-                console.log(cuser);
-                console.log(user);
-                for(let key in cuser) {
-                    cuser[key] = (key == 'attrs' && user[key]!=null ? user[key].values : user[key]);
+            	console.log(user);
+                if(user != undefined){
+					this.$refs.UserEditForm.userCached = Object.assign({},user);
+					this.$refs.UserEditForm.user = user;
+                	this.$refs.UserEditForm.add = false;
+                }else{
+                	this.$refs.UserEditForm.user = Object.assign({},this.$refs.UserEditForm.userOriginal);
+                	this.$refs.UserEditForm.add = true;
                 }
-                console.log(cuser);
                 this.ShowUserEditForm = true;
+                $('body').addClass('modal-open');
+            },
+            closeUserEditForm(){
+            	this.ShowUserEditForm = false;
+                $('body').removeClass('modal-open');
             }
         }
 	}
