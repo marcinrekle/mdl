@@ -52014,31 +52014,37 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "payment_for" } }),
+                  _c("label", { attrs: { for: "payment_for" } }, [
+                    _vm._v("Typ płatności")
+                  ]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.payment.date,
-                        expression: "payment.date"
+                        value: _vm.payment.payment_for,
+                        expression: "payment.payment_for"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: {
                       type: "name",
-                      id: "date",
+                      id: "payment_for",
                       placeholder: "",
                       required: ""
                     },
-                    domProps: { value: _vm.payment.date },
+                    domProps: { value: _vm.payment.payment_for },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.payment, "date", $event.target.value)
+                        _vm.$set(
+                          _vm.payment,
+                          "payment_for",
+                          $event.target.value
+                        )
                       }
                     }
                   })
