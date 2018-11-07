@@ -68,9 +68,9 @@
 </template>
 <script>
     export default{
-		data() {
-			return {
-				user: {
+        data() {
+            return {
+                user: {
                     id:'',
                     name:'',
                     email:'',
@@ -85,18 +85,18 @@
                 add: true,
                 userOriginal: '',
                 userCached: ''
-			}
-		},
-		mounted() {
+            }
+        },
+        mounted() {
             this.userOriginal = this.user;
         },
-		methods: {
+        methods: {
             close(){
                 this.resetForm();
                 this.$emit('close');
             },
             resetForm(){
-                this.user = this.add ?  {Object.assign({},this.userOriginal)} : Object.assign({},this.userCached);
+                this.user = this.add ?  Object.assign({},this.userOriginal) : Object.assign({},this.userCached);
             },
             submitForm(){
                 console.log('submitForm');
@@ -126,8 +126,8 @@
                     console.log('error'+res);
                 });
             }
-		}
-	}
+        }
+    }
 </script>
 <style>
     .modal {
