@@ -29,7 +29,7 @@
                         <li><a href="{{ url('user/student') }}">Kursanci</a></li>
                         <li><a href="{{ url('user/instructor') }}">Instruktorzy</a></li>
                         <li><a href="{{ url('user/officce') }}">Pracownicy biurowi</a></li>
-                        <li><a href="{{ url('user/admin') }}">Admini</a></li>
+                        <li><a href="{{ url('user/admin') }}">Administratorzy</a></li>
                     </ul>
                 </li>
                 <li><a href="{{route('drive.index')}}">Jazdy</a></li>
