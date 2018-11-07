@@ -38,11 +38,17 @@
     		            <td>{{ user.email }}</td>
     		            <td v-for="role in user.roles">{{ role.display_name }}</td>
     		            <td>
-    		                <button type="button" class="btn btn-sm btn-primary" @click="showUserEditForm(user)">
+    		                <button  v-if="$auth.check(['user-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showUserEditForm(user)">
     		                    <i class="fa fa-edit"></i>
     		                </button>
-    		                <button type="button" class="btn btn-sm btn-danger" @click="deleteUser(user)">
+    		                <button  v-if="$auth.check(['user-crud','user-delete',user.roles[0].name+'-crud'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteUser(user)">
     		                    <i class="fa fa-trash"></i>
+    		                </button>
+    		                <button  v-if="$auth.check(['payment-crud','payment-add'],'perms') && user.roles[0].name=='Student'" type="button" class="btn btn-sm btn-success" title="Dodaj płatność" @click="showPaymentAddEditForm(user)">
+    		                    <i class="fa fa-dollar"></i>
+    		                </button>
+    		                <button  v-if="$auth.check(['drive-crud','drive-add'],'perms') && (user.roles[0].name=='Student' || user.roles[0].name=='Instructor' )" type="button" class="btn btn-sm btn-success" title="Dodaj jazdę" @click="alert('a')">
+    		                    <i class="fa fa-car"></i>
     		                </button>
     		            </td>
     		        </tr>
@@ -50,13 +56,16 @@
     		</div>
 		</div>
 		<UserEditForm  ref="UserEditForm" v-show="ShowUserEditForm" @close="closeUserEditForm" />	
+		<PaymentAddEditForm  ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
 	</div>
 </template>
 <script>
 	import UserEditForm from './UserEditForm.vue';
+	import PaymentAddEditForm from '../payments/PaymentAddEditForm.vue';
 	export default{
 		components: {
 			UserEditForm,
+			PaymentAddEditForm,
 		},
 		data() {
 			return {
@@ -64,6 +73,7 @@
 				fields: [],
 				roles: [],
 				ShowUserEditForm : false,
+				ShowPaymentAddEditForm : false,
 				roleShow : {'Su' : 0,'Admin' : 0,'Instructor' : 0,'Officce' : 0,'Student' : 1, }
 			}
 		},
@@ -115,7 +125,20 @@
             closeUserEditForm(){
             	this.ShowUserEditForm = false;
                 $('body').removeClass('modal-open');
-            }
+            },
+            showPaymentAddEditForm(user){
+            	console.log(user);
+                this.$refs.PaymentAddEditForm.user = user;
+                this.$refs.PaymentAddEditForm.payment.user_id = user.id;
+                this.ShowPaymentAddEditForm = true;
+                $('body').addClass('modal-open');
+            },
+            closePaymentAddEditForm(){
+            	this.ShowPaymentAddEditForm = false;
+                $('body').removeClass('modal-open');
+            },
+            showUserProfile(){},
+            closeUserProfile(){},
         }
 	}
 </script>
