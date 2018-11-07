@@ -17,8 +17,8 @@
                             <input type="number" id="amount" class="form-control" v-model="payment.amount" required>
                         </div>
                         <div class="form-group">
-                            <label for="date">Data wpłaty</label>
-                            <input type="date" id="date" class="form-control" v-model="payment.date" required>
+                            <label for="payment_date">Data wpłaty</label>
+                            <input type="date" id="payment_date" class="form-control" v-model="payment.payment_date" required>
                         </div>
                         <div class="form-group">
                             <label for="payment_for">Typ płatności</label>
