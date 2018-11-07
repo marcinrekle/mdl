@@ -51801,6 +51801,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -51811,7 +51814,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             payment: {
                 id: '',
-                payment_for: '',
+                payment_for: 'course',
                 payment_date: '',
                 user_id: '',
                 amount: ''
@@ -51962,12 +51965,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: {
-                      type: "name",
-                      id: "amount",
-                      placeholder: "100",
-                      required: ""
-                    },
+                    attrs: { type: "number", id: "amount", required: "" },
                     domProps: { value: _vm.payment.amount },
                     on: {
                       input: function($event) {
@@ -51995,12 +51993,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: {
-                      type: "name",
-                      id: "date",
-                      placeholder: "",
-                      required: ""
-                    },
+                    attrs: { type: "date", id: "date", required: "" },
                     domProps: { value: _vm.payment.date },
                     on: {
                       input: function($event) {
@@ -52018,36 +52011,53 @@ var render = function() {
                     _vm._v("Typ płatności")
                   ]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.payment.payment_for,
-                        expression: "payment.payment_for"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      type: "name",
-                      id: "payment_for",
-                      placeholder: "",
-                      required: ""
-                    },
-                    domProps: { value: _vm.payment.payment_for },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.payment.payment_for,
+                          expression: "payment.payment_for"
                         }
-                        _vm.$set(
-                          _vm.payment,
-                          "payment_for",
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        name: "payment_for",
+                        id: "payment_for",
+                        required: ""
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.payment,
+                            "payment_for",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
                       }
-                    }
-                  })
+                    },
+                    [
+                      _c("option", { attrs: { value: "course" } }, [
+                        _vm._v("Kurs")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "doctor" } }, [
+                        _vm._v("Lekarz")
+                      ])
+                    ]
+                  )
                 ]),
                 _vm._v(" "),
                 _c(
