@@ -49,7 +49,8 @@ class PaymentController extends Controller
         $validator = $this->validator($data);
         if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
         $payment = Payment::create($data);
-        return redirect()->route('payment.index')->withSuccess('Dodano płatność');
+        return response()->json(['payment' => $payment,'msg' => 'Dodano nową wpłate']);
+        //return redirect()->route('payment.index')->withSuccess('Dodano płatność');
     }
 
     /**
