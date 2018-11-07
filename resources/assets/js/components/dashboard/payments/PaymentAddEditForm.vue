@@ -92,9 +92,9 @@
             updatePayment(){
                 console.log('updateUser');
                 this.$http({
-                    url: 'user/'+this.user.id,
+                    url: 'payment/'+this.payment.id,
                     method: 'PATCH',
-                    data: this.user
+                    data: this.payment
                 }).then((res) => {
                     console.log(res.data);
                 }, (res) => {
