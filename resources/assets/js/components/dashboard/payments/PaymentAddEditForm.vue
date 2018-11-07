@@ -84,7 +84,7 @@
                     data: this.payment
                 }).then((res) => {
                     console.log(res.data);
-                    this.$parent.users.push(res.data.user);
+                    //add notify
                 }, (res) => {
                     console.log('error'+res);
                 });
