@@ -14,15 +14,18 @@
                         </div>
                         <div class="form-group">
                             <label for="amount">Kwota</label>
-                            <input type="name" id="amount" class="form-control" placeholder="100" v-model="payment.amount" required>
+                            <input type="number" id="amount" class="form-control" v-model="payment.amount" required>
                         </div>
                         <div class="form-group">
                             <label for="date">Data wpłaty</label>
-                            <input type="name" id="date" class="form-control" placeholder="" v-model="payment.date" required>
+                            <input type="date" id="date" class="form-control" v-model="payment.date" required>
                         </div>
                         <div class="form-group">
                             <label for="payment_for">Typ płatności</label>
-                            <input type="name" id="payment_for" class="form-control" placeholder="" v-model="payment.payment_for" required>
+                            <select name="payment_for" id="payment_for" class="form-control" v-model="payment.payment_for" required>
+                                <option value="course">Kurs</option>
+                                <option value="doctor">Lekarz</option>
+                            </select>
                         </div>
                         <button 
                             type="submit" 
@@ -48,7 +51,7 @@
                 },
                 payment: {
                     id:'',
-                    payment_for:'',
+                    payment_for:'course',
                     payment_date:'',
                     user_id:'',
                     amount:'',
