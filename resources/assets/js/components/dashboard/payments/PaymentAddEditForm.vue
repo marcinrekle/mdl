@@ -21,8 +21,8 @@
                             <input type="name" id="date" class="form-control" placeholder="" v-model="payment.date" required>
                         </div>
                         <div class="form-group">
-                            <label for="payment_for"></label>
-                            <input type="name" id="date" class="form-control" placeholder="" v-model="payment.date" required>
+                            <label for="payment_for">Typ płatności</label>
+                            <input type="name" id="payment_for" class="form-control" placeholder="" v-model="payment.payment_for" required>
                         </div>
                         <button 
                             type="submit" 
