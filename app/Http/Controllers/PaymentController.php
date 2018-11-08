@@ -20,6 +20,7 @@ class PaymentController extends Controller
     {
         $payments = Payment::with('user')->get()->sortBy('payment_date');
         $costNames = $this->getCostNames();
+        return response()->json(['payments' => $payments, 'costNames' => $costNames]);
         return view('payment.index', compact('payments','costNames'));
     }
 
