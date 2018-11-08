@@ -31,7 +31,15 @@ let routes = [
         meta: {
             auth: true
         }
-    }
+    },
+    {
+        name: 'payment',
+        path: '/payment',
+        component: require('./components/dashboard/payments/Payments.vue'),
+        meta: {
+            auth: true
+        }
+    },
 ];
 
 export default new VueRouter({
