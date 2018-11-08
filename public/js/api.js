@@ -50402,6 +50402,13 @@ var routes = [{
     meta: {
         auth: true
     }
+}, {
+    name: 'payment',
+    path: '/payment',
+    component: __webpack_require__(92),
+    meta: {
+        auth: true
+    }
 }];
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -50735,8 +50742,6 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_users_Users_vue__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_users_Users_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__dashboard_users_Users_vue__);
-//
-//
 //
 //
 //
@@ -51841,8 +51846,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             console.log('submitForm');
         },
         storePayment: function storePayment() {
-            var _this = this;
-
             console.log('storePayment');
             this.$http({
                 url: 'payment',
@@ -51850,7 +51853,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 data: this.payment
             }).then(function (res) {
                 console.log(res.data);
-                _this.$parent.users.push(res.data.user);
+                //add notify
             }, function (res) {
                 console.log('error' + res);
             });
@@ -51858,9 +51861,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         updatePayment: function updatePayment() {
             console.log('updateUser');
             this.$http({
-                url: 'user/' + this.user.id,
+                url: 'payment/' + this.payment.id,
                 method: 'PATCH',
-                data: this.user
+                data: this.payment
             }).then(function (res) {
                 console.log(res.data);
             }, function (res) {
@@ -51979,7 +51982,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "date" } }, [
+                  _c("label", { attrs: { for: "payment_date" } }, [
                     _vm._v("Data wpłaty")
                   ]),
                   _vm._v(" "),
@@ -51988,19 +51991,23 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.payment.date,
-                        expression: "payment.date"
+                        value: _vm.payment.payment_date,
+                        expression: "payment.payment_date"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "date", id: "date", required: "" },
-                    domProps: { value: _vm.payment.date },
+                    attrs: { type: "date", id: "payment_date", required: "" },
+                    domProps: { value: _vm.payment.payment_date },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.payment, "date", $event.target.value)
+                        _vm.$set(
+                          _vm.payment,
+                          "payment_date",
+                          $event.target.value
+                        )
                       }
                     }
                   })
@@ -52351,15 +52358,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "main",
-    {
-      staticClass: "col-md-9 ml-sm-auto col-lg-10 pt-3 px-4",
-      attrs: { role: "main" }
-    },
-    [_c("users")],
-    1
-  )
+  return _c("users")
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -52433,7 +52432,15 @@ var render = function() {
       [
         _vm.$auth.check() ? _c("sideBar") : _vm._e(),
         _vm._v(" "),
-        _c("router-view")
+        _c(
+          "main",
+          {
+            staticClass: "col-md-9 ml-sm-auto col-lg-10 pt-3 px-4",
+            attrs: { role: "main" }
+          },
+          [_c("router-view")],
+          1
+        )
       ],
       1
     )
@@ -53794,6 +53801,354 @@ module.exports = {
     }
 
 };
+
+/***/ }),
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(93)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(95)
+/* template */
+var __vue_template__ = __webpack_require__(96)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/dashboard/payments/Payments.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-41e698ed", Component.options)
+  } else {
+    hotAPI.reload("data-v-41e698ed", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(94);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("37291cfe", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-41e698ed\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Payments.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-41e698ed\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Payments.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 95 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__PaymentAddEditForm_vue__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__PaymentAddEditForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__PaymentAddEditForm_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        PaymentAddEditForm: __WEBPACK_IMPORTED_MODULE_0__PaymentAddEditForm_vue___default.a
+    },
+    data: function data() {
+        return {
+            payments: [],
+            costNames: [],
+            ShowPaymentAddEditForm: false
+        };
+    },
+    mounted: function mounted() {
+        this.getPayments();
+    },
+
+    methods: {
+        getPayments: function getPayments() {
+            var _this = this;
+
+            this.$http({
+                url: 'payment',
+                method: 'GET'
+            }).then(function (res) {
+                _this.payments = res.data.payments;
+                _this.costNames = res.data.costNames;
+            }, function (res) {
+                console.log('error ' + res);
+            });
+        },
+        showPaymentAddEditForm: function showPaymentAddEditForm(payment) {
+            console.log(payment);
+            //this.$refs.PaymentAddEditForm.user = payment.user;
+            this.$refs.PaymentAddEditForm.payment = payment;
+            this.ShowPaymentAddEditForm = true;
+            $('body').addClass('modal-open');
+        },
+        closePaymentAddEditForm: function closePaymentAddEditForm() {
+            this.ShowPaymentAddEditForm = false;
+            $('body').removeClass('modal-open');
+        }
+    }
+});
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { attrs: { id: "payments" } },
+    [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("h3", { staticClass: "card-title" }, [
+            _vm._v("Lista płatności\n    \t\t    \t"),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-sm btn-success float-right",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.showPaymentAddEditForm()
+                  }
+                }
+              },
+              [_c("i", { staticClass: "fa fa-user-plus" })]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "table",
+            { staticClass: "table table-striped" },
+            [
+              _vm._m(0),
+              _vm._v(" "),
+              _vm._l(_vm.payments, function(payment) {
+                return _c("tr", { key: payment.id }, [
+                  _c("td", [_vm._v(_vm._s(payment.id))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(payment.user_id))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(payment.amount))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(payment.payment_date))]),
+                  _vm._v(" "),
+                  _c("td"),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm.$auth.check(["payment-crud"], "perms")
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-sm btn-primary",
+                            attrs: { type: "button", title: "Edytuj" },
+                            on: {
+                              click: function($event) {
+                                _vm.showPaymentAddEditForm(payment)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fa fa-edit" })]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.$auth.check(["payment-crud", "payment-delete"], "perms")
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-sm btn-danger",
+                            attrs: { type: "button", title: "Usuń" },
+                            on: {
+                              click: function($event) {
+                                _vm.deletePayment(payment)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fa fa-trash" })]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.$auth.check(["payment-crud", "payment-add"], "perms")
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-sm btn-success",
+                            attrs: {
+                              type: "button",
+                              title: "Dodaj płatność dla payment.user_id"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.showPaymentAddEditForm(payment)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fa fa-dollar" })]
+                        )
+                      : _vm._e()
+                  ])
+                ])
+              })
+            ],
+            2
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("PaymentAddEditForm", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.ShowPaymentAddEditForm,
+            expression: "ShowPaymentAddEditForm"
+          }
+        ],
+        ref: "PaymentAddEditForm",
+        on: { close: _vm.closePaymentAddEditForm }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("Id")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Płatnik")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Kwota")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Data")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Akcje")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-41e698ed", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
