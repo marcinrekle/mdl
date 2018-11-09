@@ -71,7 +71,7 @@
                 this.$emit('close');
             },
             resetForm(){
-                this.user = this.add ?  Object.assign({},this.userOriginal) : Object.assign({},this.userCached);
+                this.user = this.add ?  Object.assign({},this.paymentOriginal) : Object.assign({},this.paymentCached);
             },
             submitForm(){
                 console.log('submitForm');
@@ -90,10 +90,10 @@
                 });
             },
             updatePayment(){
-                console.log('updateUser');
+                console.log('updatePayment');
                 this.$http({
                     url: 'payment/'+this.payment.id,
-                    method: 'PATCH',
+                    method: 'PUT',
                     data: this.payment
                 }).then((res) => {
                     console.log(res.data);

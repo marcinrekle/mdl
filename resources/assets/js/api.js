@@ -13,6 +13,7 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import VueRouter from 'vue-router';
+import store from './store';
 import VueAxios from 'vue-axios';
 
 import router from './routes.js';
@@ -36,5 +37,10 @@ Vue.use(require('@websanova/vue-auth'), {
 });
 App.router = Vue.router;
 
-new Vue(App).$mount('#app');
+new Vue({
+  store, // inject store to all children
+  el: '#app',
+  render: h => h(App)
+})
+/*new Vue({App, store}).$mount('#app');*/
 

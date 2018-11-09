@@ -3,7 +3,7 @@
 		<div class="sidebar-sticky">
 			<ul class="nav flex-column">
 				<li class="nav-item" v-for="(link,index) in sidebarLinks">
-					<router-link :to="link.name" class="nav-link">
+					<router-link :to="link.path" class="nav-link">
 						<i :class="link.icon"></i>
 						{{ link.name }}
 					</router-link>
@@ -18,14 +18,19 @@
 			return {
 				sidebarLinks : [
     				{
-      					name: 'Dashboard',
+      					name: 'Panel główny',
       					icon: 'fa fa-tachometer',
       					path: '/dashboard'
     				},
     				{
-      					name: 'Users',
+      					name: 'Użytkownicy',
       					icon: 'fa fa-users',
-      					path: '/users'
+      					path: '/user'
+    				},
+    				{
+      					name: 'Płatności',
+      					icon: 'fa fa-dollar',
+      					path: '/payment'
     				},
   				]
 			}

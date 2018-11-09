@@ -90,6 +90,7 @@
                     this.users = res.data.users;
                     this.fields = res.data.fields;
                     this.roles = res.data.roles;
+                    this.$store.commit('loadUsers', res.data.users);
                 }, (res) => {
                     console.log('error '+res);
                 });

@@ -90,9 +90,11 @@ class PaymentController extends Controller
     {
         $data = $request->all();
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) return response()->json(['payment' => $payment,'msg' => 'Wystąpiły błędy','error' => $validator]);
         $payment->update($data);
-        return redirect()->back();
+        //return redirect()->back();
+        return response()->json(['payment' => $payment,'msg' => 'Zaktualizowano wpłatę']);
     }
 
     /**

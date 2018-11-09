@@ -137,7 +137,8 @@ class UserController extends Controller
     public function show_role($role)
     {
         $users = Role::whereName($role)->with('users.attrs')->get()[0]['users']->where('status','active');
-        return view('user.role_show', compact('users','role'));
+        return response()->json(['users' => $users, 'role' => $role,]);
+        //return view('user.role_show', compact('users','role'));
     }
     
     public function student_hours($students)
