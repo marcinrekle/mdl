@@ -21,10 +21,9 @@
     		            :key="payment.id"
     		        >
     		            <td>{{ payment.id }}</td>
-    		            <td>{{ payment.user_id }}</td>
+    		            <td>{{ payment.user.name }}</td>
                         <td>{{ payment.amount }}</td>
     		            <td>{{ payment.payment_date }}</td>
-    		            <td></td>
     		            <td>
                             <button  v-if="$auth.check(['payment-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showPaymentAddEditForm(payment)">
                                 <i class="fa fa-edit"></i>
@@ -32,7 +31,7 @@
                             <button  v-if="$auth.check(['payment-crud','payment-delete'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deletePayment(payment)">
                                 <i class="fa fa-trash"></i>
                             </button>
-    		                <button  v-if="$auth.check(['payment-crud','payment-add'],'perms')" type="button" class="btn btn-sm btn-success" title="Dodaj płatność dla payment.user_id" @click="showPaymentAddEditForm(payment)">
+    		                <button  v-if="$auth.check(['payment-crud','payment-add'],'perms')" type="button" class="btn btn-sm btn-success" :title="'Dodaj płatność dla ' + payment.user.name" @click="showPaymentAddEditForm(payment)">
     		                    <i class="fa fa-dollar"></i>
     		                </button>
     		            </td>
@@ -40,7 +39,7 @@
     		    </table>
     		</div>
 		</div>
-		<PaymentAddEditForm  ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
+		<PaymentAddEditForm  :students=this.students ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
 	</div>
 </template>
 <script>
@@ -54,10 +53,12 @@
                 payments: [],
                 costNames: [],
                 ShowPaymentAddEditForm: false,
+                students: [],
             }
         },
         mounted() {
             this.getPayments();
+            this.getStudents();
         },
         methods: {
             getPayments(){
@@ -72,11 +73,23 @@
                     console.log('error '+res);
                 });    
             },
+            getStudents(){
+                this.$http({
+                    url: 'user/student',
+                    method: 'GET',
+                })
+                .then((res) => {
+                    this.students = res.data.users;
+                }, (res) => {
+                    console.log('error '+res);
+                });    
+            },
             showPaymentAddEditForm(payment){
                 console.log(payment);
-                //this.$refs.PaymentAddEditForm.user = payment.user;
+                this.$refs.PaymentAddEditForm.user = payment.user;
                 this.$refs.PaymentAddEditForm.payment = payment;
                 this.ShowPaymentAddEditForm = true;
+                this.$refs.PaymentAddEditForm.add = false;
                 $('body').addClass('modal-open');
             },
             closePaymentAddEditForm(){
