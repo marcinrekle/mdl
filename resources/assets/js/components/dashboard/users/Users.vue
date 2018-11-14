@@ -77,23 +77,14 @@
 				roleShow : {'Su' : 0,'Admin' : 0,'Instructor' : 0,'Officce' : 0,'Student' : 1, }
 			}
 		},
-		mounted() {
-            this.getUsers();
+		created() {
+            this.$store.dispatch("fetchData", { self: this });
         },
         methods: {
-        	getUsers(){
-				this.$http({
-                    url: 'user',
-                    method: 'GET',
-                })
-                .then((res) => {
-                    this.users = res.data.users;
-                    this.fields = res.data.fields;
-                    this.roles = res.data.roles;
-                    this.$store.commit('loadUsers', res.data.users);
-                }, (res) => {
-                    console.log('error '+res);
-                });
+        	getData(){
+                this.users = this.$store.state.users;
+                this.fields = this.$store.state.fields;
+                this.roles = this.$store.state.roles;
 			},
             deleteUser(user) {
                 let confirmed = confirm('Usunąć '+user.name+' ?');
@@ -140,7 +131,7 @@
             },
             showUserProfile(){},
             closeUserProfile(){},
-        }
+        },
 	}
 </script>
 <style>
