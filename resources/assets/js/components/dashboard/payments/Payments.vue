@@ -6,8 +6,7 @@
     		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showPaymentAddEditForm()"><i class="fa fa-user-plus"></i></button>
     		    </h3>
     		</div>
-    		<div class="card-body">
-    			
+    		<div class="card-body">	
     		    <table class="table table-striped">
     		        <tr>
     		            <th>Id</th>
@@ -39,10 +38,11 @@
     		    </table>
     		</div>
 		</div>
-		<PaymentAddEditForm  :students=this.students ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
+		<PaymentAddEditForm  :options="this.students" ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
 	</div>
 </template>
 <script>
+    import { mapState, mapGetters } from 'vuex';
     import PaymentAddEditForm from './PaymentAddEditForm.vue';
     export default{
         components: {
@@ -53,12 +53,18 @@
                 payments: [],
                 costNames: [],
                 ShowPaymentAddEditForm: false,
-                students: [],
+                //students: this.$store.getters.getUsersByRole('Student'),
+                //students: [],
             }
+        },
+        created() {
+            this.$store.state.users.length < 1 && this.$store.dispatch("fetchData", { self: this }) ;
+            //this.students = this.getUsersByRole('Student');
+            //this.getPayments();
         },
         mounted() {
             this.getPayments();
-            this.getStudents();
+            //this.getStudents();
         },
         methods: {
             getPayments(){
@@ -84,18 +90,34 @@
                     console.log('error '+res);
                 });    
             },
+            getStudents2(){
+                //this.students = this.$store.getters.getUsersByRole('Student');
+                this.students = getUsersByRole('Student');
+            },
             showPaymentAddEditForm(payment){
+                if(payment){
                 console.log(payment);
-                this.$refs.PaymentAddEditForm.user = payment.user;
-                this.$refs.PaymentAddEditForm.payment = payment;
-                this.ShowPaymentAddEditForm = true;
-                this.$refs.PaymentAddEditForm.add = false;
+                    this.$refs.PaymentAddEditForm.user = payment.user;
+                }else{
+                console.log(this.students);
+                    this.$refs.PaymentAddEditForm.user = this.students;
+                }
+                    this.$refs.PaymentAddEditForm.payment = payment;
+                    this.ShowPaymentAddEditForm = true;
+                    this.$refs.PaymentAddEditForm.add = false;
                 $('body').addClass('modal-open');
             },
             closePaymentAddEditForm(){
                 this.ShowPaymentAddEditForm = false;
                 $('body').removeClass('modal-open');
             },
+        },
+        computed : {
+            ...mapState([]),
+            ...mapGetters(['getUsersByRole']),
+            students(){
+                return this.getUsersByRole('Student').map(user => ({[user.id] : user.name})).reduce((obj1, obj2) => Object.assign(obj1, obj2), {});
+            }
         }
     }
 </script>

@@ -12,6 +12,11 @@ export default new Vuex.Store({
     users: [],
     fields: [],
     roles: [],
+    notifications: {
+    	error : [],
+    	success : [],
+    	info : [],
+    },
   },
   mutations,
   actions,

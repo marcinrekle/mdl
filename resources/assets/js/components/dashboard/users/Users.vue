@@ -60,6 +60,7 @@
 	</div>
 </template>
 <script>
+	import { mapState } from 'vuex';
 	import UserEditForm from './UserEditForm.vue';
 	import PaymentAddEditForm from '../payments/PaymentAddEditForm.vue';
 	export default{
@@ -69,9 +70,9 @@
 		},
 		data() {
 			return {
-				users: [],
-				fields: [],
-				roles: [],
+				//users: [],
+				//fields: [],
+				//roles: [],
 				ShowUserEditForm : false,
 				ShowPaymentAddEditForm : false,
 				roleShow : {'Su' : 0,'Admin' : 0,'Instructor' : 0,'Officce' : 0,'Student' : 1, }
@@ -82,7 +83,8 @@
         },
         methods: {
         	getData(){
-                this.users = this.$store.state.users;
+                this.users = this.$store.getters.getUsers;
+                //this.users = this.$store.state.users;
                 this.fields = this.$store.state.fields;
                 this.roles = this.$store.state.roles;
 			},
@@ -131,6 +133,12 @@
             },
             showUserProfile(){},
             closeUserProfile(){},
+        },
+        computed : {
+        	gusers() {
+        		this.$store.getters.getUsers;
+        	},
+        	...mapState(['users','fields','roles']),
         },
 	}
 </script>

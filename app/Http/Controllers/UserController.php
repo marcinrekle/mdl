@@ -36,6 +36,7 @@ class UserController extends Controller
         });*/
         $relations = ['users','users.attrs', 'users.hours.drive', 'users.payments', 'users.roles'];
         $users = Role::whereIn('name',$rolesNames)->with($relations)->get()->pluck('users')->flatten()->keyBy('id')->values();
+        $users = $users->sortBy('name')->values();
         //dd($users);
         //$users = Role::whereIn('name',$roles)->with($relations)->get()->pluck('users')->flatten()->all();
         //dd([$users,$roles, $permissions]);

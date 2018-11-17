@@ -18,7 +18,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::with('user')->get()->sortBy('payment_date');
+        $payments = Payment::with('user')->get()->sortByDesc('payment_date')->values();
         $costNames = $this->getCostNames();
         return response()->json(['payments' => $payments, 'costNames' => $costNames]);
         return view('payment.index', compact('payments','costNames'));
