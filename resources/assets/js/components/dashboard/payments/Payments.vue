@@ -6,8 +6,10 @@
     		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showPaymentAddEditForm()"><i class="fa fa-user-plus"></i></button>
     		    </h3>
     		</div>
-    		<div class="card-body">	
-    		    <table class="table table-striped">
+    		<div class="card-body">
+                <loading v-show="isLoading" loadingText="Ładowanie danych"></loading>
+                <h3 v-show="!isLoading && !payments">Brak użytkowników</h3>	
+    		    <table v-show="payments" class="table table-striped">
     		        <tr>
     		            <th>Id</th>
     		            <th>Płatnik</th>
@@ -96,15 +98,12 @@
             },
             showPaymentAddEditForm(payment){
                 if(payment){
-                console.log(payment);
+                    console.log(payment);
                     this.$refs.PaymentAddEditForm.user = payment.user;
-                }else{
-                console.log(this.students);
-                    this.$refs.PaymentAddEditForm.user = this.students;
-                }
                     this.$refs.PaymentAddEditForm.payment = payment;
-                    this.ShowPaymentAddEditForm = true;
                     this.$refs.PaymentAddEditForm.add = false;
+                }
+                this.ShowPaymentAddEditForm = true;
                 $('body').addClass('modal-open');
             },
             closePaymentAddEditForm(){
@@ -113,10 +112,14 @@
             },
         },
         computed : {
-            ...mapState([]),
-            ...mapGetters(['getUsersByRole']),
-            students(){
-                return this.getUsersByRole('Student').map(user => ({[user.id] : user.name})).reduce((obj1, obj2) => Object.assign(obj1, obj2), {});
+            ...mapState(['isLoading']),
+            ...mapGetters(['getUsersByRole','students']),
+            students1(){
+                //return this.getUsersByRole('Student').map(user => ({[user.id] : user.name})).reduce((obj1, obj2) => Object.assign(obj1, obj2), {});
+                return this.getUsersByRole('Student').map(user => ({'id' : user.id, 'name' : user.name}));
+            },
+            students2() {
+                return [{'id':2,'name':'Edek'},{'id':4,'name':'Edek2'},{'id':5,'name':'Edek2'},]
             }
         }
     }

@@ -26480,6 +26480,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_App_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_sideBar_vue__ = __webpack_require__(82);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_sideBar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_sideBar_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_Loading_vue__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_Loading_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_Loading_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_DeleteBtn_vue__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_DeleteBtn_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_DeleteBtn_vue__);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -26502,6 +26506,8 @@ __webpack_require__(21);
 
 
 
+
+
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_axios___default.a, axios);
 
@@ -26509,8 +26515,10 @@ axios.defaults.baseURL = 'http://mdl.test/api/';
 
 Vue.router = __WEBPACK_IMPORTED_MODULE_3__routes_js__["a" /* default */];
 
-var deleteBtn = Vue.component('delete-btn', __webpack_require__(87));
+//var deleteBtn = Vue.component('delete-btn', require('./components/Delete.vue'));
 Vue.component('sideBar', __WEBPACK_IMPORTED_MODULE_5__components_sideBar_vue___default.a);
+Vue.component('loading', __WEBPACK_IMPORTED_MODULE_6__components_Loading_vue___default.a);
+Vue.component('delete-btn', __WEBPACK_IMPORTED_MODULE_7__components_DeleteBtn_vue___default.a);
 
 Vue.use(__webpack_require__(90), {
   auth: __webpack_require__(94),
@@ -51386,6 +51394,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
   state: {
+    isLoading: false,
     users: [],
     fields: [],
     roles: [],
@@ -51415,6 +51424,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 	},
 	fetchRoles: function fetchRoles(state, roles) {
 		state.roles = roles;
+	},
+	setLoading: function setLoading(state, loading) {
+		state.isLoading = loading;
 	}
 });
 
@@ -51444,6 +51456,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
         var commit = _ref3.commit;
         var self = _ref4.self;
 
+        commit('setLoading', true);
         return new Promise(function (resolve, reject) {
             self.$http({
                 url: 'user',
@@ -51452,6 +51465,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
                 commit('fetchUsers', res.data.users);
                 commit('fetchFields', res.data.fields);
                 commit('fetchRoles', res.data.roles);
+                commit('setLoading', false);
                 resolve();
             }).catch(function (error) {
                 console.log(error.statusText);
@@ -51486,8 +51500,26 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 			});
 		};
 	},
-	getUsersByRole2: function getUsersByRole2(state) {
-		return function (role) {};
+	students: function students(state, getters) {
+		return getters.getUsersByRole('Student').map(function (user) {
+			return { 'id': user.id, 'name': user.name };
+		});
+	},
+	students2: function students2(state) {
+		console.log(state.users);
+		console.log(state.users.filter(function (user) {
+			return user.roles[0].name === 'Student';
+		}).map(function (user) {
+			return { 'id': user.id, 'name': user.name };
+		}));
+		return state.users.filter(function (user) {
+			return user.roles[0].name === 'Student';
+		}).map(function (user) {
+			return { 'id': user.id, 'name': user.name };
+		});
+	},
+	isLoading: function isLoading(state) {
+		return state.isLoading;
 	}
 });
 
@@ -51626,6 +51658,9 @@ module.exports = function listToStyles (parentId, list) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(6);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -51651,6 +51686,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -51665,15 +51702,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         login: function login() {
             var app = this;
+            this.$store.commit('setLoading', true);
             this.$auth.login({
                 data: {
                     email: app.email,
                     password: app.password,
                     _token: window.Laravel.csrfToken
                 },
-                success: function success() {},
+                success: function success() {
+                    this.$store.commit('setLoading', false);
+                },
                 error: function error() {
                     app.error = true;
+                    this.$store.commit('setLoading', false);
                 },
                 rememberMe: true,
                 redirect: '/dashboard',
@@ -51692,7 +51733,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         }
-    }
+    },
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['isLoading']))
 });
 
 /***/ }),
@@ -51792,9 +51834,21 @@ var render = function() {
             _c(
               "button",
               { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-              [_vm._v("Sign in")]
-            )
-          ]
+              [_vm._v("Zaloguj")]
+            ),
+            _vm._v(" "),
+            _c("loading", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.isLoading,
+                  expression: "isLoading"
+                }
+              ]
+            })
+          ],
+          1
         )
       ])
     ])
@@ -52058,6 +52112,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
 
 
 
@@ -52135,11 +52191,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         showUserProfile: function showUserProfile() {},
         closeUserProfile: function closeUserProfile() {}
     },
-    computed: _extends({
-        gusers: function gusers() {
-            this.$store.getters.getUsers;
-        }
-    }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['users', 'fields', 'roles']))
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['users', 'fields', 'roles', 'isLoading']), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['getUsersByRole', 'students']))
 });
 
 /***/ }),
@@ -52893,9 +52945,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        options: {}
+    },
     data: function data() {
         return {
             user: {
@@ -52909,7 +52963,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 user_id: '',
                 amount: ''
             },
-            options: [],
             error: [],
             add: true,
             paymentOriginal: '',
@@ -53007,37 +53060,9 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "name" } }, [
+                  _c("label", { attrs: { for: "user_id" } }, [
                     _vm._v("Imie Nazwisko")
                   ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.user.name,
-                        expression: "user.name"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      type: "name",
-                      id: "username",
-                      placeholder: "Jan Nowak",
-                      required: "",
-                      autofocus: ""
-                    },
-                    domProps: { value: _vm.user.name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.user, "name", $event.target.value)
-                      }
-                    }
-                  }),
                   _vm._v(" "),
                   _c(
                     "select",
@@ -53046,17 +53071,12 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.user.name,
-                          expression: "user.name"
+                          value: _vm.payment.user_id,
+                          expression: "payment.user_id"
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: {
-                        name: "user_id",
-                        id: "user_id",
-                        required: "",
-                        autofocus: ""
-                      },
+                      attrs: { name: "user_id", id: "user_id", required: "" },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -53068,8 +53088,8 @@ var render = function() {
                               return val
                             })
                           _vm.$set(
-                            _vm.user,
-                            "name",
+                            _vm.payment,
+                            "user_id",
                             $event.target.multiple
                               ? $$selectedVal
                               : $$selectedVal[0]
@@ -53078,11 +53098,9 @@ var render = function() {
                       }
                     },
                     _vm._l(_vm.options, function(option) {
-                      return _c(
-                        "option",
-                        { domProps: { value: _vm.student.id } },
-                        [_vm._v(_vm._s(_vm.student.name))]
-                      )
+                      return _c("option", { domProps: { value: option.id } }, [
+                        _vm._v(_vm._s(option.name))
+                      ])
                     })
                   )
                 ]),
@@ -53100,7 +53118,12 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "number", id: "amount", required: "" },
+                    attrs: {
+                      type: "number",
+                      id: "amount",
+                      required: "",
+                      autofocus: ""
+                    },
                     domProps: { value: _vm.payment.amount },
                     on: {
                       input: function($event) {
@@ -53270,160 +53293,216 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c("div", { staticClass: "input-group mb-3" }, [
+        _c(
+          "div",
+          { staticClass: "card-body" },
+          [
+            _c("loading", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.isLoading,
+                  expression: "isLoading"
+                }
+              ],
+              attrs: { loadingText: "Ładowanie danych" }
+            }),
+            _vm._v(" "),
             _c(
               "div",
-              { staticClass: "btn-group" },
-              _vm._l(_vm.roles, function(role) {
-                return _c(
-                  "button",
+              {
+                directives: [
                   {
-                    class: [
-                      "btn",
-                      _vm.roleShow[role.name] ? "btn-success" : "btn-danger"
-                    ],
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        _vm.roleShow[role.name] = _vm.roleShow[role.name]
-                          ? 0
-                          : 1
-                      }
-                    }
-                  },
-                  [
-                    _vm._v(
-                      "\n    \t\t\t\t\t\t\t" +
-                        _vm._s(role.display_name) +
-                        "\n    \t\t\t\t\t"
-                    )
-                  ]
-                )
-              })
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "table",
-            { staticClass: "table table-striped" },
-            [
-              _vm._m(0),
-              _vm._v(" "),
-              _vm._l(_vm.users, function(user) {
-                return _c(
-                  "tr",
-                  {
-                    directives: [
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.users,
+                    expression: "users"
+                  }
+                ],
+                staticClass: "input-group mb-3"
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "btn-group" },
+                  _vm._l(_vm.roles, function(role) {
+                    return _c(
+                      "button",
                       {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.roleShow[user.roles[0].name],
-                        expression: "roleShow[user.roles[0].name]"
-                      }
-                    ],
-                    key: user.id,
-                    attrs: { role: _vm.roleShow[user.roles[0].name] }
-                  },
-                  [
-                    _c("td", [_vm._v(_vm._s(user.id))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(user.name))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(user.email))]),
-                    _vm._v(" "),
-                    _vm._l(user.roles, function(role) {
-                      return _c("td", [_vm._v(_vm._s(role.display_name))])
-                    }),
-                    _vm._v(" "),
-                    _c("td", [
-                      _vm.$auth.check(["user-crud"], "perms")
-                        ? _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-sm btn-primary",
-                              attrs: { type: "button", title: "Edytuj" },
-                              on: {
-                                click: function($event) {
-                                  _vm.showUserEditForm(user)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-edit" })]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.$auth.check(
-                        [
-                          "user-crud",
-                          "user-delete",
-                          user.roles[0].name + "-crud"
+                        class: [
+                          "btn",
+                          _vm.roleShow[role.name] ? "btn-success" : "btn-danger"
                         ],
-                        "perms"
-                      )
-                        ? _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-sm btn-danger",
-                              attrs: { type: "button", title: "Usuń" },
-                              on: {
-                                click: function($event) {
-                                  _vm.deleteUser(user)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-trash" })]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.$auth.check(
-                        ["payment-crud", "payment-add"],
-                        "perms"
-                      ) && user.roles[0].name == "Student"
-                        ? _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-sm btn-success",
-                              attrs: {
-                                type: "button",
-                                title: "Dodaj płatność"
-                              },
-                              on: {
-                                click: function($event) {
-                                  _vm.showPaymentAddEditForm(user)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-dollar" })]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.$auth.check(["drive-crud", "drive-add"], "perms") &&
-                      (user.roles[0].name == "Student" ||
-                        user.roles[0].name == "Instructor")
-                        ? _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-sm btn-success",
-                              attrs: { type: "button", title: "Dodaj jazdę" },
-                              on: {
-                                click: function($event) {
-                                  _vm.alert("a")
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-car" })]
-                          )
-                        : _vm._e()
-                    ])
-                  ],
-                  2
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            _vm.roleShow[role.name] = _vm.roleShow[role.name]
+                              ? 0
+                              : 1
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n    \t\t\t\t\t\t\t" +
+                            _vm._s(role.display_name) +
+                            "\n    \t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  })
                 )
-              })
-            ],
-            2
-          )
-        ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "h3",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.isLoading && !_vm.users,
+                    expression: "!isLoading && !users"
+                  }
+                ]
+              },
+              [_vm._v("Brak użytkowników")]
+            ),
+            _vm._v(" "),
+            _c(
+              "table",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.users,
+                    expression: "users"
+                  }
+                ],
+                staticClass: "table table-striped"
+              },
+              [
+                _vm._m(0),
+                _vm._v(" "),
+                _vm._l(_vm.users, function(user) {
+                  return _c(
+                    "tr",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.roleShow[user.roles[0].name],
+                          expression: "roleShow[user.roles[0].name]"
+                        }
+                      ],
+                      key: user.id,
+                      attrs: { role: _vm.roleShow[user.roles[0].name] }
+                    },
+                    [
+                      _c("td", [_vm._v(_vm._s(user.id))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(user.name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(user.email))]),
+                      _vm._v(" "),
+                      _vm._l(user.roles, function(role) {
+                        return _c("td", [_vm._v(_vm._s(role.display_name))])
+                      }),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm.$auth.check(["user-crud"], "perms")
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-primary",
+                                attrs: { type: "button", title: "Edytuj" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.showUserEditForm(user)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-edit" })]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.$auth.check(
+                          [
+                            "user-crud",
+                            "user-delete",
+                            user.roles[0].name + "-crud"
+                          ],
+                          "perms"
+                        )
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-danger",
+                                attrs: { type: "button", title: "Usuń" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.deleteUser(user)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash" })]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.$auth.check(
+                          ["payment-crud", "payment-add"],
+                          "perms"
+                        ) && user.roles[0].name == "Student"
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-success",
+                                attrs: {
+                                  type: "button",
+                                  title: "Dodaj płatność"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    _vm.showPaymentAddEditForm(user)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-dollar" })]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.$auth.check(["drive-crud", "drive-add"], "perms") &&
+                        (user.roles[0].name == "Student" ||
+                          user.roles[0].name == "Instructor")
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-success",
+                                attrs: { type: "button", title: "Dodaj jazdę" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.alert("a")
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-car" })]
+                            )
+                          : _vm._e()
+                      ])
+                    ],
+                    2
+                  )
+                })
+              ],
+              2
+            )
+          ],
+          1
+        )
       ]),
       _vm._v(" "),
       _c("UserEditForm", {
@@ -53449,6 +53528,7 @@ var render = function() {
           }
         ],
         ref: "PaymentAddEditForm",
+        attrs: { options: this.students },
         on: { close: _vm.closePaymentAddEditForm }
       })
     ],
@@ -53588,7 +53668,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -53604,8 +53684,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PaymentAddEditForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__PaymentAddEditForm_vue__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
 //
 //
 //
@@ -53709,13 +53789,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             if (payment) {
                 console.log(payment);
                 this.$refs.PaymentAddEditForm.user = payment.user;
-            } else {
-                console.log(this.students);
-                this.$refs.PaymentAddEditForm.user = this.students;
+                this.$refs.PaymentAddEditForm.payment = payment;
+                this.$refs.PaymentAddEditForm.add = false;
             }
-            this.$refs.PaymentAddEditForm.payment = payment;
             this.ShowPaymentAddEditForm = true;
-            this.$refs.PaymentAddEditForm.add = false;
             $('body').addClass('modal-open');
         },
         closePaymentAddEditForm: function closePaymentAddEditForm() {
@@ -53723,13 +53800,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             $('body').removeClass('modal-open');
         }
     },
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])([]), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['getUsersByRole']), {
-        students: function students() {
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['isLoading']), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['getUsersByRole', 'students']), {
+        students1: function students1() {
+            //return this.getUsersByRole('Student').map(user => ({[user.id] : user.name})).reduce((obj1, obj2) => Object.assign(obj1, obj2), {});
             return this.getUsersByRole('Student').map(function (user) {
-                return _defineProperty({}, user.id, user.name);
-            }).reduce(function (obj1, obj2) {
-                return Object.assign(obj1, obj2);
-            }, {});
+                return { 'id': user.id, 'name': user.name };
+            });
+        },
+        students2: function students2() {
+            return [{ 'id': 2, 'name': 'Edek' }, { 'id': 4, 'name': 'Edek2' }, { 'id': 5, 'name': 'Edek2' }];
         }
     })
 });
@@ -53766,81 +53845,126 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c(
-            "table",
-            { staticClass: "table table-striped" },
-            [
-              _vm._m(0),
-              _vm._v(" "),
-              _vm._l(_vm.payments, function(payment) {
-                return _c("tr", { key: payment.id }, [
-                  _c("td", [_vm._v(_vm._s(payment.id))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(payment.user.name))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(payment.amount))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(payment.payment_date))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _vm.$auth.check(["payment-crud"], "perms")
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-sm btn-primary",
-                            attrs: { type: "button", title: "Edytuj" },
-                            on: {
-                              click: function($event) {
-                                _vm.showPaymentAddEditForm(payment)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-edit" })]
-                        )
-                      : _vm._e(),
+        _c(
+          "div",
+          { staticClass: "card-body" },
+          [
+            _c("loading", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.isLoading,
+                  expression: "isLoading"
+                }
+              ],
+              attrs: { loadingText: "Ładowanie danych" }
+            }),
+            _vm._v(" "),
+            _c(
+              "h3",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.isLoading && !_vm.payments,
+                    expression: "!isLoading && !payments"
+                  }
+                ]
+              },
+              [_vm._v("Brak użytkowników")]
+            ),
+            _vm._v(" "),
+            _c(
+              "table",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.payments,
+                    expression: "payments"
+                  }
+                ],
+                staticClass: "table table-striped"
+              },
+              [
+                _vm._m(0),
+                _vm._v(" "),
+                _vm._l(_vm.payments, function(payment) {
+                  return _c("tr", { key: payment.id }, [
+                    _c("td", [_vm._v(_vm._s(payment.id))]),
                     _vm._v(" "),
-                    _vm.$auth.check(["payment-crud", "payment-delete"], "perms")
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-sm btn-danger",
-                            attrs: { type: "button", title: "Usuń" },
-                            on: {
-                              click: function($event) {
-                                _vm.deletePayment(payment)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-trash" })]
-                        )
-                      : _vm._e(),
+                    _c("td", [_vm._v(_vm._s(payment.user.name))]),
                     _vm._v(" "),
-                    _vm.$auth.check(["payment-crud", "payment-add"], "perms")
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-sm btn-success",
-                            attrs: {
-                              type: "button",
-                              title: "Dodaj płatność dla " + payment.user.name
+                    _c("td", [_vm._v(_vm._s(payment.amount))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(payment.payment_date))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm.$auth.check(["payment-crud"], "perms")
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-primary",
+                              attrs: { type: "button", title: "Edytuj" },
+                              on: {
+                                click: function($event) {
+                                  _vm.showPaymentAddEditForm(payment)
+                                }
+                              }
                             },
-                            on: {
-                              click: function($event) {
-                                _vm.showPaymentAddEditForm(payment)
+                            [_c("i", { staticClass: "fa fa-edit" })]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.$auth.check(
+                        ["payment-crud", "payment-delete"],
+                        "perms"
+                      )
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-danger",
+                              attrs: { type: "button", title: "Usuń" },
+                              on: {
+                                click: function($event) {
+                                  _vm.deletePayment(payment)
+                                }
                               }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-dollar" })]
-                        )
-                      : _vm._e()
+                            },
+                            [_c("i", { staticClass: "fa fa-trash" })]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.$auth.check(["payment-crud", "payment-add"], "perms")
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-success",
+                              attrs: {
+                                type: "button",
+                                title: "Dodaj płatność dla " + payment.user.name
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.showPaymentAddEditForm(payment)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-dollar" })]
+                          )
+                        : _vm._e()
+                    ])
                   ])
-                ])
-              })
-            ],
-            2
-          )
-        ])
+                })
+              ],
+              2
+            )
+          ],
+          1
+        )
       ]),
       _vm._v(" "),
       _c("PaymentAddEditForm", {
@@ -53894,7 +54018,7 @@ if (false) {
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = null
+var __vue_script__ = __webpack_require__(97)
 /* template */
 var __vue_template__ = __webpack_require__(81)
 /* template functional */
@@ -54084,6 +54208,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -54118,23 +54248,48 @@ var render = function() {
       _c(
         "ul",
         { staticClass: "nav flex-column" },
-        _vm._l(_vm.sidebarLinks, function(link, index) {
-          return _c(
-            "li",
-            { staticClass: "nav-item" },
-            [
-              _c(
-                "router-link",
-                { staticClass: "nav-link", attrs: { to: link.path } },
-                [
-                  _c("i", { class: link.icon }),
-                  _vm._v("\n\t\t\t\t\t" + _vm._s(link.name) + "\n\t\t\t\t")
-                ]
-              )
-            ],
-            1
-          )
-        })
+        [
+          _vm._l(_vm.sidebarLinks, function(link, index) {
+            return _c(
+              "li",
+              { staticClass: "nav-item" },
+              [
+                _c(
+                  "router-link",
+                  { staticClass: "nav-link", attrs: { to: link.path } },
+                  [
+                    _c("i", { class: link.icon }),
+                    _vm._v(
+                      "\n\t\t\t\t\t\t" + _vm._s(link.name) + "\n\t\t\t\t\t"
+                    )
+                  ]
+                )
+              ],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _vm.$auth.check()
+              ? _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    on: {
+                      click: function($event) {
+                        _vm.$auth.logout()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-sign-out-alt" }),
+                    _vm._v("\n            Wyloguj\n          ")
+                  ]
+                )
+              : _vm._e()
+          ])
+        ],
+        2
       )
     ])
   ])
@@ -54150,104 +54305,9 @@ if (false) {
 }
 
 /***/ }),
-/* 87 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(88)
-/* template */
-var __vue_template__ = __webpack_require__(89)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/Delete.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-10614d22", Component.options)
-  } else {
-    hotAPI.reload("data-v-10614d22", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 88 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted delete.');
-    },
-
-    methods: {
-        deleteElem: function deleteElem(event) {
-            if (confirm('Czy na pewno chcesz usunąć ?')) $(event.target).parent().submit();
-        }
-    }
-});
-
-/***/ }),
-/* 89 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "a",
-    {
-      staticClass: "btn btn-danger",
-      attrs: { href: "#" },
-      on: { click: _vm.deleteElem }
-    },
-    [_vm._v("Usuń")]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-10614d22", module.exports)
-  }
-}
-
-/***/ }),
+/* 87 */,
+/* 88 */,
+/* 89 */,
 /* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -55322,6 +55382,272 @@ module.exports = {
     }
 
 };
+
+/***/ }),
+/* 97 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(6);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			//isLoading: false
+		};
+	},
+
+	computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['isLoading']))
+});
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(100)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(102)
+/* template */
+var __vue_template__ = __webpack_require__(99)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Loading.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3373ff55", Component.options)
+  } else {
+    hotAPI.reload("data-v-3373ff55", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "loading" } }, [
+    _c("h3", [
+      _vm._v("\n\t\t" + _vm._s(_vm.loadingText) + " \n\t\t"),
+      _c("i", { staticClass: "fa fa-spinner fa-spin" })
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3373ff55", module.exports)
+  }
+}
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(101);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("6719d2d3", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3373ff55\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Loading.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3373ff55\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Loading.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n#loading {\n\t\tdisplay:inline-block;\n  \t\tmargin-left: 30%;\n  \t\tmin-width: 33%;\n}\n.modal {\n\t\tdisplay:block;\n}\n#loading h3{\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 102 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: {
+		loadingText: ''
+	}
+});
+
+/***/ }),
+/* 103 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(104)
+/* template */
+var __vue_template__ = __webpack_require__(105)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/DeleteBtn.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-49281c0a", Component.options)
+  } else {
+    hotAPI.reload("data-v-49281c0a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 104 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Component mounted delete.');
+    },
+
+    methods: {
+        deleteElem: function deleteElem(event) {
+            if (confirm('Czy na pewno chcesz usunąć ?')) $(event.target).parent().submit();
+        }
+    }
+});
+
+/***/ }),
+/* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "a",
+    {
+      staticClass: "btn btn-danger",
+      attrs: { href: "#" },
+      on: { click: _vm.deleteElem }
+    },
+    [_vm._v("Usuń")]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-49281c0a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

@@ -8,4 +8,7 @@ export default {
 	fetchRoles(state, roles){
 		state.roles = roles;
 	},
+	setLoading(state, loading){
+		state.isLoading = loading;
+	}
 }

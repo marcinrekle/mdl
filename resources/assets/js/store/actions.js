@@ -14,15 +14,17 @@ export default {
         });
 	},
 	fetchData({ commit }, { self }) {
-		return new Promise((resolve, reject) => {
-    	   	self.$http({
-    	    	url: 'user',
-    	    	method: 'GET',
-    	    })
-    	    .then((res) => {
-    	        commit('fetchUsers', res.data.users);
-    	        commit('fetchFields', res.data.fields);
-    	        commit('fetchRoles', res.data.roles);
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'user',
+                method: 'GET',
+            })
+            .then((res) => {
+                commit('fetchUsers', res.data.users);
+                commit('fetchFields', res.data.fields);
+                commit('fetchRoles', res.data.roles);
+                commit('setLoading',false);
     	        resolve();
     	    })
     	    .catch((error) => {

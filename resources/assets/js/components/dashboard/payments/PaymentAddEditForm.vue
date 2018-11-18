@@ -9,15 +9,14 @@
                 <div class="modal-body">
                     <form class="form" autocomplete="off" @submit.prevent="add ? storePayment() : updatePayment()" method="post"> 
                         <div class="form-group">
-                            <label for="name">Imie Nazwisko</label>
-                            <input type="name" id="username" class="form-control" placeholder="Jan Nowak" v-model="user.name" required autofocus>
-                            <select name="user_id" id="user_id" class="form-control" v-model="user.name" required autofocus >
-                                <option v-for="option in options" :value="student.id">{{ student.name }}</option>
+                            <label for="user_id">Imie Nazwisko</label>
+                            <select name="user_id" id="user_id" class="form-control" v-model="payment.user_id" required>
+                                <option v-for="option in options" :value="option.id">{{ option.name }}</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="amount">Kwota</label>
-                            <input type="number" id="amount" class="form-control" v-model="payment.amount" required>
+                            <input type="number" id="amount" class="form-control" v-model="payment.amount" required autofocus />
                         </div>
                         <div class="form-group">
                             <label for="payment_date">Data wpłaty</label>
@@ -46,6 +45,9 @@
 </template>
 <script>
     export default{
+        props: {
+            options: {},
+        },
         data() {
             return {
                 user: {
@@ -59,7 +61,6 @@
                     user_id:'',
                     amount:'',
                 },
-                options: [],
                 error: [],
                 add: true,
                 paymentOriginal: '',

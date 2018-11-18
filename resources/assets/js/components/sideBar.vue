@@ -8,6 +8,12 @@
 						{{ link.name }}
 					</router-link>
 				</li>
+        <li class="nav-item">
+          <a class="nav-link" v-if="$auth.check()" @click="$auth.logout()">
+            <i class="fa fa-sign-out-alt"></i>
+            Wyloguj
+          </a>
+        </li>
 			</ul>
 		</div>
 	</nav>

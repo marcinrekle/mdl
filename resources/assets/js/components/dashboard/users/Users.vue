@@ -7,7 +7,8 @@
     		    </h3>
     		</div>
     		<div class="card-body">
-    			<div class="input-group mb-3">
+				<loading v-show="isLoading" loadingText="Ładowanie danych"></loading>
+    			<div v-show="users" class="input-group mb-3">
   					<div class="btn-group">
     					<button 
     						v-for="role in roles"
@@ -19,7 +20,8 @@
     					</button>
   					</div>
 				</div>
-    		    <table class="table table-striped">
+    		    <h3 v-show="!isLoading && !users">Brak użytkowników</h3>
+    		    <table v-show="users" class="table table-striped">
     		        <tr>
     		            <th>Id</th>
     		            <th>Imie nazwisko</th>
@@ -56,11 +58,11 @@
     		</div>
 		</div>
 		<UserEditForm  ref="UserEditForm" v-show="ShowUserEditForm" @close="closeUserEditForm" />	
-		<PaymentAddEditForm  ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
+		<PaymentAddEditForm  :options="this.students" ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
 	</div>
 </template>
 <script>
-	import { mapState } from 'vuex';
+	import { mapState, mapGetters } from 'vuex';
 	import UserEditForm from './UserEditForm.vue';
 	import PaymentAddEditForm from '../payments/PaymentAddEditForm.vue';
 	export default{
@@ -135,10 +137,8 @@
             closeUserProfile(){},
         },
         computed : {
-        	gusers() {
-        		this.$store.getters.getUsers;
-        	},
-        	...mapState(['users','fields','roles']),
+        	...mapState(['users','fields','roles','isLoading']),
+        	...mapGetters(['getUsersByRole','students']),
         },
 	}
 </script>
