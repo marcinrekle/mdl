@@ -114,13 +114,6 @@
         computed : {
             ...mapState(['isLoading']),
             ...mapGetters(['getUsersByRole','students']),
-            students1(){
-                //return this.getUsersByRole('Student').map(user => ({[user.id] : user.name})).reduce((obj1, obj2) => Object.assign(obj1, obj2), {});
-                return this.getUsersByRole('Student').map(user => ({'id' : user.id, 'name' : user.name}));
-            },
-            students2() {
-                return [{'id':2,'name':'Edek'},{'id':4,'name':'Edek2'},{'id':5,'name':'Edek2'},]
-            }
         }
     }
 </script>

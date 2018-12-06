@@ -38,6 +38,11 @@
       					icon: 'fa fa-dollar',
       					path: '/payment'
     				},
+            {
+                name: 'Jazdy',
+                icon: 'fa fa-car',
+                path: '/drive'
+            },
   				]
 			}
 		}

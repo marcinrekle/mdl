@@ -7,6 +7,7 @@ use App\Role;
 use App\User;
 use Validator;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DriveController extends Controller
 {
@@ -17,8 +18,9 @@ class DriveController extends Controller
      */
     public function index()
     {
-        $drives = Drive::with(['user','']);
-        return view('drive.index', compact('drives'));
+        $drives = Drive::with(['hours'])->get()->sortBy('date')->groupBy([function ($item) {return Carbon::parse($item->date)->format('Y-m-d');},'user_id',function ($item) {return Carbon::parse($item->date)->format('H:i');}]);
+        return response()->json(['drives' => $drives,]);
+        //return view('drive.index', compact('drives'));
     }
 
     /**

@@ -21,6 +21,7 @@ import App from './components/App.vue';
 import sideBar from './components/sideBar.vue';
 import loading from './components/Loading.vue';
 import deleteBtn from './components/DeleteBtn.vue';
+import grid from './components/Grid.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -29,10 +30,10 @@ axios.defaults.baseURL = 'http://mdl.test/api/';
 
 Vue.router = router;
 
-//var deleteBtn = Vue.component('delete-btn', require('./components/Delete.vue'));
 Vue.component('sideBar', sideBar);
 Vue.component('loading', loading);
 Vue.component('delete-btn', deleteBtn);
+Vue.component('grid', grid);
 
 Vue.use(require('@websanova/vue-auth'), {
    auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),

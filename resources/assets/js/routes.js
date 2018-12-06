@@ -37,7 +37,15 @@ let routes = [
         path: '/payment',
         component: require('./components/dashboard/payments/Payments.vue'),
         meta: {
-            auth: true
+            auth: true,
+        }
+    },
+    {
+        name: 'drive',
+        path: '/drive',
+        component: require('./components/dashboard/drives/Drives.vue'),
+        meta: {
+            auth: true,
         }
     },
 ];
