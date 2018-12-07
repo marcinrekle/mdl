@@ -6,10 +6,6 @@ export default {
 	getUserById: state => (id) => state.users.find(user => user.id === id),
 	getUsersByRole: state => role => state.users.filter(user => user.roles[0].name === role),
 	students: (state, getters) => getters.getUsersByRole('Student').map(user => ({'id' : user.id, 'name' : user.name})),
-	students2: state => {
-		console.log(state.users);
-		console.log(state.users.filter(user => user.roles[0].name === 'Student').map(user => ({'id' : user.id, 'name' : user.name})))
-		return state.users.filter(user => user.roles[0].name === 'Student').map(user => ({'id' : user.id, 'name' : user.name}))
-	},
+	drives: (state,) => state.drives,
 	isLoading: state => state.isLoading,
 }

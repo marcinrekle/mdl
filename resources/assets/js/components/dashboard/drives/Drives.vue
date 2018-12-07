@@ -90,6 +90,7 @@
             this.$store.state.users.length < 1 && this.$store.dispatch("fetchData", { self: this }) ;
         },
         mounted() {
+            //this.$store.dispatch("fetchData", { self: this });
             this.getDrives();
         },
         methods: {
@@ -148,8 +149,8 @@
             }
         },
         computed : {
-            ...mapState(['isLoading']),
-            ...mapGetters(['getUsersByRole','students']),
+            ...mapState(['isLoading','drives']),
+            //...mapGetters(['getUsersByRole','students']),
         }
     }
 </script>

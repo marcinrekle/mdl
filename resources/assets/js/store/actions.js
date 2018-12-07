@@ -25,11 +25,27 @@ export default {
                 commit('fetchFields', res.data.fields);
                 commit('fetchRoles', res.data.roles);
                 commit('setLoading',false);
+                resolve();
+            })
+            .catch((error) => {
+                console.log(error.statusText);
+            })
+        })
+    },fetchDrives({ commit }, { self }) {
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'drive',
+                method: 'GET',
+            })
+            .then((res) => {
+                commit('fetchDrives', res.data.drives);
+                commit('setLoading',false);
     	        resolve();
     	    })
     	    .catch((error) => {
     	        console.log(error.statusText);
     	    })
     	})
-    }
+    },
 }

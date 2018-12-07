@@ -136,7 +136,7 @@
             showUserProfile(){},
             closeUserProfile(){},
         },
-        computed : {
+        computed :{
         	...mapState(['users','fields','roles','isLoading']),
         	...mapGetters(['getUsersByRole','students']),
         },

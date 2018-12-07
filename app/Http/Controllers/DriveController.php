@@ -19,7 +19,7 @@ class DriveController extends Controller
     public function index()
     {
         $drives = Drive::with(['hours'])->get()->sortBy('date')->groupBy([function ($item) {return Carbon::parse($item->date)->format('Y-m-d');},'user_id',function ($item) {return Carbon::parse($item->date)->format('H:i');}]);
-        return response()->json(['drives' => $drives,]);
+        return response()->json(['drives' => $drives]);
         //return view('drive.index', compact('drives'));
     }
 

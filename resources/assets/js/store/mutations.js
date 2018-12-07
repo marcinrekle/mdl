@@ -10,5 +10,8 @@ export default {
 	},
 	setLoading(state, loading){
 		state.isLoading = loading;
-	}
+	},
+	fetchDrives(state, drives){
+		state.drives = drives;
+	},
 }

@@ -51401,6 +51401,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
     users: [],
     fields: [],
     roles: [],
+    drives: [],
     notifications: {
       error: [],
       success: [],
@@ -51430,6 +51431,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 	},
 	setLoading: function setLoading(state, loading) {
 		state.isLoading = loading;
+	},
+	fetchDrives: function fetchDrives(state, drives) {
+		state.drives = drives;
 	}
 });
 
@@ -51474,6 +51478,24 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
                 console.log(error.statusText);
             });
         });
+    },
+    fetchDrives: function fetchDrives(_ref5, _ref6) {
+        var commit = _ref5.commit;
+        var self = _ref6.self;
+
+        commit('setLoading', true);
+        return new Promise(function (resolve, reject) {
+            self.$http({
+                url: 'drive',
+                method: 'GET'
+            }).then(function (res) {
+                commit('fetchDrives', res.data.drives);
+                commit('setLoading', false);
+                resolve();
+            }).catch(function (error) {
+                console.log(error.statusText);
+            });
+        });
     }
 });
 
@@ -51508,18 +51530,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 			return { 'id': user.id, 'name': user.name };
 		});
 	},
-	students2: function students2(state) {
-		console.log(state.users);
-		console.log(state.users.filter(function (user) {
-			return user.roles[0].name === 'Student';
-		}).map(function (user) {
-			return { 'id': user.id, 'name': user.name };
-		}));
-		return state.users.filter(function (user) {
-			return user.roles[0].name === 'Student';
-		}).map(function (user) {
-			return { 'id': user.id, 'name': user.name };
-		});
+	drives: function drives(state) {
+		return state.drives;
 	},
 	isLoading: function isLoading(state) {
 		return state.isLoading;
@@ -54097,7 +54109,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -54206,6 +54218,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         this.$store.state.users.length < 1 && this.$store.dispatch("fetchData", { self: this });
     },
     mounted: function mounted() {
+        //this.$store.dispatch("fetchData", { self: this });
         this.getDrives();
     },
 
@@ -54243,7 +54256,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         drivesToTable: function drivesToTable() {
             Object.keys(this.drives['2018-12-02']).forEach(function (instructor) {
                 return Object.keys(instructor).forEach(function (drive) {
-                    console.log(Array.from(drive));
+                    console.log(drive[0]);
                 });
             });
         },
@@ -54263,7 +54276,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             return obj;
         }
     },
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['isLoading']), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['getUsersByRole', 'students']))
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['isLoading', 'drives']))
 });
 
 /***/ }),
