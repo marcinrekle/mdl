@@ -18,7 +18,10 @@ class DriveController extends Controller
      */
     public function index()
     {
-        $drives = Drive::with(['hours'])->get()->sortBy('date')->groupBy([function ($item) {return Carbon::parse($item->date)->format('Y-m-d');},'user_id',function ($item) {return Carbon::parse($item->date)->format('H:i');}]);
+        //$drives = Drive::with(['hours'])->get()->sortBy('date')->groupBy([function ($item) {return Carbon::parse($item->date)->format('Y-m-d');},'user_id',function ($item) {return Carbon::parse($item->date)->format('H:i');}]);
+        //$drives = Drive::with(['hours'])->get()->sortBy('date')->groupBy([function ($item) {return Carbon::parse($item->date)->format('Y-m-d');},'user_id',function ($item) {return Carbon::parse($item->date)->format('H:i');}]);
+        $drives = Drive::with(['hours'])->get()->map(function ($drive) {$drive['day'] = Carbon::parse($drive->date)->format('Y-m-d');$drive['time'] = Carbon::parse($drive->date)->format('H:i');return $drive;})->sortBy(['date'])->values()->all();
+        //dd($drives);
         return response()->json(['drives' => $drives]);
         //return view('drive.index', compact('drives'));
     }

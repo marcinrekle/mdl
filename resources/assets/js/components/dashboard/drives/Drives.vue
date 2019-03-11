@@ -8,37 +8,27 @@
     		</div>
     		<div class="card-body">
                 <loading v-show="isLoading" loadingText="Ładowanie danych"></loading>
-                <h3 v-show="!isLoading && !drives">Brak jazd</h3>	
-    		    <table v-show="drives" class="table table-striped">
-    		        <tr>
-    		            <th>Id</th>
-    		            <th>Płatnik</th>
-    		            <th>Kwota</th>
-                        <th>Data</th>
-    		            <th>Akcje</th>
-    		        </tr>
-    		        <tr 
-    		            v-for="drive in drives" 
-    		            :key="drive.id"
-    		        >
-    		            <td>{{ drive.id }}</td>
-    		            <td>{{  }}</td>
-                        <td>{{  }}</td>
-    		            <td>{{ drive.date }}</td>
-    		            <td>
-                            <button  v-if="$auth.check(['drive-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showDriveAddEditForm(drive)">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button  v-if="$auth.check(['drive-crud','drive-delete'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteDrive(drive)">
-                                <i class="fa fa-trash"></i>
-                            </button>
-    		                <button  v-if="$auth.check(['drive-crud','drive-add'],'perms')" type="button" class="btn btn-sm btn-success" :title="'Dodaj płatność dla '" @click="showDriveAddEditForm(payment)">
-    		                    <i class="fa fa-dollar"></i>
-    		                </button>
-    		            </td>
-    		        </tr>
-    		    </table>
-    		</div>
+                <h3 v-show="!isLoading && !drives">Brak jazd</h3>
+                <div class="row">
+                    <div class="col-md-2 col-sm-4 col-xs-6" v-for="col in cal">
+                        <table v-show="drives" class="table table-striped">
+                            <tr>
+                                <th>{{col.name}}</th>
+                            </tr>    
+                            <tr
+                                v-for="hour in col.hours" 
+                                :key="hour.index"
+                            >
+                                <td 
+                                    v-if="hour.colspan"
+                                >
+                                    {{hour.text}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>  
+                </div>
+            </div>
 		</div>
 		<DriveAddEditForm  :options="this.drives" ref="DriveAddEditForm" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
 	</div>
@@ -52,60 +42,32 @@
         },
         data() {
             return {
-                drives: [],
+                //drives: [],
                 costNames: [],
                 ShowDriveAddEditForm: false,
                 table: [],
-                drives2: [
-                    [{ 
-                        id: 1,
-                        user_id: 3,
-                        date: "2018-11-27 07:00:00",
-                        hours_count: 5,
-                        hours:[{
-                            id: 1,
-                            user_id: 5,
-                            count: 3,
-                            drive_id: 1
-                        },
-                        {
-                            id: 2,
-                            user_id: 8,
-                            count: 2,
-                            drive_id: 1
-                        }],
-                    }], 
-                ],
-                cal: ['hours', '3'].map(e => ({
-                    name: e,
-                    hours: Array(26).fill(0).map((e, i) => ({
-                        index: i*0.5 + 7,
-                        selected: false,
-                        text:''
-                    }))
+                instructorMap: {'3':0},
+                hourMap: new Map(Array(26).fill(0).map((e, i) => ([ ('0'+Math.floor(i*0.5+7)).slice(-2) + (i%2 == 0 ? ':00' : ':30'),i]))),
+                cal: ['hours', '3'].map((e,i) => ({
+                        name: e,
+                        hours: e=='hours' ? Array(26).fill(0).map((e, i) => ({text:Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30'),text2:i%2,colspan:1})) : Array(26).fill(0).map((e, i) => ({
+                            index: i*0.5 + 7,
+                            selected: false,
+                            text:' ', 
+                            node:'',
+                            colspan:1,
+                        }))
                 })),
+                cal3: ['3'].map(e => Array(26).fill(0).map(e => ({drive:{},td:'',colspan:0})) ),
             }
         },
         created() {
             this.$store.state.users.length < 1 && this.$store.dispatch("fetchData", { self: this }) ;
+            this.$store.dispatch("fetchDrives", { self: this });
         },
         mounted() {
-            //this.$store.dispatch("fetchData", { self: this });
-            this.getDrives();
         },
         methods: {
-            getDrives(){
-                this.$http({
-                    url: 'drive',
-                    method: 'GET',
-                })
-                .then((res) => {
-                    this.drives = res.data.drives;
-                    this.drivesToTable();
-                }, (res) => {
-                    console.log('error '+res);
-                });    
-            },
             showDriveAddEditForm(drive){
                 if(drive){
                     console.log(drive);
@@ -123,14 +85,8 @@
             parseDrives(){
                 return this.createHoursTh(7,20);
             },
-            drivesToTable(){
-                Object.keys(this.drives['2018-12-02']).forEach(instructor =>
-                        Object.keys(instructor).forEach(drive =>  
-                            {
-                            console.log(drive[0]);
-                            }
-                        )
-                );
+            drivesToTable(date){
+                    console.log(this.getDriveByDate('2018-12-02'))
             },
             createHoursTh(start,stop){
                 let obj= [];
@@ -146,11 +102,29 @@
                 }
                 console.log(obj);
                 return obj;
+            },
+            driveToCal(time,interval){
+                if(time == 'first') time = '2018-12-02';
+                let drives = this.getDriveByDate(time);
+                console.log(drives);
+                console.log(this.instructorMap,this.instructorMap[3],this.hourMap.get('07:00'));
+                drives.forEach(e => {
+                    let instructor = this.instructorMap[e.user_id];
+                    let hour = this.hourMap.get(e.time);
+                    console.log(instructor,hour);
+                    this.cal3[instructor][hour].drive = e;
+                    this.cal3[instructor][hour].td = 'Antek <br> Zenek';
+                    let hoursCount = e.hours_count*2;
+                    this.cal3[instructor][hour].colspan = hoursCount;
+                    for(i=hour+1;i<hour+hoursCount;i++)this.cal3[instructor][i].td=0; 
+
+                });
+                this.cal3[0].forEach(e => console.log(e.td));
             }
         },
         computed : {
             ...mapState(['isLoading','drives']),
-            //...mapGetters(['getUsersByRole','students']),
+            ...mapGetters(['getDriveByDate','students']),
         }
     }
 </script>
