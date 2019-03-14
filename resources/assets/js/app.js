@@ -13,18 +13,6 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-
-
-
-
-
-
-
-
-
-var deleteBtn = Vue.component('delete-btn', require('./components/Delete.vue'));
-
-
 const app = new Vue({
     el: '#app'
 });

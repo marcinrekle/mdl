@@ -28,9 +28,21 @@
                         </table>
                     </div>  
                 </div>
+                <div class="row">
+                        <table v-show="drives" class="table table-striped">
+                            <tr>
+                                <th v-for="col in cal">{{col.name}}</th>
+                            </tr>    
+                            <tr v-for="(item,index) in cal[0].hours">
+                                <td v-for="col in cal">
+                                    {{col.hours[index].text}} - {{col.hours[index].index}}
+                                </td>
+                            </tr>
+                        </table>
+                </div>
             </div>
 		</div>
-		<DriveAddEditForm  :options="this.drives" ref="DriveAddEditForm" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
+		<DriveAddEditForm  :drives="this.drives" ref="DriveAddEditForm" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
 	</div>
 </template>
 <script>
@@ -66,6 +78,7 @@
             this.$store.dispatch("fetchDrives", { self: this });
         },
         mounted() {
+            this.createHoursTable(7,20);
         },
         methods: {
             showDriveAddEditForm(drive){
@@ -120,6 +133,10 @@
 
                 });
                 this.cal3[0].forEach(e => console.log(e.td));
+            },
+            createHoursTable(start,end){
+                let count = start-end;
+                alert(count);
             }
         },
         computed : {

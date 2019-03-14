@@ -3,7 +3,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    {{ this.add ? 'Dodawanie nowej płatności' : "Edycja płatności" }}
+                    {{ this.add ? 'Dodawanie nowej jazdy' : "Edycja płatności" }}
                     <button type="button" class="close" @click="close">&times;</button>
                 </div>
                 <div class="modal-body">

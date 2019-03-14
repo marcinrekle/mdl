@@ -4,7 +4,15 @@ let routes = [
     {
         name: 'home',
         path: '/',
-        component: require('./components/auth/Login.vue'),
+        component: require('./components/auth/Login.vue').default,
+        meta: {
+            auth: false
+        }
+    },
+    {
+        name: 'login',
+        path: '/login',
+        component: require('./components/auth/Login.vue').default,
         meta: {
             auth: false
         }
@@ -17,17 +25,9 @@ let routes = [
         }
     },
     {
-        name: 'login',
-        path: '/login',
-        component: require('./components/auth/Login.vue'),
-        meta: {
-            auth: false
-        }
-    },
-    {
         name: 'dashboard',
         path: '/dashboard',
-        component: require('./components/Dashboard.vue'),
+        component: require('./components/Dashboard.vue').default,
         meta: {
             auth: true
         }
@@ -35,7 +35,7 @@ let routes = [
     {
         name: 'payment',
         path: '/payment',
-        component: require('./components/dashboard/payments/Payments.vue'),
+        component: require('./components/dashboard/payments/Payments.vue').default,
         meta: {
             auth: true,
         }
@@ -43,11 +43,15 @@ let routes = [
     {
         name: 'drive',
         path: '/drive',
-        component: require('./components/dashboard/drives/Drives.vue'),
+        component: require('./components/dashboard/drives/Drives.vue').default,
         meta: {
             auth: true,
         }
     },
+    {
+        path: '*',
+        redirect: '/dashboard'//change to 404 component
+    }
 ];
 
 export default new VueRouter({

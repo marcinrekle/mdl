@@ -1,43 +1,42 @@
 <template>
-    <main class="col-12">
-        <div class="card card-signin mx-auto">
-            <div class="card-header bg-primary">
-                <h3 class="text-light">Please Sign in</h3>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-danger" v-if="error">
-                    <p>There was an error, unable to sign in with those credentials.</p>
-                </div>
-                <form class="form-signin" autocomplete="off" @submit.prevent="login" method="post">
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" class="form-control" v-model="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Zaloguj</button>
-                    <loading v-show="isLoading"></loading>
-                </form>
-            </div>
+    <div class="card card-signin mx-auto">
+        <div class="card-header bg-primary">
+            <h3 class="text-light">Please Sign in</h3>
         </div>
-    </main>
+        <div class="card-body">
+            <div class="alert alert-danger" v-if="error">
+                <p>There was an error, unable to sign in with those credentials.</p>
+            </div>
+            <form class="form-signin" autocomplete="off" @submit.prevent="login" method="post">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" v-model="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Zaloguj</button>
+                <loading v-show="isLoading"></loading>
+            </form>
+        </div>
+    </div>
 </template>
 <script>
     import {mapState} from 'vuex';
     export default {
         data(){
-          return {
-            email: 'admin@example.com',
-            password: 'admin',
-            error: false,
-            _token: '',
-          }
+            return {
+                email: 'admin@example.com',
+                password: 'admin',
+                error: false,
+                _token: '',
+            }
         },
+        mounted() {console.log('Login')},
         methods: {
             login(){
-                var app = this
+                var app = this;
                 this.$store.commit('setLoading',true);
                 this.$auth.login({
                     data: {
@@ -57,20 +56,6 @@
                     fetchUser: true,
                 });       
             },
-            login2(){
-                var app = this;
-                axios.post('api/auth/login',{
-                    email: app.email,
-                    password: app.password
-                })
-                .then(response => {
-                    console.log(response);
-                })
-                .catch(error => {
-                    alert(error);
-                    console.log(error);
-                });
-            }
         },
         computed: {
             ...mapState(['isLoading']),

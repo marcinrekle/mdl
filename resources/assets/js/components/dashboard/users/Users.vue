@@ -76,7 +76,8 @@
 				//fields: [],
 				//roles: [],
 				ShowUserEditForm : false,
-				ShowPaymentAddEditForm : false,
+                ShowPaymentAddEditForm : false,
+				ShowDriveAddEditForm : false,
 				roleShow : {'Su' : 0,'Admin' : 0,'Instructor' : 0,'Officce' : 0,'Student' : 1, }
 			}
 		},
