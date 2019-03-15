@@ -33,7 +33,7 @@
                 _token: '',
             }
         },
-        mounted() {console.log('Login')},
+        mounted() {},
         methods: {
             login(){
                 var app = this;
