@@ -33,8 +33,8 @@
                             <tr>
                                 <th v-for="col in cal">{{col.name}}</th>
                             </tr>    
-                            <tr v-for="(item,index) in cal[0].hours">
-                                <td v-for="col in cal">
+                            <tr v-for="(item,index) in cal[0].hours" :test1="index" test2:="item.index" :key="item.index">
+                                <td v-for="col in cal" :class="{ hours : col.name=='hours', selected: col.hours[index].selected }" @click="col.name!='hours' ? select(col.hours[index]):{}">
                                     {{col.hours[index].text}} - {{col.hours[index].index}}
                                 </td>
                             </tr>
@@ -65,9 +65,7 @@
                         hours: e=='hours' ? Array(26).fill(0).map((e, i) => ({text:Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30'),text2:i%2,colspan:1})) : Array(26).fill(0).map((e, i) => ({
                             index: i*0.5 + 7,
                             selected: false,
-                            text:' ', 
-                            node:'',
-                            colspan:1,
+                            text:' ',
                         }))
                 })),
                 cal3: ['3'].map(e => Array(26).fill(0).map(e => ({drive:{},td:'',colspan:0})) ),
@@ -137,6 +135,9 @@
             createHoursTable(start,end){
                 let count = start-end;
                 alert(count);
+            },
+            select(e){
+                e.selected = !e.selected;
             }
         },
         computed : {
@@ -146,4 +147,10 @@
     }
 </script>
 <style>
+.selected{
+    background-color: gray;
+}
+.hours{
+    width:20px;
+}
 </style>
