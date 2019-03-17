@@ -63,9 +63,6 @@
     } 
 </script>
 <style>
-    html,body {
-        height: 100%;
-    }
     body {
         display: -ms-flexbox;
         display: -webkit-box;
