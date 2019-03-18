@@ -19,7 +19,7 @@
                         :key="col.name + (col.name!='hours' ? col.hours[index].index:index)"
                         :class="{ hours : col.name=='hours', selected: col.hours[index].selected, drive: col.hours[index].drive }"
                         :style="col.hours[index].style" 
-                        @click="col.name!='hours' ? (col.hours[index].drive ? editDrive(col.hours[index].drive_id) : select(col.hours[index])):{}"
+                        @click="col.name!='hours' ? (col.hours[index].drive ? editDrive(col.hours[index].drive_id) : select(col.hours[index],col.name)):{}"
                         >
                             {{col.hours[index].text}}
                         </td>
@@ -44,6 +44,7 @@
                 costNames: [],
                 ShowDriveAddEditForm: false,
                 table: [],
+                selectedTd: [],
                 instructorMap: {'3':1,'4':2},
                 hourMap: new Map(Array(26).fill(0).map((e, i) => ([ ('0'+Math.floor(i*0.5+7)).slice(-2) + (i%2 == 0 ? ':00' : ':30'),i]))),
                 cal: ['hours', '3','4'].map((e,i) => ({
@@ -137,13 +138,16 @@
             },
             createHoursTable(start,end){
                 let count = end-start;
-                //alert(count);
             },
-            select(e){
+            select(e,index){
+                console.log('select e index',e,index);
                 e.selected = !e.selected;
             },
             editDrive(id){
                 console.log('editDrive id',id);
+            },
+            toggleSelectBetween(start,stop,instructor){
+                for(let i=start+1;i<stop-1;i++)this.cal[instructor].hours[i].selected=!this.cal[instructor].hours[i].selected;
             }
         },
         computed : {
