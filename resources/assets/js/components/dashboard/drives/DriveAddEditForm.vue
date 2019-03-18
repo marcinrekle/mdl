@@ -15,12 +15,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="hours_count">Godzina</label>
-                            <input type="number" step="0.5" min="" max="" id="hours_count" class="form-control" v-model="drive.hours_count" required autofocus />
-                        </div>
-                        <div class="form-group">
                             <label for="date">Data jazdy</label>
                             <input type="datetime-local" id="date" class="form-control" v-model="drive.date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hours_count">Ilość godzin</label>
+                            <input type="number" step="0.5" min="0.5" max="12" id="hours_count" class="form-control" v-model="drive.hours_count" required autofocus />
                         </div>
                         <button 
                             type="submit" 

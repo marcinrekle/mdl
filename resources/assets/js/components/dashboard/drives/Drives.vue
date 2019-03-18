@@ -43,16 +43,16 @@
                 //drives: [],
                 costNames: [],
                 ShowDriveAddEditForm: false,
-                date:new Date().toLocaleDateString("pl-PL"),
+                date: this.$moment().format('YYYY-MM-DD'),
                 table: [],
                 selectedTd: [],
-                instructorMap: {'3':1,'4':2},
+                instructorMap: {'3':1,'7':2},
                 hourMap: new Map(Array(26).fill(0).map((e, i) => ([ ('0'+Math.floor(i*0.5+7)).slice(-2) + (i%2 == 0 ? ':00' : ':30'),i]))),
-                cal: ['hours', '3','4'].map((e,i) => ({
+                cal: ['hours', '3','7'].map((e,i) => ({
                         name: e,
                         hours: e=='hours' ? Array(26).fill(0).map((e, i) => ({text:Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30')})) : Array(26).fill(0).map((e, i) => ({
                             index: i*0.5 + 7,
-                            hour: Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30'),
+                            hour: ('0'+Math.floor(i*0.5+7)).slice(-2) + (i%2 == 0 ? ':00' : ':30'),
                             selected: false,
                             drive: false,
                             drive_id: 0,
@@ -80,7 +80,9 @@
                 //this.$refs.DriveAddEditForm.user = drive.user;
                 this.$refs.DriveAddEditForm.user = this.getUserById(parseInt(instructor_id));
                 this.$refs.DriveAddEditForm.drive.user_id = parseInt(instructor_id);
-                //this.$refs.DriveAddEditForm.drive.date = this.date+'T'+e.hour;
+                this.$refs.DriveAddEditForm.drive.hours_count = 1;
+                console.log('e.hour',e.hour);
+                this.$refs.DriveAddEditForm.drive.date = this.$moment(this.date+' '+e.hour).format('YYYY-MM-DDTHH:mm');
                 this.ShowDriveAddEditForm = true;
                 $('body').addClass('modal-open');
             },
