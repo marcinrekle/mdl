@@ -1,5 +1,5 @@
 <template>
-	<div id="payments">
+	<div id="drives">
 		<div class="card">
     		<div class="card-header">
     		    <h3 class="card-title">Lista jazd
@@ -9,37 +9,23 @@
     		<div class="card-body">
                 <loading v-show="isLoading" loadingText="Ładowanie danych"></loading>
                 <h3 v-show="!isLoading && !drives">Brak jazd</h3>
-                <div class="row">
-                    <div class="col-md-2 col-sm-4 col-xs-6" v-for="col in cal">
-                        <table v-show="drives" class="table table-striped">
-                            <tr>
-                                <th>{{col.name}}</th>
-                            </tr>    
-                            <tr
-                                v-for="hour in col.hours" 
-                                :key="hour.index"
-                            >
-                                <td 
-                                    v-if="hour.colspan"
-                                >
-                                    {{hour.text}}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>  
-                </div>
-                <div class="row">
-                        <table v-show="drives" class="table table-striped">
-                            <tr>
-                                <th v-for="col in cal">{{col.name}}</th>
-                            </tr>    
-                            <tr v-for="(item,index) in cal[0].hours" :test1="index" test2:="item.index" :key="item.index">
-                                <td v-for="col in cal" :class="{ hours : col.name=='hours', selected: col.hours[index].selected }" @click="col.name!='hours' ? select(col.hours[index]):{}">
-                                    {{col.hours[index].text}} - {{col.hours[index].index}}
-                                </td>
-                            </tr>
-                        </table>
-                </div>
+                <table class="table table-striped">
+                <tbody>    
+                    <tr>
+                        <th v-for="col in cal">{{col.name}}</th>
+                    </tr>
+                    <tr v-for="(item,index) in cal[0].hours">
+                        <td v-for="col in cal"
+                        :key="col.name + (col.name!='hours' ? col.hours[index].index:index)"
+                        :class="{ hours : col.name=='hours', selected: col.hours[index].selected, drive: col.hours[index].drive }"
+                        :style="col.hours[index].style" 
+                        @click="col.name!='hours' ? (col.hours[index].drive ? editDrive(col.hours[index].drive_id) : select(col.hours[index])):{}"
+                        >
+                            {{col.hours[index].text}}
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
             </div>
 		</div>
 		<DriveAddEditForm  :drives="this.drives" ref="DriveAddEditForm" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
@@ -58,13 +44,16 @@
                 costNames: [],
                 ShowDriveAddEditForm: false,
                 table: [],
-                instructorMap: {'3':0},
+                instructorMap: {'3':1,'4':2},
                 hourMap: new Map(Array(26).fill(0).map((e, i) => ([ ('0'+Math.floor(i*0.5+7)).slice(-2) + (i%2 == 0 ? ':00' : ':30'),i]))),
-                cal: ['hours', '3'].map((e,i) => ({
+                cal: ['hours', '3','4'].map((e,i) => ({
                         name: e,
-                        hours: e=='hours' ? Array(26).fill(0).map((e, i) => ({text:Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30'),text2:i%2,colspan:1})) : Array(26).fill(0).map((e, i) => ({
+                        hours: e=='hours' ? Array(26).fill(0).map((e, i) => ({text:Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30')})) : Array(26).fill(0).map((e, i) => ({
                             index: i*0.5 + 7,
                             selected: false,
+                            drive: false,
+                            drive_id: 0,
+                            style: '',
                             text:' ',
                         }))
                 })),
@@ -117,15 +106,29 @@
             driveToCal(time,interval){
                 if(time == 'first') time = '2018-12-02';
                 let drives = this.getDriveByDate(time);
-                console.log(drives);
-                console.log(this.instructorMap,this.instructorMap[3],this.hourMap.get('07:00'));
+                console.log('time',time);
+                console.log('drives',drives);
+                console.log('instMap instMap[3] hoursmap get 7:00',this.instructorMap,this.instructorMap[3],this.hourMap.get('07:00'));
                 drives.forEach(e => {
+                    console.log('drive', e.id);
                     let instructor = this.instructorMap[e.user_id];
                     let hour = this.hourMap.get(e.time);
-                    console.log(instructor,hour);
+                    let hoursCount = e.hours_count*2;
+
+                    console.log('ins hour hCount hours',instructor,hour,hoursCount,e.hours);
+                    for(let i=0;i<hoursCount;i++){
+                        this.cal[instructor].hours[i+hour].drive=true;
+                        this.cal[instructor].hours[i+hour].drive_id=e.id;
+                    }
+                    e.hours.forEach((e,index) => {
+                        console.log('hours foreach getuserbyid e.count',this.getUserById(e.user_id),e.count);
+                        this.cal[instructor].hours[index+hour].text=this.getUserById(e.user_id).name;
+                        this.cal[instructor].hours[index+hour].style="border-top:2px solid black";
+                        this.cal[instructor].hours[index+hour+(e.count*2)-1].style="border-bottom:2px solid black";
+                    });
+
                     this.cal3[instructor][hour].drive = e;
                     this.cal3[instructor][hour].td = 'Antek <br> Zenek';
-                    let hoursCount = e.hours_count*2;
                     this.cal3[instructor][hour].colspan = hoursCount;
                     for(i=hour+1;i<hour+hoursCount;i++)this.cal3[instructor][i].td=0; 
 
@@ -133,16 +136,19 @@
                 this.cal3[0].forEach(e => console.log(e.td));
             },
             createHoursTable(start,end){
-                let count = start-end;
-                alert(count);
+                let count = end-start;
+                //alert(count);
             },
             select(e){
                 e.selected = !e.selected;
+            },
+            editDrive(id){
+                console.log('editDrive id',id);
             }
         },
         computed : {
             ...mapState(['isLoading','drives']),
-            ...mapGetters(['getDriveByDate','students']),
+            ...mapGetters(['getDriveByDate','students','getUserById']),
         }
     }
 </script>
@@ -150,7 +156,16 @@
 .selected{
     background-color: gray;
 }
+.drive{
+    background-color: lightgrey;
+}
+.selected.drive{
+    background-color: lightblue;
+}
 .hours{
     width:20px;
+}
+.table th, .table td{
+    padding:0.25rem;
 }
 </style>
