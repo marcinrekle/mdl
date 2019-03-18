@@ -3,19 +3,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    {{ this.add ? 'Dodawanie nowej jazdy' : "Edycja płatności" }}
+                    {{ this.add ? 'Dodawanie nowej jazdy' : "Edycja jazdy" }}
                     <button type="button" class="close" @click="close">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form class="form" autocomplete="off" @submit.prevent="add ? storePayment() : updatePayment()" method="post"> 
+                    <form class="form" autocomplete="off" @submit.prevent="add ? storeHour() : updateHour()" method="post"> 
                         <div class="form-group">
                             <label for="user_id">Imie Nazwisko</label>
-                            <select name="user_id" id="user_id" class="form-control" v-model="payment.user_id" required>
+                            <select name="user_id" id="user_id" class="form-control" v-model="hour.user_id" required>
                                 <option v-for="option in options" :value="option.id">{{ option.name }}</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="amount">Kwota</label>
+                            <label for="amount">Godzina</label>
                             <input type="number" id="amount" class="form-control" v-model="payment.amount" required autofocus />
                         </div>
                         <div class="form-group">
