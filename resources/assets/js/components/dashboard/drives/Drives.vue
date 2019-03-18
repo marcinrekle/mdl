@@ -28,7 +28,7 @@
                 </table>
             </div>
 		</div>
-		<DriveAddEditForm  :drives="this.drives" ref="DriveAddEditForm" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
+		<DriveAddEditForm ref="DriveAddEditForm" :instructors="this.instructors" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
 	</div>
 </template>
 <script>
@@ -43,6 +43,7 @@
                 //drives: [],
                 costNames: [],
                 ShowDriveAddEditForm: false,
+                date:new Date().toLocaleDateString("pl-PL"),
                 table: [],
                 selectedTd: [],
                 instructorMap: {'3':1,'4':2},
@@ -51,6 +52,7 @@
                         name: e,
                         hours: e=='hours' ? Array(26).fill(0).map((e, i) => ({text:Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30')})) : Array(26).fill(0).map((e, i) => ({
                             index: i*0.5 + 7,
+                            hour: Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30'),
                             selected: false,
                             drive: false,
                             drive_id: 0,
@@ -69,13 +71,16 @@
             this.createHoursTable(7,20);
         },
         methods: {
-            showDriveAddEditForm(drive){
+            showDriveAddEditForm(e,drive,instructor_id){
                 if(drive){
                     console.log(drive);
-                    this.$refs.DriveAddEditForm.user = drive.user;
                     this.$refs.DriveAddEditForm.drive = drive;
                     this.$refs.DriveAddEditForm.add = false;
                 }
+                //this.$refs.DriveAddEditForm.user = drive.user;
+                this.$refs.DriveAddEditForm.user = this.getUserById(parseInt(instructor_id));
+                this.$refs.DriveAddEditForm.drive.user_id = parseInt(instructor_id);
+                //this.$refs.DriveAddEditForm.drive.date = this.date+'T'+e.hour;
                 this.ShowDriveAddEditForm = true;
                 $('body').addClass('modal-open');
             },
@@ -139,20 +144,23 @@
             createHoursTable(start,end){
                 let count = end-start;
             },
-            select(e,index){
-                console.log('select e index',e,index);
-                e.selected = !e.selected;
+            select(e,instructor_id){
+                console.log('select e instructor_id',e,instructor_id);
+                if(!e.drive){
+                    this.showDriveAddEditForm(e,false,instructor_id);
+                }
+                //e.selected = !e.selected;
             },
             editDrive(id){
                 console.log('editDrive id',id);
             },
             toggleSelectBetween(start,stop,instructor){
-                for(let i=start+1;i<stop-1;i++)this.cal[instructor].hours[i].selected=!this.cal[instructor].hours[i].selected;
+                for(let i=start;i<stop;i++)this.cal[instructor].hours[i].selected=!this.cal[instructor].hours[i].selected;
             }
         },
         computed : {
             ...mapState(['isLoading','drives']),
-            ...mapGetters(['getDriveByDate','students','getUserById']),
+            ...mapGetters(['getDriveByDate','students','getUserById','getUsersByRole','instructors']),
         }
     }
 </script>

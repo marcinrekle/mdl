@@ -1,5 +1,5 @@
 <template>
-    <div id="PaymentsAddEditModal" class="modal">
+    <div id="DrivesAddEditModal" class="modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -7,27 +7,20 @@
                     <button type="button" class="close" @click="close">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form class="form" autocomplete="off" @submit.prevent="add ? storeHour() : updateHour()" method="post"> 
+                    <form class="form" autocomplete="off" @submit.prevent="add ? storeDrive() : updateDrive()" method="post"> 
                         <div class="form-group">
                             <label for="user_id">Imie Nazwisko</label>
-                            <select name="user_id" id="user_id" class="form-control" v-model="hour.user_id" required>
-                                <option v-for="option in options" :value="option.id">{{ option.name }}</option>
+                            <select name="user_id" id="user_id" class="form-control" v-model="drive.user_id" required>
+                                <option v-for="instructor in instructors" :value="instructor.id">{{ instructor.name }}</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="amount">Godzina</label>
-                            <input type="number" id="amount" class="form-control" v-model="payment.amount" required autofocus />
+                            <label for="hours_count">Godzina</label>
+                            <input type="number" step="0.5" min="" max="" id="hours_count" class="form-control" v-model="drive.hours_count" required autofocus />
                         </div>
                         <div class="form-group">
-                            <label for="payment_date">Data wpłaty</label>
-                            <input type="date" id="payment_date" class="form-control" v-model="payment.payment_date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="payment_for">Typ płatności</label>
-                            <select name="payment_for" id="payment_for" class="form-control" v-model="payment.payment_for" required>
-                                <option value="course">Kurs</option>
-                                <option value="doctor">Lekarz</option>
-                            </select>
+                            <label for="date">Data jazdy</label>
+                            <input type="datetime-local" id="date" class="form-control" v-model="drive.date" required>
                         </div>
                         <button 
                             type="submit" 
@@ -46,7 +39,7 @@
 <script>
     export default{
         props: {
-            options: {},
+            instructors: {},
         },
         data() {
             return {
@@ -54,21 +47,20 @@
                     id:'',
                     name:'',
                 },
-                payment: {
+                drive: {
                     id:'',
-                    payment_for:'course',
-                    payment_date:'',
                     user_id:'',
-                    amount:'',
+                    date:'',
+                    hours_count:'',
                 },
                 error: [],
                 add: true,
-                paymentOriginal: '',
-                paymentCached: ''
+                driveOriginal: '',
+                driveCached: ''
             }
         },
         mounted() {
-            this.paymentOriginal = this.payment;
+            this.driveOriginal = this.drive;
         },
         methods: {
             close(){
@@ -76,17 +68,17 @@
                 this.$emit('close');
             },
             resetForm(){
-                this.user = this.add ?  Object.assign({},this.paymentOriginal) : Object.assign({},this.paymentCached);
+                this.user = this.add ?  Object.assign({},this.driveOriginal) : Object.assign({},this.driveCached);
             },
             submitForm(){
                 console.log('submitForm');
             },
-            storePayment(){
-                console.log('storePayment');
+            storeDrive(){
+                console.log('storeDrive');
                 this.$http({
-                    url: 'payment',
+                    url: 'drive',
                     method: 'POST',
-                    data: this.payment
+                    data: this.drive
                 }).then((res) => {
                     console.log(res.data);
                     //add notify
@@ -94,12 +86,12 @@
                     console.log('error'+res);
                 });
             },
-            updatePayment(){
-                console.log('updatePayment');
+            updateDrive(){
+                console.log('updateDrive');
                 this.$http({
-                    url: 'payment/'+this.payment.id,
+                    url: 'drive/'+this.drive.id,
                     method: 'PUT',
-                    data: this.payment
+                    data: this.drive
                 }).then((res) => {
                     console.log(res.data);
                 }, (res) => {
