@@ -28,7 +28,7 @@
                 </table>
             </div>
 		</div>
-		<DriveAddEditForm ref="DriveAddEditForm" :instructors="this.instructors" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
+		<DriveAddEditForm ref="DriveAddEditForm" :instructors="this.instructors" :students="this.students" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
 	</div>
 </template>
 <script>
@@ -80,8 +80,6 @@
                 //this.$refs.DriveAddEditForm.user = drive.user;
                 this.$refs.DriveAddEditForm.user = this.getUserById(parseInt(instructor_id));
                 this.$refs.DriveAddEditForm.drive.user_id = parseInt(instructor_id);
-                this.$refs.DriveAddEditForm.drive.hours_count = 1;
-                console.log('e.hour',e.hour);
                 this.$refs.DriveAddEditForm.drive.date = this.$moment(this.date+' '+e.hour).format('YYYY-MM-DDTHH:mm');
                 this.ShowDriveAddEditForm = true;
                 $('body').addClass('modal-open');

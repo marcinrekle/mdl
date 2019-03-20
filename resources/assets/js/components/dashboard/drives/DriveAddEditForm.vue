@@ -9,7 +9,7 @@
                 <div class="modal-body">
                     <form class="form" autocomplete="off" @submit.prevent="add ? storeDrive() : updateDrive()" method="post"> 
                         <div class="form-group">
-                            <label for="user_id">Imie Nazwisko</label>
+                            <label for="user_id">Instruktor</label>
                             <select name="user_id" id="user_id" class="form-control" v-model="drive.user_id" required>
                                 <option v-for="instructor in instructors" :value="instructor.id">{{ instructor.name }}</option>
                             </select>
@@ -21,6 +21,12 @@
                         <div class="form-group">
                             <label for="hours_count">Ilość godzin</label>
                             <input type="number" step="0.5" min="0.5" max="12" id="hours_count" class="form-control" v-model="drive.hours_count" required autofocus />
+                        </div>
+                        <div class="form-group">
+                            <label for="s_user_id">Kursant(ci)</label>
+                            <select name="s_user_id" id="s_user_id" class="form-control" v-model="drive.s_user_id" multiple>
+                                <option v-for="student in students" :value="student.id" :disabled="drive.s_user_id.length>=2 && !drive.s_user_id.includes(student.id)">{{ student.name }}</option>
+                            </select>
                         </div>
                         <button 
                             type="submit" 
@@ -40,6 +46,7 @@
     export default{
         props: {
             instructors: {},
+            students: {},
         },
         data() {
             return {
@@ -52,6 +59,7 @@
                     user_id:'',
                     date:'',
                     hours_count:'',
+                    s_user_id:[],
                 },
                 error: [],
                 add: true,

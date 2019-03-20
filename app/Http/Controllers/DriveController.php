@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Drive;
 use App\Role;
 use App\User;
+use App\Hour;
 use Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -47,10 +48,22 @@ class DriveController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $data['date'] = implode($data['date'],' ');
+        //$data['date'] = implode($data['date'],' ');
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
-        $drive = Drive::create($data);
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) response()->json(['validator' => $validator]);
+        //$drive = Drive::create($data);
+        $drive = new Drive;
+        $drive->fill($data);
+        $hours = [];
+        foreach ($data['s_user_id'] as $key => $hour) {
+              $hour_tmp = new Hour;
+              $hour_tmp->fill($hour);
+              array_push($hours, $hour_tmp);
+        }
+        $data['newDrive'] = $drive;
+        $data['newHours'] = $hours;
+        return response()->json(['drive' => $data,'validator' => $validator,'msg' => 'Dodano nową jazde']);
         return redirect()->route('drive.index')->withSuccess('Dodano jazdę');
     }
 
