@@ -51,20 +51,19 @@ class DriveController extends Controller
         //$data['date'] = implode($data['date'],' ');
         $validator = $this->validator($data);
         //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        $unique = Drive::where([['user_id',$data['user_id']],['date',$data['date']]])->count();
+        if($unique>0) response()->json(['msg' => 'O tej godzinie już istnieje jazda']);
         if($validator->fails()) response()->json(['validator' => $validator]);
-        //$drive = Drive::create($data);
-        $drive = new Drive;
-        $drive->fill($data);
+        $drive = Drive::create($data);
+        //$drive = new Drive;
+        //$drive->fill($data)->save();
         $hours = [];
-        foreach ($data['s_user_id'] as $key => $hour) {
-              $hour_tmp = new Hour;
-              $hour_tmp->fill($hour);
-              array_push($hours, $hour_tmp);
+        foreach ($data['s_user_id'] as $key => $user_id) {
+            $hours[] = new Hour(['user_id'=>$user_id]);
         }
-        $data['newDrive'] = $drive;
-        $data['newHours'] = $hours;
+        $drive->hours()->saveMany($hours);
         return response()->json(['drive' => $data,'validator' => $validator,'msg' => 'Dodano nową jazde']);
-        return redirect()->route('drive.index')->withSuccess('Dodano jazdę');
+        //return redirect()->route('drive.index')->withSuccess('Dodano jazdę');
     }
 
     /**
@@ -101,10 +100,15 @@ class DriveController extends Controller
     public function update(Request $request, Drive $drive)
     {
         $data = $request->all();
-        $data['date'] = implode($data['date'],' ');
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) response()->json(['validator' => $validator]);
         $drive->update($data);
+        $hours = [];
+        foreach ($data['s_user_id'] as $key => $user_id) {
+            $hours[] = new Hour(['user_id'=>$user_id]);
+        }
+        $drive->hours()->updateOrCreateMany($hours);
         return redirect()->back();
     }
 
@@ -125,6 +129,7 @@ class DriveController extends Controller
             'user_id'    => 'required|exists:users,id',
             'date'  => 'required|date_format:Y-m-d H:i',
             'hours_count'  => 'required|numeric|min:0.5|max:8',
+            //'user_id' => ['required', 'unique:drives,user_id,NULL,id,date,'.$data['date']],
         ]);
     }
 }
