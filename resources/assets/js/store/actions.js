@@ -41,7 +41,7 @@ export default {
             .then((res) => {
                 commit('fetchDrives', res.data.drives);
                 commit('setLoading',false);
-                self.driveToCal('first',1);
+                self.driveToCal('today',1);
     	        resolve();
     	    })
     	    .catch((error) => {
