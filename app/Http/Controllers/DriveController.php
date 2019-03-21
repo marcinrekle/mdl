@@ -48,7 +48,6 @@ class DriveController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        //$data['date'] = implode($data['date'],' ');
         $validator = $this->validator($data);
         //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
         $unique = Drive::where([['user_id',$data['user_id']],['date',$data['date']]])->count();
