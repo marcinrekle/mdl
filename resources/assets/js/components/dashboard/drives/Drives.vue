@@ -80,8 +80,8 @@
                 }
                 //this.$refs.DriveAddEditForm.user = drive.user;
                 this.$refs.DriveAddEditForm.user = this.getUserById(parseInt(instructor_id));
-                this.$refs.DriveAddEditForm.drive.user_id = parseInt(instructor_id);
-                this.$refs.DriveAddEditForm.drive.date = this.$moment(this.date+' '+e.hour).format('YYYY-MM-DDTHH:mm');
+                this.$refs.DriveAddEditForm.drive.user_id = drive ? drive.user_id : parseInt(instructor_id);
+                this.$refs.DriveAddEditForm.drive.date = drive ? drive.date : this.$moment(this.date+'T'+e.hour).format('YYYY-MM-DDTHH:mm');
                 this.ShowDriveAddEditForm = true;
                 $('body').addClass('modal-open');
             },
