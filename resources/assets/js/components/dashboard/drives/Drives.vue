@@ -2,7 +2,8 @@
 	<div id="drives">
 		<div class="card">
     		<div class="card-header">
-    		    <h3 class="card-title">Lista jazd
+    		    <h3 class="card-title">Lista jazd 
+                    << {{ date }}  >>
     		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showDriveAddEditForm()"><i class="fa fa-user-plus"></i></button>
     		    </h3>
     		</div>
@@ -109,19 +110,26 @@
                 console.log(obj);
                 return obj;
             },
-            driveToCal(time,interval){
-                if(time == 'first') time = '2018-12-02';
-                let drives = this.getDriveByDate(time);
-                console.log('time',time);
+            driveToCal(date,interval){
+                switch(date){
+                    case 'first':
+                        date = '2018-12-02';
+                        break;
+                    case 'today':
+                        date = this.$moment().format('YYYY-MM-DD');
+                        break;
+                }
+                let drives = this.getDriveByDate(date);
+                console.log('date',date);
                 console.log('drives',drives);
-                console.log('instMap instMap[3] hoursmap get 7:00',this.instructorMap,this.instructorMap[3],this.hourMap.get('07:00'));
+                console.log('instMap - instMap[3] - hoursmap - get 7:00',this.instructorMap,this.instructorMap[3],this.hourMap.get('07:00'));
                 drives.forEach(e => {
                     console.log('drive', e.id);
                     let instructor = this.instructorMap[e.user_id];
                     let hour = this.hourMap.get(e.time);
                     let hoursCount = e.hours_count*2;
 
-                    console.log('ins hour hCount hours',instructor,hour,hoursCount,e.hours);
+                    console.log('drives.foreach ins hour hCount hours',instructor,hour,hoursCount,e.hours);
                     for(let i=0;i<hoursCount;i++){
                         this.cal[instructor].hours[i+hour].drive=true;
                         this.cal[instructor].hours[i+hour].drive_id=e.id;
@@ -132,14 +140,7 @@
                         this.cal[instructor].hours[index+hour].style="border-top:2px solid black";
                         this.cal[instructor].hours[index+hour+(e.count*2)-1].style="border-bottom:2px solid black";
                     });
-
-                    this.cal3[instructor][hour].drive = e;
-                    this.cal3[instructor][hour].td = 'Antek <br> Zenek';
-                    this.cal3[instructor][hour].colspan = hoursCount;
-                    for(i=hour+1;i<hour+hoursCount;i++)this.cal3[instructor][i].td=0; 
-
                 });
-                this.cal3[0].forEach(e => console.log(e.td));
             },
             createHoursTable(start,end){
                 let count = end-start;
