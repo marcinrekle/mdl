@@ -10,5 +10,5 @@ export default {
 	drives: (state) => state.drives,
 	isLoading: state => state.isLoading,
 	getDriveByDate: state => date => state.drives.filter(drive => drive.day === date),
-	getDriveById: state => Id => state.drives.filter(drive => drive.id === id),
+	getDriveById: state => id => state.drives.filter(drive => drive.id === id),
 }
