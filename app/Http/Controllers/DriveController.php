@@ -51,8 +51,10 @@ class DriveController extends Controller
         $validator = $this->validator($data);
         //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
         $unique = Drive::where([['user_id',$data['user_id']],['date',$data['date']]])->count();
-        if($unique>0) response()->json(['msg' => 'O tej godzinie już istnieje jazda']);
-        if($validator->fails()) response()->json(['validator' => $validator]);
+        //if($unique>0) return response()->json(['msg' => 'O tej godzinie już istnieje jazda']);
+        if($unique>0) return response()->json('O tej godzinie już istnieje jazda', 200);
+        //if($validator->fails()) response()->json(['validator' => $validator]);
+        if($validator->fails()) return response()->json($validator->messages(), 200);
         $drive = Drive::create($data);
         //$drive = new Drive;
         //$drive->fill($data)->save();
@@ -61,7 +63,7 @@ class DriveController extends Controller
             $hours[] = new Hour(['user_id'=>$user_id]);
         }
         $drive->hours()->saveMany($hours);
-        return response()->json(['drive' => $data,'validator' => $validator,'msg' => 'Dodano nową jazde']);
+        return response()->json(['drive' => $data,'validator' => $validator,'msg' => 'Dodano nową jazde'],200);
         //return redirect()->route('drive.index')->withSuccess('Dodano jazdę');
     }
 
@@ -101,7 +103,7 @@ class DriveController extends Controller
         $data = $request->all();
         $validator = $this->validator($data);
         //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
-        if($validator->fails()) response()->json(['validator' => $validator,'msg' => 'Validator fails']);
+        if($validator->fails()) return response()->json([$validator->errors()], 422);
         $drive->update($data);
         $drive->hours()->delete();
         $newIds=$data['s_user_id'];
@@ -160,7 +162,7 @@ class DriveController extends Controller
     {
         return Validator::make($data, [
             'user_id'    => 'required|exists:users,id',
-            'date'  => 'required|date_format:Y-m-d H:i',
+            'date'  => 'required|date_format:Y-m-d\TH:i',
             'hours_count'  => 'required|numeric|min:0.5|max:8',
             //'user_id' => ['required', 'unique:drives,user_id,NULL,id,date,'.$data['date']],
         ]);
