@@ -20,7 +20,7 @@
                         </div>
                         <div class="form-group">
                             <label for="hours_count">Ilość godzin</label>
-                            <input type="number" step="0.5" min="0.5" max="12" id="hours_count" class="form-control" v-model="drive.hours_count" required autofocus />
+                            <input type="number" ref="hours_count" step="0.5" min="0.5" max="12" id="hours_count" class="form-control" v-model="drive.hours_count" required autofocus/>
                         </div>
                         <div class="form-group">
                             <label for="s_user_id">Kursant(ci)</label>
@@ -95,7 +95,7 @@
                 });
             },
             updateDrive(){
-                console.log('updateDrive');
+                console.log('updateDrive',this.drive);
                 this.$http({
                     url: 'drive/'+this.drive.id,
                     method: 'PUT',

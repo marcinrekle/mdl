@@ -101,13 +101,47 @@ class DriveController extends Controller
         $data = $request->all();
         $validator = $this->validator($data);
         //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
-        if($validator->fails()) response()->json(['validator' => $validator]);
+        if($validator->fails()) response()->json(['validator' => $validator,'msg' => 'Validator fails']);
         $drive->update($data);
-        $hours = [];
-        foreach ($data['s_user_id'] as $key => $user_id) {
-            $hours[] = new Hour(['user_id'=>$user_id]);
+        $drive->hours()->delete();
+        $newIds=$data['s_user_id'];
+        $newHours = [];
+        foreach ($newIds as $key => $value) {
+            $newHours[$key] = ['user_id' => $value];
         }
-        $drive->hours()->updateOrCreateMany($hours);
+        $drive->hours()->createMany($newHours);
+        
+        return response()->json(['data' => $data,'drive' => $drive,'validator' => $validator,'msg' => 'Aktualizacja zakończona sukcesem']);
+        return redirect()->back();
+    }
+    public function update2(Request $request, Drive $drive)
+    {
+        $data = $request->all();
+        $validator = $this->validator($data);
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) response()->json(['validator' => $validator,'msg' => 'Validator fails']);
+        //$drive->update($data);
+        $s_user_ids=collect($data['s_user_id'])->sort()->values();
+        $hoursOriginal = $drive->hours()->get();
+        $hours=$hoursOriginal->sortBy('user_id');
+        $hoursUserIds = $hours->pluck('user_id');
+        $hoursCut = $hours->whereNotIn('user_id',$s_user_ids);
+        $hoursUserCutIds = $hoursCut->pluck('user_id');
+        $s_user_idsCut=$s_user_ids->whereNotIn(null,$hoursUserIds)->values();
+        foreach ($s_user_idsCut as $key => $user_id) {
+            dump($hoursUserCutIds,$hoursUserCutIds[$key] ?? '');
+            //$s_user_ids[] = ['user_id' => $user_id];
+            $drive->hours()->updateOrCreate(['user_id' => $hoursUserCutIds[$key] ?? ''],['user_id'=>$user_id]);
+        }
+        $count = count($hoursUserCutIds)-count($s_user_idsCut);
+        dd($count-$count*2,$hoursCut->whereNotIn('user_id',$s_user_idsCut->take($count-$count*2))->pluck('id'));
+        if($count > 0){
+            $drive->hours()->delete($hoursCut->whereNotIn('user_id',$s_user_idsCut->take($count-$count*2))->pluck('id'));
+        }
+        return response()->json([$s_user_ids,$hours,$hoursUserIds,$hoursCut,$hoursUserCutIds,$s_user_idsCut,$data['s_user_id'],$hoursCut->whereNotIn('user_id',$s_user_idsCut)->pluck('id')]);
+        return response()->json(['hours' => $hours,'hoursUserId' => $hoursUserId,'s_user_ids' => $s_user_ids,'hours2' => $drive->hours()->get()]);
+        //dump($hours);
+        return response()->json(['drive' => $data,'validator' => $validator,'msg' => 'Aktualizacja zakończona sukcesem']);
         return redirect()->back();
     }
 

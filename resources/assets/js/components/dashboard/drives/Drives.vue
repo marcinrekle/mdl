@@ -20,7 +20,7 @@
                         :key="col.name + (col.name!='hours' ? col.hours[index].index:index)"
                         :class="{ hours : col.name=='hours', selected: col.hours[index].selected, drive: col.hours[index].drive }"
                         :style="col.hours[index].style" 
-                        @click="col.name!='hours' ? (col.hours[index].drive ? editDrive(col.hours[index].drive_id) : select(col.hours[index],col.name)):{}"
+                        @click="col.name!='hours' ? showDriveAddEditForm(col.hours[index],col.name):{}"
                         >
                             {{col.hours[index].text}}
                         </td>
@@ -72,16 +72,24 @@
             this.createHoursTable(7,20);
         },
         methods: {
-            showDriveAddEditForm(e,drive,instructor_id){
-                if(drive){
-                    console.log(drive);
-                    this.$refs.DriveAddEditForm.drive = drive;
-                    this.$refs.DriveAddEditForm.add = false;
-                }
-                //this.$refs.DriveAddEditForm.user = drive.user;
+            showDriveAddEditForm(e,instructor_id){
+                let drive = this.getDriveById(e.drive_id)[0];
+                let add = e.drive_id == '0' ? true:false;
+                //this.$refs.DriveAddEditForm.drive = {...drive};
+                //this.$refs.DriveAddEditForm.drive = Object.assign({},drive);
+                //console.log(add,e,drive,instructor_id);
+                //if(!add){
+                //    console.log(drive);
+                //    this.$refs.DriveAddEditForm.drive = drive;
+                //    this.$refs.DriveAddEditForm.add = false;
+                //}else{}
+                this.$refs.DriveAddEditForm.add = add;
                 this.$refs.DriveAddEditForm.user = this.getUserById(parseInt(instructor_id));
-                this.$refs.DriveAddEditForm.drive.user_id = drive ? drive.user_id : parseInt(instructor_id);
-                this.$refs.DriveAddEditForm.drive.date = drive ? drive.date : this.$moment(this.date+'T'+e.hour).format('YYYY-MM-DDTHH:mm');
+                this.$refs.DriveAddEditForm.drive.id = add ? null:drive.id;
+                this.$refs.DriveAddEditForm.drive.user_id = add ? parseInt(instructor_id):drive.user_id;
+                this.$refs.DriveAddEditForm.drive.date=this.$moment(add?this.date+'T'+e.hour:drive.date).format('YYYY-MM-DDTHH:mm');
+                this.$refs.DriveAddEditForm.drive.hours_count = add ? null:drive.hours_count;
+                this.$refs.DriveAddEditForm.drive.s_user_id = add ? []:drive.hours.map(hour => hour.user_id);
                 this.ShowDriveAddEditForm = true;
                 $('body').addClass('modal-open');
             },
@@ -124,7 +132,7 @@
                 console.log('drives',drives);
                 console.log('instMap - instMap[3] - hoursmap - get 7:00',this.instructorMap,this.instructorMap[3],this.hourMap.get('07:00'));
                 drives.forEach(e => {
-                    console.log('drive', e.id);
+                    console.log('drive - id', e.id);
                     let instructor = this.instructorMap[e.user_id];
                     let hour = this.hourMap.get(e.time);
                     let hoursCount = e.hours_count*2;
@@ -161,7 +169,7 @@
         },
         computed : {
             ...mapState(['isLoading','drives']),
-            ...mapGetters(['getDriveByDate','students','getUserById','getUsersByRole','instructors']),
+            ...mapGetters(['getDriveByDate','getDriveById','getUserById','getUsersByRole','students','instructors']),
         }
     }
 </script>
