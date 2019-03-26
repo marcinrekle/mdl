@@ -13,12 +13,12 @@
                 <table class="table table-striped">
                 <tbody>    
                     <tr>
-                        <th v-for="col in cal">{{col.name}}</th>
+                        <th v-for="col in cal" :test="col.name">{{col.name=='hours'?'Godz':getUserById(parseInt(col.name)).name}}</th>
                     </tr>
                     <tr v-for="(item,index) in cal[0].hours">
                         <td v-for="col in cal"
                         :key="col.name + (col.name!='hours' ? col.hours[index].index:index)"
-                        :class="{ hours : col.name=='hours', selected: col.hours[index].selected, drive: col.hours[index].drive }"
+                        :class="[col.hours[index].class,{ hours : col.name=='hours', selected: col.hours[index].selected, drive: col.hours[index].drive }]"
                         :style="col.hours[index].style" 
                         @click="col.name!='hours' ? showDriveAddEditForm(col.hours[index],col.name):{}"
                         >
@@ -49,7 +49,17 @@
                 selectedTd: [],
                 instructorMap: {'3':1,'7':2},
                 hourMap: new Map(Array(26).fill(0).map((e, i) => ([ ('0'+Math.floor(i*0.5+7)).slice(-2) + (i%2 == 0 ? ':00' : ':30'),i]))),
-                cal: ['hours', '3','7'].map((e,i) => ({
+                hours: Array(26).fill(0).map((e, i) => ({
+                            index: i*0.5 + 7,
+                            hour: ('0'+Math.floor(i*0.5+7)).slice(-2) + (i%2 == 0 ? ':00' : ':30'),
+                            selected: false,
+                            drive: false,
+                            drive_id: 0,
+                            style: '',
+                            text:' ',
+                            class: '',
+                        })),
+                cal: ['hours'].map((e,i) => ({
                         name: e,
                         hours: e=='hours' ? Array(26).fill(0).map((e, i) => ({text:Math.floor(i*0.5+7) + (i%2 == 0 ? ':00' : ':30')})) : Array(26).fill(0).map((e, i) => ({
                             index: i*0.5 + 7,
@@ -59,9 +69,10 @@
                             drive_id: 0,
                             style: '',
                             text:' ',
+                            class: '',
                         }))
                 })),
-                cal3: ['3'].map(e => Array(26).fill(0).map(e => ({drive:{},td:'',colspan:0})) ),
+                cal2:[],
             }
         },
         created() {
@@ -119,6 +130,9 @@
                 return obj;
             },
             driveToCal(date,interval){
+                console.log('---Start driveToCal()---');
+                this.cal2=this.instructors.map(e => ({name:e.id,hours:[...this.hours]}));
+                this.cal = this.cal.concat(this.instructors.map(e => ({name:e.id,hours:[...this.hours]})));
                 switch(date){
                     case 'first':
                         date = '2018-12-02';
@@ -129,26 +143,30 @@
                 }
                 let drives = this.getDriveByDate(date);
                 console.log('date',date);
-                console.log('drives',drives);
+                console.log('--Jazdy - drives--',drives);
                 console.log('instMap - instMap[3] - hoursmap - get 7:00',this.instructorMap,this.instructorMap[3],this.hourMap.get('07:00'));
-                drives.forEach(e => {
+                drives.forEach((e,index) => {
+                    console.log('--drives loop start -- index:', index);
                     console.log('drive - id', e.id);
                     let instructor = this.instructorMap[e.user_id];
                     let hour = this.hourMap.get(e.time);
                     let hoursCount = e.hours_count*2;
 
-                    console.log('drives.foreach ins hour hCount hours',instructor,hour,hoursCount,e.hours);
+                    //console.log('drives.foreach ins hour hCount hours',instructor,hour,hoursCount,e.hours);
                     for(let i=0;i<hoursCount;i++){
                         this.cal[instructor].hours[i+hour].drive=true;
                         this.cal[instructor].hours[i+hour].drive_id=e.id;
+                        this.cal[instructor].hours[i+hour].class='drive-'+index%3;
                     }
                     e.hours.forEach((e,index) => {
+                        console.log('--e.hours foreach -- index:', index);
                         console.log('hours foreach getuserbyid e.count',this.getUserById(e.user_id),e.count);
                         this.cal[instructor].hours[index+hour].text=this.getUserById(e.user_id).name;
-                        this.cal[instructor].hours[index+hour].style="border-top:2px solid black";
-                        this.cal[instructor].hours[index+hour+(e.count*2)-1].style="border-bottom:2px solid black";
+                        //this.cal[instructor].hours[index+hour].style="border-top:2px solid black";
+                        //this.cal[instructor].hours[index+hour+(e.count*2)-1].style="border-bottom:2px solid black";
                     });
                 });
+                console.log('---End driveToCal()---');
             },
             createHoursTable(start,end){
                 let count = end-start;
@@ -178,7 +196,16 @@
     background-color: gray;
 }
 .drive{
-    background-color: lightgrey;
+    
+}
+.drive-0{
+    background-color: lightgray;
+}
+.drive-1{
+    background-color: darkgray;
+}
+.drive-2{
+    background-color: grey;
 }
 .selected.drive{
     background-color: lightblue;
