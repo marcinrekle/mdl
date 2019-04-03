@@ -63,7 +63,9 @@ class DriveController extends Controller
             $hours[] = new Hour(['user_id'=>$user_id]);
         }
         $drive->hours()->saveMany($hours);
-        return response()->json(['drive' => $data,'validator' => $validator,'msg' => 'Dodano nową jazde'],200);
+        $drive['day'] = Carbon::parse($drive->date)->format('Y-m-d');
+        $drive['time'] = Carbon::parse($drive->date)->format('H:i');
+        return response()->json(['drive' => $drive->load('hours'),'validator' => $validator,'msg' => 'Dodano nową jazde'],200);
         //return redirect()->route('drive.index')->withSuccess('Dodano jazdę');
     }
 
@@ -112,8 +114,9 @@ class DriveController extends Controller
             $newHours[$key] = ['user_id' => $value];
         }
         $drive->hours()->createMany($newHours);
-        
-        return response()->json(['data' => $data,'drive' => $drive,'validator' => $validator,'msg' => 'Aktualizacja zakończona sukcesem']);
+        $drive['day'] = Carbon::parse($drive->date)->format('Y-m-d');
+        $drive['time'] = Carbon::parse($drive->date)->format('H:i');
+        return response()->json(['data' => $data,'drive' => $drive->load('hours'),'validator' => $validator,'msg' => 'Aktualizacja zakończona sukcesem']);
         return redirect()->back();
     }
     public function update2(Request $request, Drive $drive)
@@ -155,7 +158,8 @@ class DriveController extends Controller
      */
     public function destroy(Drive $drive)
     {
-        //
+        $drive->delete();
+        return response()->json(['msg' => 'Usunięto']);
     }
 
     protected function validator(array $data)

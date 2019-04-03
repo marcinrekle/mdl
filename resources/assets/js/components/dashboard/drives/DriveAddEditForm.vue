@@ -72,7 +72,7 @@
         },
         methods: {
             close(){
-                this.resetForm();
+                //this.resetForm();
                 this.$emit('close');
             },
             resetForm(){
@@ -89,9 +89,14 @@
                     data: this.drive
                 }).then((res) => {
                     console.log(res.data);
+                    //this.$parent.drives.push(res.data.drive);
+                    this.$store.commit('updateDrive',res.data.drive);
+                    this.$parent.driveToCal('current',1);
+                    this.close();
                     //add notify
                 }, (res) => {
                     console.log('error'+res);
+                    this.close();
                 });
             },
             updateDrive(){
@@ -102,10 +107,14 @@
                     data: this.drive
                 }).then((res) => {
                     console.log(res.data);
+                    this.$store.commit('updateDrive',res.data.drive);
+                    this.$parent.driveToCal('current',1);
+                    this.close();
                 }, (res) => {
                     console.log('error'+res);
+                    this.close();
                 });
-            }
+            },
         }
     }
 </script>

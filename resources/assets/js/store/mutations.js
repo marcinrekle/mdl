@@ -14,4 +14,10 @@ export default {
 	fetchDrives(state, drives){
 		state.drives = drives;
 	},
+	updateDrive(state,drive){
+		state.drives = [...state.drives.filter(element => element.id != drive.id),drive];
+	},
+	deleteDrive(state,id){
+		state.drives = state.drives.filter(element => element.id != id);
+	},
 }
