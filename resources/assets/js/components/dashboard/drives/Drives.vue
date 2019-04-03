@@ -125,6 +125,7 @@
                 //    this.$refs.DriveAddEditForm.drive = drive;
                 //    this.$refs.DriveAddEditForm.add = false;
                 //}else{}
+                this.$refs.DriveAddEditForm.processing = false;
                 this.$refs.DriveAddEditForm.add = add;
                 this.$refs.DriveAddEditForm.user = this.getUserById(parseInt(instructor_id));
                 this.$refs.DriveAddEditForm.drive.id = add ? null:drive.id;
