@@ -35,6 +35,9 @@
                             {{ this.add ? 'Dodaj' : 'Aktualizuj' }}
                         </button>
                         <button type="button" class="btn btn-danger" @click="close">Anuluj</button>
+                        <h3 v-if="processing" class="d-inline pl-5">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </h3>
                     </form>   
                 </div>
             </div>
@@ -64,7 +67,8 @@
                 error: [],
                 add: true,
                 driveOriginal: '',
-                driveCached: ''
+                driveCached: '',
+                processing:false,
             }
         },
         mounted() {
@@ -83,34 +87,39 @@
             },
             storeDrive(){
                 console.log('storeDrive');
+                this.processing = true;
                 this.$http({
                     url: 'drive',
                     method: 'POST',
                     data: this.drive
                 }).then((res) => {
                     console.log(res.data);
-                    //this.$parent.drives.push(res.data.drive);
                     this.$store.commit('updateDrive',res.data.drive);
                     this.$parent.driveToCal('current',1);
+                    this.processing = false;
                     this.close();
                     //add notify
                 }, (res) => {
+                    this.processing = false;
                     console.log('error'+res);
                     this.close();
                 });
             },
             updateDrive(){
+                this.processing = true;
                 console.log('updateDrive',this.drive);
                 this.$http({
                     url: 'drive/'+this.drive.id,
                     method: 'PUT',
                     data: this.drive
                 }).then((res) => {
+                    this.processing = false;
                     console.log(res.data);
                     this.$store.commit('updateDrive',res.data.drive);
                     this.$parent.driveToCal('current',1);
                     this.close();
                 }, (res) => {
+                    this.processing = false;
                     console.log('error'+res);
                     this.close();
                 });
