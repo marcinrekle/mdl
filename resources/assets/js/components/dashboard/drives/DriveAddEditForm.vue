@@ -24,7 +24,7 @@
                         </div>
                         <div class="form-group">
                             <label for="s_user_id">Kursant(ci)</label>
-                            <select name="s_user_id" id="s_user_id" class="form-control" v-model="drive.s_user_id" multiple>
+                            <select name="s_user_id" id="s_user_id" class="form-control" v-model="drive.s_user_id" multiple required>
                                 <option v-for="student in students" :value="student.id" :disabled="drive.s_user_id.length>=2 && !drive.s_user_id.includes(student.id)">{{ student.name }}</option>
                             </select>
                         </div>
