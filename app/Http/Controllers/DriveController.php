@@ -167,7 +167,7 @@ class DriveController extends Controller
         return Validator::make($data, [
             'user_id'    => 'required|exists:users,id',
             'date'  => 'required|date_format:Y-m-d\TH:i',
-            'hours_count'  => 'required|numeric|min:0.5|max:8',
+            'hours_count'  => 'required|numeric|min:0|max:8',
             //'user_id' => ['required', 'unique:drives,user_id,NULL,id,date,'.$data['date']],
         ]);
     }
