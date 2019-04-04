@@ -3,8 +3,16 @@
 		<div class="card">
     		<div class="card-header">
     		    <h3 class="card-title">Lista jazd 
-                    <button @click="driveToCal('prev')"><i class="fa fa-caret-left"></i></button> {{ date }} <button @click="driveToCal('next')"><i class="fa fa-caret-right"></i></button>
-    		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showDriveAddEditForm()"><i class="fa fa-user-plus"></i></button>
+                    <button @click="driveToCal('prev')">
+                        <i class="fa fa-caret-left"></i>
+                    </button>
+                    <datepicker @selected="selectedDate" v-model="date" :format="'yyyy-MM-dd'" :language="pl" :bootstrap-styling="true" :wrapper-class="'d-inline-block'"></datepicker>
+                    <button @click="driveToCal('next')">
+                        <i class="fa fa-caret-right"></i>
+                    </button>
+    		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showDriveAddEditForm()">
+                        <i class="fa fa-user-plus"></i>
+                    </button>
     		    </h3>
     		</div>
     		<div class="card-body">
@@ -34,7 +42,7 @@
                         </table>
                     </div>
                     <div :class="[fixedCol ? 'col-10':'col-12', 'table-responsive']">
-                        <table class="table table-striped  table-borderless">
+                        <table class="table table-striped table-borderless">
                             <tbody>    
                                 <tr>
                                     <th class="w-33" v-for="col in cal" :test="col.name">{{col.name=='hours' ? 'Godz':getUserById(parseInt(col.name)).name}}</th>
@@ -59,18 +67,22 @@
                 </div>
             </div>
 		</div>
-		<DriveAddEditForm ref="DriveAddEditForm" :instructors="this.instructors" :students="this.students" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />	
+		<DriveAddEditForm ref="DriveAddEditForm" :instructors="this.instructors" :students="this.students" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />
 	</div>
 </template>
 <script>
     import { mapState, mapGetters } from 'vuex';
     import DriveAddEditForm from './DriveAddEditForm.vue';
+    import Datepicker from 'vuejs-datepicker';
+    import {pl} from 'vuejs-datepicker/dist/locale';
     export default {
         components: {
             DriveAddEditForm,
+            Datepicker,
         },
         data() {
             return {
+                pl:pl,
                 fixedCol:false,
                 ShowDriveAddEditForm: false,
                 date: this.$moment().format('YYYY-MM-DD'),
@@ -111,27 +123,18 @@
                 setTimeout(()=> {
                     this.$store.dispatch("fetchDrives", { self: this });
                 },200) : this.$store.dispatch("fetchDrives", { self: this });
-                this.im = {...this.instructors};
         },
         methods: {
             showDriveAddEditForm(e,instructor_id){
                 let drive = this.getDriveById(e.drive_id);
                 let add = e.drive_id == '0' ? true:false;
-                //this.$refs.DriveAddEditForm.drive = {...drive};
-                //this.$refs.DriveAddEditForm.drive = Object.assign({},drive);
-                //console.log(add,e,drive,instructor_id);
-                //if(!add){
-                //    console.log(drive);
-                //    this.$refs.DriveAddEditForm.drive = drive;
-                //    this.$refs.DriveAddEditForm.add = false;
-                //}else{}
                 this.$refs.DriveAddEditForm.processing = false;
                 this.$refs.DriveAddEditForm.add = add;
                 this.$refs.DriveAddEditForm.user = this.getUserById(parseInt(instructor_id));
                 this.$refs.DriveAddEditForm.drive.id = add ? null:drive.id;
                 this.$refs.DriveAddEditForm.drive.user_id = add ? parseInt(instructor_id):drive.user_id;
-                this.$refs.DriveAddEditForm.drive.date=this.$moment(add?this.date+'T'+e.hour:drive.date).format('YYYY-MM-DDTHH:mm');
-                this.$refs.DriveAddEditForm.drive.hours_count = add ? null:drive.hours_count;
+                this.$refs.DriveAddEditForm.drive.date=this.$moment(add?this.formatDate+'T'+e.hour:drive.date).format('YYYY-MM-DDTHH:mm');
+                this.$refs.DriveAddEditForm.drive.hours_count = add ? 0:drive.hours_count;
                 this.$refs.DriveAddEditForm.drive.s_user_id = add ? []:drive.hours.map(hour => hour.user_id);
                 this.ShowDriveAddEditForm = true;
                 $('body').addClass('modal-open');
@@ -141,7 +144,7 @@
                 $('body').removeClass('modal-open');
             },
             driveToCal(date,interval){
-                console.log('---Start driveToCal()---',this.cal.length);
+                console.log('---Start driveToCal()---',date,this.date,interval);
                 const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
                 this.instructorMap2=new Map(this.instructors.map((e,i)=>([e.id,i+1])));
                 this.cal.splice(1);
@@ -195,6 +198,12 @@
                 });
                 console.log('---End driveToCal()---');
             },
+            selectedDate(date){
+                console.log('---selectedDate()---', date,this.date);
+                this.date = this.$moment(date).format('YYYY-MM-DD');
+                console.log('---date this.date---', date,this.date);
+                this.driveToCal('current');
+            },
             select(e,instructor_id){
                 console.log('select e instructor_id',e,instructor_id);
                 if(!e.drive){
@@ -230,8 +239,16 @@
             ...mapGetters(['getDriveByDate','getDriveById','getUserById','getUsersByRole','students','instructors']),
             instructorMap(){
                 return new Map(this.instructors.map((e,i)=>([e.id,i+1])));
+            },
+            formatDate(){
+                return this.$moment(this.date).format('YYYY-MM-DD');
             }
-        }
+        },
+        //watch:{
+        //    date:function(val){
+        //        this.date = this.$moment(val).format('YYYY-MM-DD');
+        //    }
+        //}
     }
 </script>
 <style>
@@ -257,6 +274,6 @@
     width:20px;
 }
 .table th, .table td{
-    padding:0.25rem;
+    padding:0.1rem;
 }
 </style>
