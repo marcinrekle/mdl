@@ -179,9 +179,10 @@
                     //let instructor = this.instructorMap[e.user_id];
                     let instructor = this.instructorMap.get(e.user_id);
                     let hour = this.hourMap.get(e.time);
-                    let hoursCount = e.hours_count*2;
-
-                    //console.log('drives.foreach ins hour hCount hours',instructor,hour,hoursCount,e.hours);
+                    //let hoursCount = e.hours_count*2 == 0 ? e.hours_count*2: e.hours.length; 
+                    //let hoursCount = e.hours_count*2 || e.hours.length; 
+                    let hoursCount = Math.max(e.hours_count*2, e.hours.length);
+                    console.log('!!!! drives.foreach ins hour hCount hours !!!!',instructor,hour,hoursCount,e.hours);
                     for(let i=0;i<hoursCount;i++){
                         i==0?this.cal[instructor].hours[i+hour].deleteBtn=true:{};
                         this.cal[instructor].hours[i+hour].drive=true;
@@ -244,11 +245,11 @@
                 return this.$moment(this.date).format('YYYY-MM-DD');
             }
         },
-        //watch:{
-        //    date:function(val){
-        //        this.date = this.$moment(val).format('YYYY-MM-DD');
-        //    }
-        //}
+        watch:{
+            date:function(val){
+                this.date = this.$moment(val).format('YYYY-MM-DD');
+            }
+        }
     }
 </script>
 <style>
