@@ -56,7 +56,7 @@ export default {
                 method: 'GET',
             })
             .then((res) => {
-                commit('fetchHours', res.data.drives);
+                commit('fetchHours', res.data.hours);
                 commit('setLoading',false);
                 //self.driveToCal('today',1);
                 resolve();
