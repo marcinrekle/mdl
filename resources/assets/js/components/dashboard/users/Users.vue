@@ -102,8 +102,8 @@
                         this.notify = res.data.message;
                         console.log(res.data.message);
                     }, (res) => {
-                    console.log('error : '+res);
-                });
+                        console.log('error : '+res);
+                    });
                 }
             },
             showUserEditForm(user){

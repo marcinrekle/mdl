@@ -54,7 +54,7 @@
                     drive_id:'',
                 },
                 error: [],
-                add: true,
+                add: false,
                 hourOriginal: '',
                 hourCached: '',
                 processing:false,

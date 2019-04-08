@@ -59,6 +59,9 @@
                                         <button v-if="$auth.check(['drive-crud','drive-delete'],'perms') && col.hours[index].deleteBtn" type="button" class="btn btn-sm btn-danger float-right" title="Usuń" @click.stop="deleteDrive(col.hours[index])">
                                             <i class="fa fa-trash"></i>
                                         </button>
+                                        <button v-if="col.hours[index].hourFormBtn" type="button" class="btn btn-sm btn-success float-right" title="Dodaj/Edytuj" @click.stop="showHourAddEditForm(col.hours[index])">
+                                            <i class="fa fa-clock-o"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -68,16 +71,19 @@
             </div>
 		</div>
 		<DriveAddEditForm ref="DriveAddEditForm" :instructors="this.instructors" :students="this.students" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />
+        <HourAddEditForm ref="HourAddEditForm" :students="this.students" v-show="ShowHourAddEditForm" @close="closeHourAddEditForm" />
 	</div>
 </template>
 <script>
     import { mapState, mapGetters } from 'vuex';
     import DriveAddEditForm from './DriveAddEditForm.vue';
+    import HourAddEditForm from './../hours/HourAddEditForm.vue';
     import Datepicker from 'vuejs-datepicker';
     import {pl} from 'vuejs-datepicker/dist/locale';
     export default {
         components: {
             DriveAddEditForm,
+            HourAddEditForm,
             Datepicker,
         },
         data() {
@@ -85,6 +91,7 @@
                 pl:pl,
                 fixedCol:false,
                 ShowDriveAddEditForm: false,
+                ShowHourAddEditForm: false,
                 date: this.$moment().format('YYYY-MM-DD'),
                 instructorMap1: {'3':1,'7':2},
                 instructorMap2: {},
@@ -143,6 +150,20 @@
                 this.ShowDriveAddEditForm = false;
                 $('body').removeClass('modal-open');
             },
+            showHourAddEditForm(e){
+                let drive = this.getDriveById(e.drive_id);
+                console.log('---showHourAddEditForm --- e drive',e,drive);
+                //let add = e.drive_id == '0' ? true:false;
+                this.$refs.HourAddEditForm.hour.id = drive.hours[e.hour_idx].id;
+                this.$refs.HourAddEditForm.hour.count = drive.hours[e.hour_idx].count;
+                this.$refs.HourAddEditForm.hour.user_id = drive.hours[e.hour_idx].user_id;
+                this.ShowHourAddEditForm = true;
+                $('body').addClass('modal-open');
+            },
+            closeHourAddEditForm(){
+                this.ShowHourAddEditForm = false;
+                $('body').removeClass('modal-open');
+            },
             driveToCal(date,interval){
                 console.log('---Start driveToCal()---',date,this.date,interval);
                 const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
@@ -192,7 +213,11 @@
                     e.hours.forEach((e,index) => {
                         console.log('--e.hours foreach -- index:', index);
                         console.log('hours foreach getuserbyid e.count',this.getUserById(e.user_id),e.count);
-                        this.cal[instructor].hours[index+hour].text=this.getUserById(e.user_id).name;
+                        this.cal[instructor].hours[index+hour].text=this.getUserById(e.user_id).name+' '+e.count;
+                        this.cal[instructor].hours[index+hour].hour_id = e.id;
+                        this.cal[instructor].hours[index+hour].hour_idx = index;
+                        this.cal[instructor].hours[index+hour].hour_count = e.count;
+                        if((this.$parent.$auth.user().id == instructor && this.$parent.$auth.check(['hour-crud-own','hour-add-own'],'perms')) || this.$parent.$auth.check(['hour-crud','hour-add'],'perms')) this.cal[instructor].hours[index+hour].hourFormBtn = true;
                         //this.cal[instructor].hours[index+hour].style="border-top:2px solid black";
                         //this.cal[instructor].hours[index+hour+(e.count*2)-1].style="border-bottom:2px solid black";
                     });
