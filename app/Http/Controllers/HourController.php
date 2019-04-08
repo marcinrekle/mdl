@@ -102,8 +102,9 @@ class HourController extends Controller
         //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
         if($validator->fails()) return response()->json($validator->messages(),422);
         $unique = Hour::where([['user_id',$data['user_id']],['drive_id',$data['drive_id']]])->get();
+        if($unique[0]->id!=$hour->id) return response()->json(['msg'=>'Nie można dodać drugi raz'],422);
         //if($unique) return redirect()->back()->withErrors('Kursant już bierze udział w tej jeździe')->withInput();
-        if($unique) return response()->json('msg'=>'Nie można dodać drugi raz',422);
+        //if($unique) return response()->json(['msg'=>'Nie można dodać drugi raz'],422);
         $hour->update($data);
         return response()->json(['hour' => $hour,'msg' => 'Aktualizacja zakończona sukcesem'],200);
         //return redirect()->back();
@@ -125,7 +126,7 @@ class HourController extends Controller
         return Validator::make($data, [
             //'user_id'    => 'required|exists:users,id|unique:hours,user_id,NULL,id,drive_id,'.$data['drive_id'],
             'user_id'    => 'required|exists:users,id',
-            'count'  => 'required|numeric|min:0.5|max:8',
+            'count'  => 'required|numeric|min:0|max:8',
             //'drive_id'    => 'required|exists:users,id|unique:hours,drive_id,NULL,id,user_id,'.$data['user_id'],
             'drive_id'    => 'required|exists:drives,id',
         ]);

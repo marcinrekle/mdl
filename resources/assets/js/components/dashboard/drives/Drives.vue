@@ -55,7 +55,11 @@
                                     :drive-id="col.hours[index].drive_id" 
                                     @click="showDriveAddEditForm(col.hours[index],col.name)"
                                     >
-                                        {{col.hours[index].text}}
+                                        <b>{{col.hours[index].text}}</b> 
+                                        <span v-if="col.hours[index].hour_count!=undefined" class="hour-info">
+                                            <i class="fa fa-clock-o"></i>
+                                            {{ col.hours[index].hour_count }}
+                                        </span>
                                         <button v-if="$auth.check(['drive-crud','drive-delete'],'perms') && col.hours[index].deleteBtn" type="button" class="btn btn-sm btn-danger float-right" title="Usuń" @click.stop="deleteDrive(col.hours[index])">
                                             <i class="fa fa-trash"></i>
                                         </button>
@@ -157,6 +161,8 @@
                 this.$refs.HourAddEditForm.hour.id = drive.hours[e.hour_idx].id;
                 this.$refs.HourAddEditForm.hour.count = drive.hours[e.hour_idx].count;
                 this.$refs.HourAddEditForm.hour.user_id = drive.hours[e.hour_idx].user_id;
+                this.$refs.HourAddEditForm.hour.drive_id = drive.id;
+                this.$refs.HourAddEditForm.driveHourIdx = e.hour_idx;
                 this.ShowHourAddEditForm = true;
                 $('body').addClass('modal-open');
             },
@@ -213,7 +219,7 @@
                     e.hours.forEach((e,index) => {
                         console.log('--e.hours foreach -- index:', index);
                         console.log('hours foreach getuserbyid e.count',this.getUserById(e.user_id),e.count);
-                        this.cal[instructor].hours[index+hour].text=this.getUserById(e.user_id).name+' '+e.count;
+                        this.cal[instructor].hours[index+hour].text=this.getUserById(e.user_id).name;
                         this.cal[instructor].hours[index+hour].hour_id = e.id;
                         this.cal[instructor].hours[index+hour].hour_idx = index;
                         this.cal[instructor].hours[index+hour].hour_count = e.count;
@@ -298,6 +304,9 @@
 }
 .hours{
     width:20px;
+}
+.hour-info{
+    color:gray;
 }
 .table th, .table td{
     padding:0.1rem;

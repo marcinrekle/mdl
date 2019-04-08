@@ -18,6 +18,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('user', 'UserController');
     Route::resource('payment', 'PaymentController');
     Route::resource('drive', 'DriveController');
+    Route::resource('hour', 'HourController');
 });
 Route::group(['prefix' => 'auth'], function(){
 	Auth::routes();

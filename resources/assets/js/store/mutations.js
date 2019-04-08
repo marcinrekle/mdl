@@ -20,4 +20,9 @@ export default {
 	deleteDrive(state,id){
 		state.drives = state.drives.filter(element => element.id != id);
 	},
+	updateHourInDrive(state,hour){
+		let drive = state.drives.find(element => element.id == hour.drive_id);
+		let h = drive.hours.find(element => element.id == hour.id);
+		h.count = hour.count;
+	},
 }
