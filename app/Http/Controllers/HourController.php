@@ -20,7 +20,8 @@ class HourController extends Controller
     {
         $hours = Hour::with(['user','drive.user'])->get();
         //dd($hours);
-        return view('hour.index', compact('hours'));
+        return response()->json(['hours' => $hours,'msg' => 'Pobrano jazdy'],200);
+        //return view('hour.index', compact('hours'));
     }
 
     /**
