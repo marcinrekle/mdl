@@ -42,6 +42,10 @@
                 name: 'Jazdy',
                 icon: 'fa fa-car',
                 path: '/drive'
+            },{
+                name: 'Godziny',
+                icon: 'fa fa-clock-o',
+                path: '/hour'
             },
   				]
 			}
