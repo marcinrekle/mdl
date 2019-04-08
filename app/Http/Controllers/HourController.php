@@ -55,9 +55,11 @@ class HourController extends Controller
     {
         $data = $request->all();
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) return response()->json($validator->messages(),422);
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
         $hour = Hour::create($data);
-        return redirect()->back()->withSuccess('Dodano kursanta do jazdy');
+        return response()->json(['hour' => $hour,'msg' => 'Dodano godziny'],200);
+        //return redirect()->back()->withSuccess('Dodano kursanta do jazdy');
     }
 
     /**
@@ -97,11 +99,14 @@ class HourController extends Controller
     {
         $data = $request->all();
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) return response()->json($validator->messages(),422);
         $unique = Hour::where([['user_id',$data['user_id']],['drive_id',$data['drive_id']]])->get();
-        if($unique) return redirect()->back()->withErrors('Kursant już bierze udział w tej jeździe')->withInput();
+        //if($unique) return redirect()->back()->withErrors('Kursant już bierze udział w tej jeździe')->withInput();
+        if($unique) return response()->json('msg'=>'Nie można dodać drugi raz',422);
         $hour->update($data);
-        return redirect()->back();
+        return response()->json(['hour' => $hour,'msg' => 'Aktualizacja zakończona sukcesem'],200);
+        //return redirect()->back();
     }
 
     /**
