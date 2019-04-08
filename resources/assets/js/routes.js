@@ -49,6 +49,14 @@ let routes = [
         }
     },
     {
+        name: 'hour',
+        path: '/hour',
+        component: require('./components/dashboard/hours/Hours.vue').default,
+        meta: {
+            auth: true,
+        }
+    },
+    {
         path: '*',
         redirect: '/dashboard'//change to 404 component
     }
