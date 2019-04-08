@@ -11,4 +11,5 @@ export default {
 	isLoading: state => state.isLoading,
 	getDriveByDate: state => date => state.drives.filter(drive => drive.day === date),
 	getDriveById: state => id => state.drives.find(drive => drive.id == id),
+	hours: (state) => state.hours,
 }

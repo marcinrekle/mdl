@@ -14,6 +14,7 @@ export default new Vuex.Store({
     fields: [],
     roles: [],
     drives: [],
+    hours: [],
     notifications: {
     	error : [],
     	success : [],

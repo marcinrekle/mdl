@@ -48,5 +48,22 @@ export default {
     	        console.log(error.statusText);
     	    })
     	})
+    },fetchHours({ commit }, { self }) {
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'hour',
+                method: 'GET',
+            })
+            .then((res) => {
+                commit('fetchHours', res.data.drives);
+                commit('setLoading',false);
+                //self.driveToCal('today',1);
+                resolve();
+            })
+            .catch((error) => {
+                console.log(error.statusText);
+            })
+        })
     },
 }

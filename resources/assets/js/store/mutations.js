@@ -25,4 +25,7 @@ export default {
 		let h = drive.hours.find(element => element.id == hour.id);
 		h.count = hour.count;
 	},
+	fetchHours(state, hours){
+		state.hours = hours;
+	},
 }
