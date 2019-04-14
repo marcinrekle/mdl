@@ -18,7 +18,7 @@ class HourController extends Controller
      */
     public function index()
     {
-        $hours = Hour::with(['user','drive.user'])->get();
+        $hours = Hour::with(['user','drive.user'])->get()->sortByDesc('drive.date')->values()->all();
         //dd($hours);
         return response()->json(['hours' => $hours,'msg' => 'Pobrano jazdy'],200);
         //return view('hour.index', compact('hours'));
@@ -107,7 +107,7 @@ class HourController extends Controller
         //if($unique) return redirect()->back()->withErrors('Kursant już bierze udział w tej jeździe')->withInput();
         //if($unique) return response()->json(['msg'=>'Nie można dodać drugi raz'],422);
         $hour->update($data);
-        return response()->json(['hour' => $hour,'msg' => 'Aktualizacja zakończona sukcesem'],200);
+        return response()->json(['hour' => $hour->load(['user','drive.user']),'msg' => 'Aktualizacja zakończona sukcesem'],200);
         //return redirect()->back();
     }
 
