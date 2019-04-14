@@ -55,7 +55,7 @@
                 },
                 error: [],
                 add: false,
-                driveHourIdx:'',
+                driveHourIdx:-1,
                 hourOriginal: '',
                 hourCached: '',
                 processing:false,
@@ -105,8 +105,12 @@
                 }).then((res) => {
                     this.processing = false;
                     console.log(res.data);
-                    this.$store.commit('updateHourInDrive',res.data.hour);
-                    this.$parent.driveToCal('current',1);
+                    if(this.driveHourIdx>-1){
+                        this.$store.commit('updateHourInDrive',res.data.hour);
+                        this.$parent.driveToCal('current',1);
+                    }else{
+                        this.$store.commit('updateHour',res.data.hour);
+                    };
                     this.close();
                 }, (res) => {
                     this.processing = false;
