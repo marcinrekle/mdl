@@ -28,4 +28,8 @@ export default {
 	fetchHours(state, hours){
 		state.hours = hours;
 	},
+	updateHour(state,hour){
+		state.hours = [...state.hours.filter(element => element.id != hour.id),hour];
+		//drive.hours.find(element => element.id == hour.id) = hour;
+	},
 }
