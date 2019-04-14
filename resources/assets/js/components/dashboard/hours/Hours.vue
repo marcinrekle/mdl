@@ -20,10 +20,29 @@
                         <table class="table table-striped table-borderless">
                             <tbody>    
                                 <tr>
-                                    <th class="w-33"></th>
+                                    <th class="">Lp</th>
+                                    <th class="">Kursant</th>
+                                    <th class="">Instruktor</th>
+                                    <th class="">Ilość godzin</th>
+                                    <th class="">Data</th>
+                                    <th class="">Opcje</th>
                                 </tr>
-                                <tr v-for="(item,index) in hours">
-                                    <td></td>
+                                <tr v-for="(item,index) in hours"
+                                    :key="item.id"
+                                >
+                                    <td>{{ index+1 }}</td>
+                                    <td>{{ item.user.name }}</td>
+                                    <td>{{ item.drive.user.name }}</td>
+                                    <td>{{ item.count }}</td>
+                                    <td>{{ item.drive.date }}</td>
+                                    <td>
+                                        <button  v-if="$auth.check(['hour-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showHourAddEditForm(item)">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button  v-if="$auth.check(['hour-crud','hour-delete'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteHour(item)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -56,15 +75,14 @@
                 },200) : this.$store.dispatch("fetchHours", { self: this });
         },
         methods: {
-            showHourAddEditForm(e){
-                let drive = this.getDriveById(e.drive_id);
-                console.log('---showHourAddEditForm --- e drive',e,drive);
-                //let add = e.drive_id == '0' ? true:false;
-                this.$refs.HourAddEditForm.hour.id = drive.hours[e.hour_idx].id;
-                this.$refs.HourAddEditForm.hour.count = drive.hours[e.hour_idx].count;
-                this.$refs.HourAddEditForm.hour.user_id = drive.hours[e.hour_idx].user_id;
-                this.$refs.HourAddEditForm.hour.drive_id = drive.id;
-                this.$refs.HourAddEditForm.driveHourIdx = e.hour_idx;
+            showHourAddEditForm(hour){
+                //let drive = this.getDriveById(hour.drive_id);
+                //console.log('---showHourAddEditForm --- e drive',e,drive);
+                //let add = hour.drive_id == '0' ? true:false;
+                this.$refs.HourAddEditForm.hour.id = hour.id;
+                this.$refs.HourAddEditForm.hour.count = hour.count;
+                this.$refs.HourAddEditForm.hour.user_id = hour.user_id;
+                this.$refs.HourAddEditForm.hour.drive_id = hour.drive_id;
                 this.ShowHourAddEditForm = true;
                 $('body').addClass('modal-open');
             },
