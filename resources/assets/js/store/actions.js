@@ -65,5 +65,21 @@ export default {
                 console.log(error.statusText);
             })
         })
+    },fetchPayments({ commit }, { self }) {
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'payment',
+                method: 'GET',
+            })
+            .then((res) => {
+                commit('fetchPayments', res.data.payments);
+                commit('setLoading',false);
+                resolve();
+            })
+            .catch((error) => {
+                console.log(error.statusText);
+            })
+        })
     },
 }
