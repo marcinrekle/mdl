@@ -16,11 +16,19 @@ class HourController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $hours = Hour::with(['user','drive.user'])->get()->sortByDesc('drive.date')->values()->all();
-        //dd($hours);
-        return response()->json(['hours' => $hours,'msg' => 'Pobrano jazdy'],200);
+        //$hours = Hour::with(['user','drive.user'])->get()->sortByDesc('drive.date');
+        //$hours = Hour::load(['user','drive.user'])->orderBy('drive.date','desc')->paginate(10);
+        $paginate = 10;
+        $page = $request->input('page', 1);
+        $offSet = ($page * $paginate) - $paginate;  
+        $itemsForCurrentPage = array_slice($hours, $offSet, $paginate, true);  
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator($itemsForCurrentPage, count($hours), $paginate, $page);
+        //$paginator = new \Illuminate\Pagination\LengthAwarePaginator($hours, count($hours), 10);
+        //dd($hours,$paginator);
+        return response()->json(['hours' => $hours,'paginator' => $paginator,'msg' => 'Pobrano jazdy'],200);
         //return view('hour.index', compact('hours'));
     }
 
