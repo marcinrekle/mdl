@@ -14,7 +14,9 @@ export default new Vuex.Store({
     fields: [],
     roles: [],
     drives: [],
-    hours: [],
+    hours: {},
+    payments: {},
+    costNames: [],
     notifications: {
     	error : [],
     	success : [],

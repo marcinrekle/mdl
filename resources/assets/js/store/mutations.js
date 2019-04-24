@@ -32,4 +32,10 @@ export default {
 		state.hours = [...state.hours.filter(element => element.id != hour.id),hour];
 		//drive.hours.find(element => element.id == hour.id) = hour;
 	},
+	fetchPayments(state, payments){
+		state.payments = payments;
+	},
+	fetchCostNames(state, costNames){
+		state.costNames = costNames;
+	},
 }

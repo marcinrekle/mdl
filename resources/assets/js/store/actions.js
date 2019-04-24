@@ -69,11 +69,12 @@ export default {
         commit('setLoading',true);
         return new Promise((resolve, reject) => {
             self.$http({
-                url: 'payment',
+                url: 'payment?page='+self.page,
                 method: 'GET',
             })
             .then((res) => {
-                commit('fetchPayments', res.data.payments);
+                commit('fetchPayments', res.data.paginator);
+                commit('fetchCostNames', res.data.costNames);
                 commit('setLoading',false);
                 resolve();
             })

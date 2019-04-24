@@ -8,7 +8,7 @@
     		</div>
     		<div class="card-body">
                 <loading v-show="isLoading" loadingText="Ładowanie danych"></loading>
-                <h3 v-show="!isLoading && !payments">Brak użytkowników</h3>	
+                <h3 v-show="!isLoading && !payments">Brak wpłat</h3>	
     		    <table v-show="payments" class="table table-striped">
     		        <tr>
     		            <th>Id</th>
@@ -18,7 +18,7 @@
     		            <th>Akcje</th>
     		        </tr>
     		        <tr 
-    		            v-for="payment in payments" 
+    		            v-for="payment in payments.data" 
     		            :key="payment.id"
     		        >
     		            <td>{{ payment.id }}</td>
@@ -38,6 +38,7 @@
     		            </td>
     		        </tr>
     		    </table>
+                <pagination :limit="2" :data="payments" @pagination-change-page="getPayments"></pagination>
     		</div>
 		</div>
 		<PaymentAddEditForm  :options="this.students" ref="PaymentAddEditForm" v-show="ShowPaymentAddEditForm" @close="closePaymentAddEditForm" />	
@@ -45,27 +46,34 @@
 </template>
 <script>
     import { mapState, mapGetters } from 'vuex';
+    import pagination from 'laravel-vue-pagination';
     import PaymentAddEditForm from './PaymentAddEditForm.vue';
     export default{
         components: {
             PaymentAddEditForm,
+            pagination
         },
         data() {
             return {
-                payments: [],
-                costNames: [],
+                //payments: [],
+                //costNames: [],
+                page: 1,
                 ShowPaymentAddEditForm: false,
                 //students: this.$store.getters.getUsersByRole('Student'),
                 //students: [],
             }
         },
         created() {
-            this.$store.state.users.length < 1 && this.$store.dispatch("fetchData", { self: this }) ;
+            this.$store.state.users.length < 1 && this.$store.dispatch("fetchData", { self: this });
             //this.students = this.getUsersByRole('Student');
             //this.getPayments();
         },
         mounted() {
-            this.getPayments();
+            this.$store.state.users.length < 1 ?
+                setTimeout(()=> {
+                    this.$store.dispatch("fetchPayments", { self: this });
+                },200) : this.$store.dispatch("fetchPayments", { self: this });
+            //this.getPayments();
             //this.getStudents();
         },
         methods: {
@@ -81,21 +89,6 @@
                     console.log('error '+res);
                 });    
             },
-            getStudents(){
-                this.$http({
-                    url: 'user/student',
-                    method: 'GET',
-                })
-                .then((res) => {
-                    this.students = res.data.users;
-                }, (res) => {
-                    console.log('error '+res);
-                });    
-            },
-            getStudents2(){
-                //this.students = this.$store.getters.getUsersByRole('Student');
-                this.students = getUsersByRole('Student');
-            },
             showPaymentAddEditForm(payment){
                 if(payment){
                     console.log(payment);
@@ -110,10 +103,14 @@
                 this.ShowPaymentAddEditForm = false;
                 $('body').removeClass('modal-open');
             },
+            getPayments(page = 1){
+                this.page = page;
+                this.$store.dispatch("fetchPayments", { self: this });
+            }
         },
         computed : {
             ...mapState(['isLoading']),
-            ...mapGetters(['getUsersByRole','students']),
+            ...mapGetters(['getUsersByRole','students','payments','costNames']),
         }
     }
 </script>
