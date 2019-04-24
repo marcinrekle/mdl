@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col">
                         <loading v-show="isLoading" loadingText="Ładowanie danych"></loading>
-                        <h3 v-show="!isLoading && !hours">Brak jazd</h3>
+                        <h3 v-show="!isLoading && !hours">Brak godzin</h3>
                     </div>
                 </div>
                 <div class="row">
@@ -27,7 +27,7 @@
                                     <th class="">Data</th>
                                     <th class="">Opcje</th>
                                 </tr>
-                                <tr v-for="(item,index) in hours"
+                                <tr v-for="(item,index) in hours.data"
                                     :key="item.id"
                                 >
                                     <td>{{ index+1 }}</td>
@@ -46,6 +46,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <pagination :limit="2" :data="hours" @pagination-change-page="getHours"></pagination>
                     </div>
                 </div>
             </div>
@@ -55,14 +56,17 @@
 </template>
 <script>
     import { mapState, mapGetters } from 'vuex';
+    import pagination from 'laravel-vue-pagination';
     import HourAddEditForm from './HourAddEditForm.vue';
     export default {
         components: {
             HourAddEditForm,
+            pagination,
         },
         data() {
             return {
                 ShowHourAddEditForm: false,
+                page: 1,
             }
         },
         created() {
@@ -89,6 +93,10 @@
             closeHourAddEditForm(){
                 this.ShowHourAddEditForm = false;
                 $('body').removeClass('modal-open');
+            },
+            getHours(page = 1){
+                this.page = page;
+                this.$store.dispatch("fetchHours", { self: this });
             },
         },
         computed : {

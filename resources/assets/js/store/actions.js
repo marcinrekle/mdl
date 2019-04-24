@@ -52,11 +52,12 @@ export default {
         commit('setLoading',true);
         return new Promise((resolve, reject) => {
             self.$http({
-                url: 'hour',
+                url: 'hour?page='+self.page,
                 method: 'GET',
             })
             .then((res) => {
-                commit('fetchHours', res.data.hours);
+                commit('fetchHours', res.data.paginator);
+                //commit('fetchHours', res.data.hours);
                 commit('setLoading',false);
                 //self.driveToCal('today',1);
                 resolve();
