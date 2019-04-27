@@ -59,6 +59,9 @@
                             {{ this.add ? 'Dodaj' : 'Aktualizuj' }}
                         </button>
                         <button type="button" class="btn btn-danger" @click="close">Anuluj</button>
+                        <h3 v-if="processing" class="d-inline pl-5">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </h3>
                     </form>   
                 </div>
             </div>
@@ -83,8 +86,9 @@
                 },
                 error: [],
                 add: true,
-                userOriginal: '',
-                userCached: ''
+                userOriginal: {},
+                userCached: {},
+                processing:false,
             }
         },
         mounted() {
@@ -103,25 +107,33 @@
             },
             storeUser(){
                 console.log('storeUser');
+                this.processing = true;
                 this.$http({
                     url: 'user',
                     method: 'POST',
                     data: this.user
                 }).then((res) => {
                     console.log(res.data);
-                    this.$parent.users.push(res.data.user);
+                    this.processing = false;
+                    this.$store.commit('addUser',res.data.user);
+                    this.close();
+                    //this.$parent.users.push(res.data.user);
                 }, (res) => {
                     console.log('error'+res);
                 });
             },
             updateUser(){
                 console.log('updateUser');
+                this.processing = true;
                 this.$http({
                     url: 'user/'+this.user.id,
                     method: 'PATCH',
                     data: this.user
                 }).then((res) => {
                     console.log(res.data);
+                    this.processing = false;
+                    this.$store.commit('updateUser',res.data.user);
+                    this.close();
                 }, (res) => {
                     console.log('error'+res);
                 });

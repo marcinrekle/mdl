@@ -21,7 +21,7 @@ class HourController extends Controller
         $hours = Hour::with(['user','drive.user'])->get()->sortByDesc('drive.date')->values()->all();
         //$hours = Hour::with(['user','drive.user'])->get()->sortByDesc('drive.date');
         //$hours = Hour::load(['user','drive.user'])->orderBy('drive.date','desc')->paginate(10);
-        $paginate = 10;
+        $paginate = 30;
         $page = request()->input('page', 1);
         $offSet = ($page * $paginate) - $paginate;  
         $itemsForCurrentPage = array_slice($hours, $offSet, $paginate, true);  

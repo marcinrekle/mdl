@@ -67,6 +67,7 @@
             return {
                 ShowHourAddEditForm: false,
                 page: 1,
+                forPage:30,
             }
         },
         created() {

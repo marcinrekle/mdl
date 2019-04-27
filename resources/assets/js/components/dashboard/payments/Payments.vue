@@ -57,8 +57,9 @@
             return {
                 //payments: [],
                 //costNames: [],
-                page: 1,
                 ShowPaymentAddEditForm: false,
+                page: 1,
+                forPage: 30,
                 //students: this.$store.getters.getUsersByRole('Student'),
                 //students: [],
             }

@@ -20,17 +20,23 @@ export default {
 	deleteDrive(state,id){
 		state.drives = state.drives.filter(element => element.id != id);
 	},
+	fetchHours(state, hours){
+		state.hours = hours;
+	},
 	updateHourInDrive(state,hour){
 		let drive = state.drives.find(element => element.id == hour.drive_id);
 		let h = drive.hours.find(element => element.id == hour.id);
 		h.count = hour.count;
 	},
-	fetchHours(state, hours){
-		state.hours = hours;
-	},
 	updateHour(state,hour){
-		state.hours = [...state.hours.filter(element => element.id != hour.id),hour];
+		state.hours.data = [...state.hours.data.filter(element => element.id != hour.id),hour];
 		//drive.hours.find(element => element.id == hour.id) = hour;
+	},
+	updateUser(state,user){
+		state.users = [...state.user.filter(element => element.id != user.id),user];
+	},
+	addUser(state,user){
+		state.users.push(user);
 	},
 	fetchPayments(state, payments){
 		state.payments = payments;

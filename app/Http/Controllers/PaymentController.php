@@ -19,7 +19,7 @@ class PaymentController extends Controller
     public function index()
     {
         $payments = Payment::with('user')->get()->sortByDesc('payment_date')->values()->all();
-        $paginate = 1;
+        $paginate = 30;
         $page = request()->input('page', 1);
         $offSet = ($page * $paginate) - $paginate;  
         $itemsForCurrentPage = array_slice($payments, $offSet, $paginate, true);  
