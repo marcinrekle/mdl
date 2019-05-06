@@ -83,5 +83,20 @@ export default {
                 console.log(error.statusText);
             })
         })
-    },
+    },storeUser({ commit }, { self }){
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'user',
+                method: 'POST',
+                data: self.user
+            })
+            .then((res) => {
+                commit('addUser',res.data.user);
+                resolve();
+            })
+            .catch((error) => {
+                console.log(error.statusText);
+            })
+        })
+    }
 }

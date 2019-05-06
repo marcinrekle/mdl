@@ -95,7 +95,7 @@ class UserController extends Controller
             return $v ?: '';
         },$values);
         $user->attrs()->create(['values' => $values]);
-        $role = Role::whereName($data['roles'][0]['name'])->first();
+        $role = Role::whereName($data['roles'])->first();
         $user->attachRole($role);
         return response()->json(['user' => $user->load('roles'),'msg' => 'Dodano nowego użytkownika']);
     }

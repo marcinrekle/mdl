@@ -22,11 +22,10 @@
                         </div>
                         <div class="form-group">
                             <label for="role">Rola</label>
-                            <select class="form-control" id="role" v-model="user.roles[0]" required>
+                            <select class="form-control" id="role" v-model="user.roles" required>
                                 <option 
                                     v-for="role in this.$parent.roles" 
-                                    required  
-                                    :value="role"
+                                    :value="role.name"
                                 >
                                         {{role.display_name}}
                                 </option>
@@ -79,7 +78,7 @@
                     email:'',
                     password: '',
                     attrs : {'values' : {}},
-                    roles: [],
+                    roles: 'Student',
                     avatar:'',
                     confirmed:'0',
                     status:'active',
@@ -108,19 +107,8 @@
             storeUser(){
                 console.log('storeUser');
                 this.processing = true;
-                this.$http({
-                    url: 'user',
-                    method: 'POST',
-                    data: this.user
-                }).then((res) => {
-                    console.log(res.data);
-                    this.processing = false;
-                    this.$store.commit('addUser',res.data.user);
-                    this.close();
-                    //this.$parent.users.push(res.data.user);
-                }, (res) => {
-                    console.log('error'+res);
-                });
+                this.$store.dispatch("storeUser", { self: this });
+                this.processing = false;
             },
             updateUser(){
                 console.log('updateUser');
