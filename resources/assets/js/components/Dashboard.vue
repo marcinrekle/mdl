@@ -1,5 +1,5 @@
 <template>
-       <users />
+    <users />
 </template>
 <script>
     import Users from './dashboard/users/Users.vue';

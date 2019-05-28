@@ -18,7 +18,14 @@ class HourController extends Controller
      */
     public function index()
     {
-        $hours = Hour::with(['user','drive.user'])->get()->sortByDesc('drive.date')->values()->all();
+        //$userPerms = auth()->user()->roles[0]->perms->pluck('name');
+        $userPerms = auth()->user()->roles[0]->perms->where('name','hour-retrive-own')->pluck('name');
+        $hours = Hour::with(['user','drive.user'])->get();
+        if( $userPerms->count() ){
+            $hours = $hours->where('drive.user_id',auth()->user()->id);
+        }
+        $hours = $hours->sortByDesc('drive.date')->values()->all();
+        //->where('drive.user_id',auth()->user()->id)
         //$hours = Hour::with(['user','drive.user'])->get()->sortByDesc('drive.date');
         //$hours = Hour::load(['user','drive.user'])->orderBy('drive.date','desc')->paginate(10);
         $paginate = 30;
@@ -28,7 +35,7 @@ class HourController extends Controller
         $paginator = new \Illuminate\Pagination\LengthAwarePaginator($itemsForCurrentPage, count($hours), $paginate, $page);
         //$paginator = new \Illuminate\Pagination\LengthAwarePaginator($hours, count($hours), 10);
         //dd($hours,$paginator);
-        return response()->json(['hours' => $hours,'paginator' => $paginator,'msg' => 'Pobrano jazdy'],200);
+        return response()->json(['user'=> $userPerms,'hours' => $hours,'paginator' => $paginator,'msg' => 'Pobrano jazdy'],200);
         //return view('hour.index', compact('hours'));
     }
 

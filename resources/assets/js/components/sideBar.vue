@@ -2,7 +2,7 @@
 	<nav class="col-md-2 d-none d-md-block sidebar">
 		<div class="sidebar-sticky">
 			<ul class="nav flex-column">
-				<li class="nav-item" v-for="(link,index) in sidebarLinks">
+				<li class="nav-item" v-for="(link,index) in permittedLinks">
 					<router-link :to="link.path" class="nav-link">
 						<i :class="link.icon"></i>
 						{{ link.name }}
@@ -26,30 +26,47 @@
     				{
       					name: 'Panel główny',
       					icon: 'fa fa-tachometer',
-      					path: '/dashboard'
+      					path: '/dashboard',
+                perms: ''
     				},
     				{
       					name: 'Użytkownicy',
       					icon: 'fa fa-users',
-      					path: '/user'
+      					path: '/user',
+                perms: ['user-retrive','user-crud']
     				},
     				{
       					name: 'Płatności',
       					icon: 'fa fa-dollar',
-      					path: '/payment'
+      					path: '/payment',
+                perms: ['payment-retrive','payment-crud']
     				},
             {
                 name: 'Jazdy',
                 icon: 'fa fa-car',
-                path: '/drive'
+                path: '/drive',
+                perms: ['drive-retrive','drive-crud']
             },{
                 name: 'Godziny',
                 icon: 'fa fa-clock-o',
-                path: '/hour'
+                path: '/hour',
+                perms: ['hour-retrive','hour-retrive-own']
             },
   				]
 			}
-		}
+		},
+    computed: {
+      permittedLinks() {
+        return this.sidebarLinks.filter(elem => this.perms(elem.perms));
+      }
+    },
+    methods: {
+      perms(perm) {
+        if(perm=='') return true;
+        //return this.$auth.user().perms.includes(perm);
+        return this.$auth.check(perm,'perms');
+      }
+    }
 	}
 </script>
 <style>

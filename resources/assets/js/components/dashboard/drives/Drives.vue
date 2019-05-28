@@ -53,7 +53,7 @@
                                     :class="[col.hours[index].class,{ hours : col.name=='hours', selected: col.hours[index].selected, drive: col.hours[index].drive }]"
                                     :style="col.hours[index].style" 
                                     :drive-id="col.hours[index].drive_id" 
-                                    @click="showDriveAddEditForm(col.hours[index],col.name)"
+                                    @click="$auth.check(['drive-crud','drive-create'],'perms') ? showDriveAddEditForm(col.hours[index],col.name):{}"
                                     >
                                         <b>{{col.hours[index].text}}</b> 
                                         <span v-if="col.hours[index].hour_count!=undefined" class="hour-info">

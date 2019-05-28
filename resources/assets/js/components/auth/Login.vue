@@ -13,7 +13,7 @@
                     <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required autofocus>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password">Hasło</label>
                     <input type="password" id="password" class="form-control" v-model="password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Zaloguj</button>

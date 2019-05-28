@@ -36,10 +36,10 @@
                                     <td>{{ item.count }}</td>
                                     <td>{{ item.drive.date }}</td>
                                     <td>
-                                        <button  v-if="$auth.check(['hour-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showHourAddEditForm(item)">
+                                        <button  v-if="$auth.check(['hour-crud','hour-update-own'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showHourAddEditForm(item)">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                        <button  v-if="$auth.check(['hour-crud','hour-delete'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteHour(item)">
+                                        <button  v-if="$auth.check(['hour-crud','hour-delete','hour-delete-own'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteHour(item)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>

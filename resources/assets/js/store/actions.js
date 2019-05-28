@@ -84,6 +84,7 @@ export default {
             })
         })
     },storeUser({ commit }, { self }){
+        self.processing = true;
         return new Promise((resolve, reject) => {
             self.$http({
                 url: 'user',
@@ -92,9 +93,12 @@ export default {
             })
             .then((res) => {
                 commit('addUser',res.data.user);
+                self.processing = false;
+                self.close();
                 resolve();
             })
             .catch((error) => {
+                self.processing = false;
                 console.log(error.statusText);
             })
         })

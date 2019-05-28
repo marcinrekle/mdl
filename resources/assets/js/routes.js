@@ -38,6 +38,7 @@ let routes = [
         component: require('./components/dashboard/payments/Payments.vue').default,
         meta: {
             auth: true,
+            perms: 'payment',
         }
     },
     {

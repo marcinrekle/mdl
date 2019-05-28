@@ -106,9 +106,7 @@
             },
             storeUser(){
                 console.log('storeUser');
-                this.processing = true;
                 this.$store.dispatch("storeUser", { self: this });
-                this.processing = false;
             },
             updateUser(){
                 console.log('updateUser');
