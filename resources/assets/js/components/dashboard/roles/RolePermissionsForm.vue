@@ -10,9 +10,11 @@
                     <form class="form" autocomplete="off" @submit.prevent="updateHour()" method="post"> 
                         <fieldset v-for="(group,key) in permissions">
                             <legend> {{key}} </legend>
-                            <div class="form-group" v-for="item in group">
-                                <label :for="item.name">{{ item.display_name }}</label>
-                                <input type="checkbox" :name="item.name" :value="item.name" :id="item.name" class="form-control" v-model="perms" required/>
+                            <div class="form-group">
+                                <div class="form-check" v-for="item in group">
+                                    <input type="checkbox" :name="item.name" :value="item.name" :id="item.name" class="form-check-input" v-model="perms" required/>
+                                    <label :for="item.name">{{ item.display_name }}</label>
+                                </div>
                             </div>
                         </fieldset>
                         <button 

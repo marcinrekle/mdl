@@ -53,12 +53,12 @@
                 perms: ['hour-retrive','hour-retrive-own']
             },{
                 name: 'Role',
-                icon: 'fa fa-user-cog-o',
+                icon: 'fa fa-cog',
                 path: '/role',
                 perms: ['role-retrive','role-crud']
             },{
                 name: 'Uprawnienia',
-                icon: 'fa fa-users-cog-o',
+                icon: 'fa fa-cogs',
                 path: '/permissions',
                 perms: ['permission-retrive','permission-crud']
             },

@@ -91,7 +91,8 @@
             closeRolePermissionsForm(){
                 this.ShowRolePermissionsForm = false;
                 $('body').removeClass('modal-open');
-            },openRolePermissionsForm(role){
+            },
+            openRolePermissionsForm(role){
                 this.ShowRolePermissionsForm = true;
                 $('body').addClass('modal-open');
                 let form = this.$refs.RolePermissionsForm;
