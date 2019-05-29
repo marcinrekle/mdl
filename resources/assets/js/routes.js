@@ -56,6 +56,13 @@ let routes = [
         meta: {
             auth: true,
         }
+    },{
+        name: 'role',
+        path: '/role',
+        component: require('./components/dashboard/roles/Roles.vue').default,
+        meta: {
+            auth: true,
+        }
     },
     {
         path: '*',

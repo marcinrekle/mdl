@@ -17,6 +17,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
+        return response()->json(['roles'=> $roles,],200);
         return view('role.index', compact('roles'));
     }
 
@@ -95,16 +96,20 @@ class RoleController extends Controller
         return redirect()->route('role.index')->withSuccess('Rola usunięta');
     }
 
+    public function permissionGrouped()
+    {
+        dd("test pG");
+    }
+
     /**
      * Show the form for editing permission the specified resource.
      *
-     * @param  Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function permission(Role $role)
+    public function permissionOld()
     {
-        $rolePerm = $role->perms->pluck('name');
-        $permissions = Permission::all()->sortBy('name');
+        //$rolePerm = $role->perms->pluck('name');
+        $permissions = Permission::all()->sortBy('groupName');
         $perm = collect(); 
         $permissions->each(function ($item, $key) use ($perm) {
             $cat = explode("-", $item->name);
@@ -114,6 +119,34 @@ class RoleController extends Controller
             $perm[$cat[0]]->push($item);
         });
         $permissions = $perm;
+        return response()->json(['permissions'=> $permissions,'msg' => 'Pobrano uprawnienia RC'],200);
+        //dd($role,$permissions, $rolePerm);
+        //dd($perm, $permissions);
+        return view('role.permission', compact('role','permissions', 'rolePerm'));
+    }
+
+     /**
+     * Show the form for editing permission the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function permission()
+    {
+        //$rolePerm = $role->perms->pluck('name');
+        $roleWithPerms = Role::with('perms')->get()->mapWithKeys(function($item){
+            return [$item->name => $item->perms()->pluck('name')->all()];
+        })->all();
+        $permissions = Permission::all()->groupBy('groupName');
+        // $perm = collect(); 
+        // $permissions->each(function ($item, $key) use ($perm) {
+        //     $cat = explode("-", $item->name);
+        //     if( !isset($perm[$cat[0]])){
+        //         $perm[$cat[0]] = collect();
+        //     }
+        //     $perm[$cat[0]]->push($item);
+        // });
+        // $permissions = $perm;
+        return response()->json(['permissions'=> $permissions,'roleWithPerms' => $roleWithPerms,'msg' => 'Pobrano uprawnienia RC'],200);
         //dd($role,$permissions, $rolePerm);
         //dd($perm, $permissions);
         return view('role.permission', compact('role','permissions', 'rolePerm'));

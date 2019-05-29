@@ -27,7 +27,7 @@
     export default {
         data(){
             return {
-                email: 'admin@example.com',
+                email: 'aileen42@example.org',
                 password: 'admin',
                 error: false,
                 _token: '',

@@ -14,7 +14,7 @@ class Permission extends EntrustPermission
      * @var array
      */
     protected $fillable = [
-        'name', 'display_name', 'description',
+        'name', 'display_name', 'description','groupName'
     ];
 
 }

@@ -16,6 +16,7 @@ class PermissionController extends Controller
     public function index()
     {
         $permissions = Permission::all();
+        return response()->json(['permissions'=> $permissions,'msg' => 'Pobrano uprawnienia'],200);
         return view('permission.index', compact('permissions'));
     }
 

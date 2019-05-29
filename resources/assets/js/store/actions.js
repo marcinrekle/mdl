@@ -102,5 +102,37 @@ export default {
                 console.log(error.statusText);
             })
         })
-    }
+    },fetchRoles({ commit }, { self }) {
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'role',
+                method: 'GET',
+            })
+            .then((res) => {
+                commit('fetchRoles', res.data.roles);
+                commit('setLoading',false);
+                resolve();
+            })
+            .catch((error) => {
+                console.log(error.statusText);
+            })
+        })
+    },fetchPerms({ commit }, { self }) {
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: '/role/permission',
+                method: 'GET',
+            })
+            .then((res) => {
+                commit('fetchPerms', res.data.permissions);
+                commit('setLoading',false);
+                resolve(self.roleWithPerms = res.data.roleWithPerms);
+            })
+            .catch((error) => {
+                console.log(error.statusText);
+            })
+        })
+    },
 }

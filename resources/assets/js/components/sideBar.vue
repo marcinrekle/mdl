@@ -51,6 +51,16 @@
                 icon: 'fa fa-clock-o',
                 path: '/hour',
                 perms: ['hour-retrive','hour-retrive-own']
+            },{
+                name: 'Role',
+                icon: 'fa fa-user-cog-o',
+                path: '/role',
+                perms: ['role-retrive','role-crud']
+            },{
+                name: 'Uprawnienia',
+                icon: 'fa fa-users-cog-o',
+                path: '/permissions',
+                perms: ['permission-retrive','permission-crud']
             },
   				]
 			}

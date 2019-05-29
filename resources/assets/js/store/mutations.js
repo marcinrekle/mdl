@@ -7,6 +7,8 @@ export default {
 	},
 	fetchRoles(state, roles){
 		state.roles = roles;
+	},fetchPerms(state, permissions){
+		state.permissions = permissions;
 	},
 	setLoading(state, loading){
 		state.isLoading = loading;

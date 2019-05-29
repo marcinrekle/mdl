@@ -1,16 +1,9 @@
 <template>
-	<div id="drives">
+	<div id="roles">
 		<div class="card">
     		<div class="card-header">
-    		    <h3 class="card-title">Lista jazd 
-                    <button @click="driveToCal('prev')">
-                        <i class="fa fa-caret-left"></i>
-                    </button>
-                    <datepicker @selected="selectedDate" v-model="date" :format="'yyyy-MM-dd'" :language="pl" :bootstrap-styling="true" :wrapper-class="'d-inline-block'"></datepicker>
-                    <button @click="driveToCal('next')">
-                        <i class="fa fa-caret-right"></i>
-                    </button>
-    		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showDriveAddEditForm()">
+    		    <h3 class="card-title">Lista ról 
+    		    	<button type="button" class="btn btn-sm btn-success float-right" @click="showRoleAddEditForm()">
                         <i class="fa fa-user-plus"></i>
                     </button>
     		    </h3>
@@ -19,52 +12,34 @@
                 <div class="row">
                     <div class="col">
                         <loading v-show="isLoading" loadingText="Ładowanie danych"></loading>
-                        <h3 v-show="!isLoading && !drives">Brak jazd</h3>
+                        <h3 v-show="!isLoading && !roles">Brak ról</h3>
                     </div>
                 </div>
                 <div class="row">
-                    <div v-if="fixedCol" class="col-2 table-responsive">
-                        <table class="table table-striped">
-                            <tbody>    
-                                <tr>
-                                    <th>Godz</th>
-                                </tr>
-                                <tr v-for="(item,index) in cal[0].hours">
-                                    <td
-                                    :key="'hours' + index"
-                                    :class=""
-                                    :style=""
-                                    >
-                                        {{cal[0].hours[index].text}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div :class="[fixedCol ? 'col-10':'col-12', 'table-responsive']">
+                    <div :class="['col-12','table-responsive']">
                         <table class="table table-striped table-borderless">
                             <tbody>    
                                 <tr>
-                                    <th class="w-33" v-for="col in cal" :test="col.name">{{col.name=='hours' ? 'Godz':getUserById(parseInt(col.name)).name}}</th>
+                                    <th>Lp</th>
+                                    <th>Nazwa</th>
+                                    <th>Nazwa wyświetlana</th>
+                                    <th>Opcje</th>
                                 </tr>
-                                <tr v-for="(item,index) in cal[0].hours">
-                                    <td v-for="col in cal"
-                                    :key="col.name + col.hours[index].index"
-                                    :class="[col.hours[index].class,{ hours : col.name=='hours', selected: col.hours[index].selected, drive: col.hours[index].drive }]"
-                                    :style="col.hours[index].style" 
-                                    :drive-id="col.hours[index].drive_id" 
-                                    @click="$auth.check(['drive-crud','drive-create'],'perms') ? showDriveAddEditForm(col.hours[index],col.name):{}"
-                                    >
-                                        <b>{{col.hours[index].text}}</b> 
-                                        <span v-if="col.hours[index].hour_count!=undefined" class="hour-info">
-                                            <i class="fa fa-clock-o"></i>
-                                            {{ col.hours[index].hour_count }}
-                                        </span>
-                                        <button v-if="$auth.check(['drive-crud','drive-delete'],'perms') && col.hours[index].deleteBtn" type="button" class="btn btn-sm btn-danger float-right" title="Usuń" @click.stop="deleteDrive(col.hours[index])">
+                                <tr v-for="(item,index) in roles"
+                                    :key="item.id"
+                                >
+                                    <td>{{ item.id }}</td>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.display_name }}</td>
+                                    <td>
+                                        <button  v-if="$auth.check(['role-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showRoleAddEditForm(item)">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button  v-if="$auth.check(['role-crud','role-delete'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteRole(item)">
                                             <i class="fa fa-trash"></i>
                                         </button>
-                                        <button v-if="col.hours[index].hourFormBtn" type="button" class="btn btn-sm btn-success float-right" title="Dodaj/Edytuj" @click.stop="showHourAddEditForm(col.hours[index])">
-                                            <i class="fa fa-clock-o"></i>
+                                        <button  v-if="$auth.check(['role-perms-set'],'perms')" type="button" class="btn btn-sm btn-success" title="Uprawnienia" @click="openRolePermissionsForm(item.name)">
+                                            Uprawnienia
                                         </button>
                                     </td>
                                 </tr>
@@ -74,14 +49,14 @@
                 </div>
             </div>
 		</div>
-		<DriveAddEditForm ref="DriveAddEditForm" :instructors="this.instructors" :students="this.students" v-show="ShowDriveAddEditForm" @close="closeDriveAddEditForm" />
-        <HourAddEditForm ref="HourAddEditForm" :students="this.students" v-show="ShowHourAddEditForm" @close="closeHourAddEditForm" />
+		<RoleAddEditForm ref="RoleAddEditForm" v-show="ShowRoleAddEditForm" @close="closeRoleAddEditForm" />
+        <RolePermissionsForm ref="RolePermissionsForm" :permissions="this.permissions" v-show="ShowRolePermissionsForm" @close="closeRolePermissionsForm" />
 	</div>
 </template>
 <script>
     import { mapState, mapGetters } from 'vuex';
     import RoleAddEditForm from './RoleAddEditForm.vue';
-    import HourAddEditForm from './RolePermissionsForm.vue';
+    import RolePermissionsForm from './RolePermissionsForm.vue';
     export default {
         components: {
             RoleAddEditForm,
@@ -91,16 +66,18 @@
             return {
                 ShowRoleAddEditForm: false,
                 ShowRolePermissionsForm: false,
+                roleWithPerms:'',
             }
         },
         created() {
-            this.$store.state.users.length < 1 && this.$store.dispatch("fetchData", { self: this }) ;
+            this.$store.state.roles.length < 1 && this.$store.dispatch("fetchRoles", { self: this }) ;
+            this.$store.state.permissions.length < 1 && this.$store.dispatch("fetchPerms", { self: this }) ;
         },
         mounted() {
-            this.$store.state.users.length < 1 ?
+            this.$store.state.roles.length < 1 ?
                 setTimeout(()=> {
-                    this.$store.dispatch("fetchData", { self: this });
-                },200) : this.$store.dispatch("fetchData", { self: this });
+                    this.$store.dispatch("fetchRoles", { self: this });
+                },200) : this.$store.dispatch("fetchRoles", { self: this });
         },
         methods: {
             showRoleAddEditForm(e){
@@ -114,6 +91,12 @@
             closeRolePermissionsForm(){
                 this.ShowRolePermissionsForm = false;
                 $('body').removeClass('modal-open');
+            },openRolePermissionsForm(role){
+                this.ShowRolePermissionsForm = true;
+                $('body').addClass('modal-open');
+                let form = this.$refs.RolePermissionsForm;
+                form.role = role;
+                form.perms = this.roleWithPerms[role];
             },
             deleteRole(role){
                 console.log('delete',role);
@@ -132,14 +115,8 @@
             }
         },
         computed : {
-            ...mapState(['isLoading','roles']),
+            ...mapState(['isLoading','roles','permissions']),
             ...mapGetters([]),
-            instructorMap(){
-                return new Map(this.instructors.map((e,i)=>([e.id,i+1])));
-            },
-            formatDate(){
-                return this.$moment(this.date).format('YYYY-MM-DD');
-            }
         },
         
     }
