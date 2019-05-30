@@ -31,9 +31,9 @@ class Role extends EntrustRole
 	 *
 	 * @return string
 	 */
-	/*public function getRouteKeyName()
+	public function getRouteKeyName()
 	{
 	    return 'name';
 	}
-    */
+    
 }

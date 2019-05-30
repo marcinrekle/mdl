@@ -133,10 +133,7 @@ class RoleController extends Controller
     public function permission()
     {
         //$rolePerm = $role->perms->pluck('name');
-        $roleWithPerms = Role::with('perms')->get()->mapWithKeys(function($item){
-            return [$item->name => $item->perms()->pluck('name')->all()];
-        })->all();
-        $permissions = Permission::all()->groupBy('groupName');
+        
         // $perm = collect(); 
         // $permissions->each(function ($item, $key) use ($perm) {
         //     $cat = explode("-", $item->name);
@@ -146,21 +143,35 @@ class RoleController extends Controller
         //     $perm[$cat[0]]->push($item);
         // });
         // $permissions = $perm;
-        return response()->json(['permissions'=> $permissions,'roleWithPerms' => $roleWithPerms,'msg' => 'Pobrano uprawnienia RC'],200);
-        //dd($role,$permissions, $rolePerm);
-        //dd($perm, $permissions);
+        $permissions = Permission::all();
+        $permissionsIds = $permissions->pluck('id');
+        $permissionsGrouped = $permissions->groupBy('groupName');
+        $permissionsGroupedIds = $permissionsGrouped->mapWithKeys(function($item,$key){
+            return [$key => $item->pluck('id')->all()];
+        })->all();
+        //dd($permissionsGroupedIds);
+        //dd($permissions,$permissionsGrouped, $permissionsIds,$permissionsGroupedIds);
+        return response()->json(['permissions'=> $permissionsGrouped,'roleWithPerms' => $this->roleWithPerms(),'msg' => 'Pobrano uprawnienia RC'],200);
         return view('role.permission', compact('role','permissions', 'rolePerm'));
     }
 
     public function permissionUpdate(Request $request, Role $role)
     {
         $data = $request->all();
-        $data['perms'] = isset($data['perms']) ? $data['perms']:[];
-        $perms = implode(',', $data['perms']);
-        //dd($role,$data,$perms);
-        $role->perms()->sync($data['perms']);
+        //$data['perms'] = isset($data['perms']) ? $data['perms']:[];
+        //$perms = implode(',', $data['perms']);
+        //dd($role,$data);
+        $role->perms()->sync($data);
+        return response()->json(['msg' => 'Pomyslnie zaktualizowano','roleWithPerms' => $this->roleWithPerms()],200);
         //return redirect()->route('role.permission')->withSuccess('Zmieniono');
         return redirect()->back()->withSuccess('Zmieniono');
+    }
+
+    protected function roleWithPerms()
+    {
+        return Role::with('perms')->get()->mapWithKeys(function($item){
+            return [$item->name => $item->perms()->pluck('id')->all()];
+        })->all();
     }
 
     protected function validator(array $data)

@@ -20,7 +20,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('drive', 'DriveController');
     Route::resource('hour', 'HourController');
     Route::get('role/permission', 'RoleController@permission');
-    Route::patch('role/permissionUpdate', 'RoleController@permissionUpdate');
+    Route::patch('role/{role}/permissionUpdate', 'RoleController@permissionUpdate');
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');
 });

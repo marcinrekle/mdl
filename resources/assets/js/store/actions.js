@@ -134,5 +134,25 @@ export default {
                 console.log(error.statusText);
             })
         })
-    },
+    },storeRolePerms({ commit }, { self }){
+        self.processing = true;
+        return new Promise((resolve, reject) => {
+            console.log(self.perms);
+            self.$http({
+                url: 'role/'+self.role+'/permissionUpdate',
+                method: 'PATCH',
+                data: self.perms
+            })
+            .then((res) => {
+                self.$parent.roleWithPerms = res.data.roleWithPerms;
+                self.processing = false;
+                self.close();
+                resolve();
+            })
+            .catch((error) => {
+                self.processing = false;
+                console.log(error.statusText);
+            })
+        })
+    }
 }

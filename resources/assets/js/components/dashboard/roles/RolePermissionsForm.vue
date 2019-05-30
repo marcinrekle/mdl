@@ -7,12 +7,12 @@
                     <button type="button" class="close" @click="close">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form class="form" autocomplete="off" @submit.prevent="updateHour()" method="post"> 
+                    <form class="form" autocomplete="off" @submit.prevent="updatePerms()" method="post"> 
                         <fieldset v-for="(group,key) in permissions">
                             <legend> {{key}} </legend>
                             <div class="form-group">
                                 <div class="form-check" v-for="item in group">
-                                    <input type="checkbox" :name="item.name" :value="item.name" :id="item.name" class="form-check-input" v-model="perms" required/>
+                                    <input type="checkbox" :name="item.name" :value="item.id" :id="item.name" class="form-check-input" v-model="perms">
                                     <label :for="item.name">{{ item.display_name }}</label>
                                 </div>
                             </div>
@@ -64,26 +64,6 @@
                 console.log('submitForm');
             },
             storeHour(){
-                console.log('storeHour');
-                this.processing = true;
-                this.$http({
-                    url: 'hour',
-                    method: 'POST',
-                    data: this.hour
-                }).then((res) => {
-                    console.log(res.data);
-                    //this.$store.commit('updateHour',res.data.hour);
-                    //this.$parent.driveToCal('current',1);
-                    this.processing = false;
-                    this.close();
-                    //add notify
-                }, (res) => {
-                    this.processing = false;
-                    console.log('error'+res);
-                    this.close();
-                });
-            },
-            updateHour(){
                 this.processing = true;
                 console.log('updateHour',this.hour);
                 this.$http({
@@ -105,6 +85,10 @@
                     console.log('error'+res);
                     this.close();
                 });
+            },
+            updatePerms(){
+                console.log('storePerms');
+                this.$store.dispatch("storeRolePerms", { self: this });
             },
         }
     }
