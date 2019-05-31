@@ -154,5 +154,24 @@ export default {
                 console.log(error.statusText);
             })
         })
-    }
+    },storeRole({ commit }, { self }){
+        self.processing = true;
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'role',
+                method: self.add ? 'POST' : 'PATCH',
+                data: self.role
+            })
+            .then((res) => {
+                commit(self.add ? 'addRole' : 'updateRole',res.data.role);
+                self.processing = false;
+                self.close();
+                resolve();
+            })
+            .catch((error) => {
+                self.processing = false;
+                console.log(error.statusText);
+            })
+        })
+    },
 }

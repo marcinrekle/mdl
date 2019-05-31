@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+//use App\Http\Controllers\Controller;
+use Validator;
 
 use App\Role;
 use App\Permission;
@@ -41,9 +43,11 @@ class RoleController extends Controller
     {
         $data = $request->all();
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) return response()->json(['role' => $role,'msg' => 'Wystąpiły błędy','error' => $validator],422);
         $role = Role::create($data);
-        return redirect()->route('role.index')->withSuccess('Rola utworzona');
+        return response()->json(['role' => $role,'msg' => 'Dodano nową rolę'],200);
+        //return redirect()->route('role.index')->withSuccess('Rola utworzona');
     }
 
     /**
@@ -79,8 +83,10 @@ class RoleController extends Controller
     {
         $data = $request->all();
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) return response()->json(['role' => $role,'msg' => 'Wystąpiły błędy','error' => $validator],422);
         $role->update($data);
+        return response()->json(['role' => $role,'msg' => 'Zaktualizowano rolę'],200);
         return redirect()->route('role.index')->withSuccess('Rola zaktualizowana');
     }
 
@@ -93,7 +99,8 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         $role->delete();
-        return redirect()->route('role.index')->withSuccess('Rola usunięta');
+        return response()->json(['role' => $role,'msg' => 'Usunieto rolę'],200);
+        //return redirect()->route('role.index')->withSuccess('Rola usunięta');
     }
 
     public function permissionGrouped()

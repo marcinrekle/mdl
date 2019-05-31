@@ -53,7 +53,8 @@ class PaymentController extends Controller
     {
         $data = $request->all();
         $validator = $this->validator($data);
-        if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
+        if($validator->fails()) return response()->json(['payment' => $payment,'msg' => 'Wystąpiły błędy','error' => $validator]);
         $payment = Payment::create($data);
         return response()->json(['payment' => $payment,'msg' => 'Dodano nową wpłate']);
         //return redirect()->route('payment.index')->withSuccess('Dodano płatność');
@@ -111,7 +112,8 @@ class PaymentController extends Controller
     public function destroy(Payment $payment)
     {
         $payment->delete();
-        return redirect()->back();
+        return response()->json(['payment' => $payment,'msg' => 'Usunięto wpłate']);
+        //return redirect()->back();
     }
 
     protected function validator(array $data)

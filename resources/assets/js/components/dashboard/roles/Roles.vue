@@ -80,7 +80,10 @@
                 },200) : this.$store.dispatch("fetchRoles", { self: this });
         },
         methods: {
-            showRoleAddEditForm(e){
+            showRoleAddEditForm(role){
+                let form = this.$refs.RoleAddEditForm;
+                form.add = role ? false : true;
+                form.role = role ? role : {...form.roleOriginal};
                 this.ShowRoleAddEditForm = true;
                 $('body').addClass('modal-open');
             },

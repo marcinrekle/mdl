@@ -7,7 +7,7 @@
                     <button type="button" class="close" @click="close">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form class="form" autocomplete="off" @submit.prevent="add ? storeRole() : updateRole()" method="post"> 
+                    <form class="form" autocomplete="off" @submit.prevent="storeRole()" method="post"> 
                         <div class="form-group">
                             <label for="name">Nazwa</label>
                             <input type="text" ref="name" id="name" class="form-control" v-model="role.name" required autofocus/>
@@ -15,6 +15,10 @@
                         <div class="form-group">
                             <label for="display_name">Nazwa wyświetlana</label>
                             <input type="text" ref="display_name" id="display_name" class="form-control" v-model="role.display_name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Opis</label>
+                            <textarea type="text" ref="description" id="description" class="form-control" v-model="role.description" required />
                         </div>
                         <button 
                             type="submit" 
@@ -41,11 +45,12 @@
                     id:'',
                     name:'',
                     display_name:'',
+                    description:'',
                 },
                 error: [],
                 add: false,
-                roleOriginal: '',
-                roleCached: '',
+                roleOriginal: {},
+                roleCached: {},
                 processing:false,
             }
         },
@@ -63,48 +68,8 @@
             submitForm(){
                 console.log('submitForm');
             },
-            storeHour(){
-                console.log('storeHour');
-                this.processing = true;
-                this.$http({
-                    url: 'hour',
-                    method: 'POST',
-                    data: this.hour
-                }).then((res) => {
-                    console.log(res.data);
-                    //this.$store.commit('updateHour',res.data.hour);
-                    //this.$parent.driveToCal('current',1);
-                    this.processing = false;
-                    this.close();
-                    //add notify
-                }, (res) => {
-                    this.processing = false;
-                    console.log('error'+res);
-                    this.close();
-                });
-            },
-            updateHour(){
-                this.processing = true;
-                console.log('updateHour',this.hour);
-                this.$http({
-                    url: 'hour/'+this.hour.id,
-                    method: 'PUT',
-                    data: this.hour
-                }).then((res) => {
-                    this.processing = false;
-                    console.log(res.data);
-                    if(this.driveHourIdx>-1){
-                        this.$store.commit('updateHourInDrive',res.data.hour);
-                        this.$parent.driveToCal('current',1);
-                    }else{
-                        this.$store.commit('updateHour',res.data.hour);
-                    };
-                    this.close();
-                }, (res) => {
-                    this.processing = false;
-                    console.log('error'+res);
-                    this.close();
-                });
+            storeRole(){
+                this.$store.dispatch("storeRole", { self: this });
             },
         }
     }

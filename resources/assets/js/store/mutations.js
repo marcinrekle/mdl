@@ -35,10 +35,16 @@ export default {
 		//drive.hours.find(element => element.id == hour.id) = hour;
 	},
 	updateUser(state,user){
-		state.users = [...state.user.filter(element => element.id != user.id),user];
+		state.users = [...state.users.filter(element => element.id != user.id),user];
 	},
 	addUser(state,user){
 		state.users.push(user);
+	},
+	addRole(state,role){
+		state.roles.push(role);
+	},
+	updateRole(state,role){
+		state.roles = [...state.roles.filter(element => element.id != role.id),role];
 	},
 	fetchPayments(state, payments){
 		state.payments = payments;

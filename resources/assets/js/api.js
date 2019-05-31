@@ -27,7 +27,7 @@ Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 Vue.use(require('vue-moment'));
 
-axios.defaults.baseURL = 'http://mdl.test/api/';
+axios.defaults.baseURL = '/api/';
 
 Vue.router = router;
 
