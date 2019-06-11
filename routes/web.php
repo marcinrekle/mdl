@@ -17,17 +17,15 @@
 //dd(config('database.connections.mysql.prefix'));
 //dd(config('database.connections.mysql.database'));
 //dd(bcrypt('biuro'));
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index');
+Route::get('home', 'HomeController@index')->name('home');
 
 Auth::routes();
 Route::get('auth/{provider?}', 'Auth\LoginController@redirectToProvider');
 Route::get('auth/{provider?}/callback', 'Auth\LoginController@handleProviderCallback');
-Route::get('/register/confirm/{confirm_code}', 'Auth\RegisterController@confirm')->middleware('guest')->name('confirmEmail');
-Route::post('/register/confirm/', 'Auth\RegisterController@confirmSetPassword')->middleware('guest')->name('confirmSetPassword');
-Route::get('/register/confirmed/', 'Auth\RegisterController@confirmed')->name('confirmedEmail');
+Route::get('register/confirm/{confirm_code}', 'Auth\RegisterController@confirm')->middleware('guest')->name('confirmEmail');
+Route::post('register/confirm/', 'Auth\RegisterController@confirmSetPassword')->middleware('guest')->name('confirmSetPassword');
+Route::get('register/confirmed/', 'Auth\RegisterController@confirmed')->name('confirmedEmail');
 
 
 

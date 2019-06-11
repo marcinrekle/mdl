@@ -74,7 +74,7 @@ class HourController extends Controller
         if($validator->fails()) return response()->json($validator->messages(),422);
         //if($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
         $hour = Hour::create($data);
-        return response()->json(['hour' => $hour,'msg' => 'Dodano godziny'],200);
+        return response()->json(['hour' => $hour,'msg' => 'Dodano godziny'],201);
         //return redirect()->back()->withSuccess('Dodano kursanta do jazdy');
     }
 

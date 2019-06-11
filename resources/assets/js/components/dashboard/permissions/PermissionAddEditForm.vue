@@ -1,22 +1,28 @@
 <template>
-    <div id="HourAddEditModal" class="modal">
+    <div id="PermissionAddEditModal" class="modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    {{ this.add ? 'Dodawanie ilości godzin' : "Edycja ilości godzin" }}
+                    {{ this.add ? 'Dodawanie uprawnienia' : "Edycja uprawnienia" }}
                     <button type="button" class="close" @click="close">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form class="form" autocomplete="off" @submit.prevent="add ? storeHour() : updateHour()" method="post"> 
+                    <form class="form" autocomplete="off" @submit.prevent="add ? storePermission() : updatePermission()" method="post"> 
                         <div class="form-group">
-                            <label for="user_id">Kursant</label>
-                            <select name="user_id" id="user_id" class="form-control" v-model="hour.user_id" required>
-                                <option v-for="student in students" :value="student.id">{{ student.name }}</option>
-                            </select>
+                            <label for="name">Nazwa</label>
+                            <input type="text" ref="name" id="name" class="form-control" v-model="permission.name" required autofocus/>
                         </div>
                         <div class="form-group">
-                            <label for="count">Ilość godzin</label>
-                            <input type="number" ref="count" step="0.5" min="0" max="12" id="count" class="form-control" v-model="hour.count" required autofocus/>
+                            <label for="display_name">Nazwa wyświetlana</label>
+                            <input type="text" ref="display_name" id="display_name" class="form-control" v-model="permission.display_name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Opis</label>
+                            <textarea ref="description" id="description" class="form-control" v-model="permission.description" />
+                        </div>
+                        <div class="form-group">
+                            <label for="groupName">Nazwa grupy</label>
+                            <input type="text" ref="groupName" id="groupName" class="form-control" v-model="permission.groupName" />
                         </div>
                         <button 
                             type="submit" 
@@ -38,31 +44,25 @@
 <script>
     export default{
         props: {
-            instructors: {},
-            students: {},
         },
         data() {
             return {
-                user: {
+                permission: {
                     id:'',
                     name:'',
-                },
-                hour: {
-                    id:'',
-                    user_id:'',
-                    count:'',
-                    drive_id:'',
+                    display_name:'',
+                    description:'',
+                    groupName:'',
                 },
                 error: [],
                 add: false,
-                driveHourIdx:-1,
-                hourOriginal: '',
-                hourCached: '',
+                permissionOriginal: '',
+                permissionCached: '',
                 processing:false,
             }
         },
         mounted() {
-            this.hourOriginal = this.hour;
+            this.permissionOriginal = this.permission;
         },
         methods: {
             close(){
@@ -70,53 +70,10 @@
                 this.$emit('close');
             },
             resetForm(){
-                this.user = this.add ?  Object.assign({},this.hourOriginal) : Object.assign({},this.hourCached);
+                this.permission = this.add ?  Object.assign({},this.permissionOriginal) : Object.assign({},this.permissionCached);
             },
             submitForm(){
                 console.log('submitForm');
-            },
-            storeHour(){
-                console.log('storeHour');
-                this.processing = true;
-                this.$http({
-                    url: 'hour',
-                    method: 'POST',
-                    data: this.hour
-                }).then((res) => {
-                    console.log(res.data);
-                    //this.$store.commit('updateHour',res.data.hour);
-                    //this.$parent.driveToCal('current',1);
-                    this.processing = false;
-                    this.close();
-                    //add notify
-                }, (res) => {
-                    this.processing = false;
-                    console.log('error'+res);
-                    this.close();
-                });
-            },
-            updateHour(){
-                this.processing = true;
-                console.log('updateHour',this.hour);
-                this.$http({
-                    url: 'hour/'+this.hour.id,
-                    method: 'PUT',
-                    data: this.hour
-                }).then((res) => {
-                    this.processing = false;
-                    console.log(res.data);
-                    if(this.driveHourIdx>-1){
-                        this.$store.commit('updateHourInDrive',res.data.hour);
-                        this.$parent.driveToCal('current',1);
-                    }else{
-                        this.$store.commit('updateHour',res.data.hour);
-                    };
-                    this.close();
-                }, (res) => {
-                    this.processing = false;
-                    console.log('error'+res);
-                    this.close();
-                });
             },
         }
     }

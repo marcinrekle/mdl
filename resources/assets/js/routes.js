@@ -63,6 +63,13 @@ let routes = [
         meta: {
             auth: true,
         }
+    },{
+        name: 'permission',
+        path: '/permission',
+        component: require('./components/dashboard/permissions/Permissions.vue').default,
+        meta: {
+            auth: true,
+        }
     },
     {
         path: '*',

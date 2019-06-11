@@ -23,6 +23,7 @@
                                     <th>Lp</th>
                                     <th>Nazwa</th>
                                     <th>Nazwa wyświetlana</th>
+                                    <th>Opis</th>
                                     <th>Opcje</th>
                                 </tr>
                                 <tr v-for="(item,index) in roles"
@@ -31,6 +32,7 @@
                                     <td>{{ item.id }}</td>
                                     <td>{{ item.name }}</td>
                                     <td>{{ item.display_name }}</td>
+                                    <td>{{ item.description }}</td>
                                     <td>
                                         <button  v-if="$auth.check(['role-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showRoleAddEditForm(item)">
                                             <i class="fa fa-edit"></i>

@@ -134,6 +134,23 @@ export default {
                 console.log(error.statusText);
             })
         })
+    },
+    fetchPermissions({ commit }, { self }) {
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: '/permission',
+                method: 'GET',
+            })
+            .then((res) => {
+                commit('fetchPerms', res.data.permissions);
+                commit('setLoading',false);
+                resolve();
+            })
+            .catch((error) => {
+                console.log(error.statusText);
+            })
+        })
     },storeRolePerms({ commit }, { self }){
         self.processing = true;
         return new Promise((resolve, reject) => {
