@@ -17,6 +17,7 @@ export default new Vuex.Store({
     drives: [],
     hours: {},
     payments: {},
+    student: {},
     costNames: [],
     notifications: {
     	error : [],

@@ -27,13 +27,23 @@
     export default {
         data(){
             return {
-                email: 'aileen42@example.org',
-                password: 'admin',
+                emails: {
+                    kursant:['kursant@example.com','kursant'],
+                    su:['aileen42@example.org','admin'],
+                    admin:['admin@example.com','admin'],
+                    instruktor: ['instruktor@example.com','instruktor'],
+                    biuro:['biuro@example.com','biuro']
+                },
+                email: '',//kursant@example.com |admin - aileen42@example.org | instruktor@example.com | biuro -
+                password: 'kursant',
                 error: false,
                 _token: '',
             }
         },
-        mounted() {},
+        mounted() {
+            this.email = this.emails.instruktor[0];
+            this.password = this.emails.instruktor[1];
+        },
         methods: {
             login(){
                 var app = this;
@@ -44,8 +54,9 @@
                         password: app.password,
                         _token: window.Laravel.csrfToken
                     }, 
-                    success: function () {
+                    success: function (res) {
                         this.$store.commit('setLoading',false);
+                        //this.$router.push({name: res.data.role});
                     },
                     error: function () {
                         app.error = true;
@@ -55,6 +66,21 @@
                     redirect: '/dashboard',
                     fetchUser: true,
                 });       
+            },
+            setRedirect(role){
+                console.log(role);
+                switch(role){
+                    case 'Student' : 
+                        console.log('penis');
+                        return 'me';
+                        break;
+                    case 'Admin' : 
+                        return 'dashboard';
+                        break;
+                    default : 
+                        return 'dashboard';
+                }
+                console.log(this.redirect);
             },
         },
         computed: {

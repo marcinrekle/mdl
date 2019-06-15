@@ -29,6 +29,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('permission',['middleware' =>'permission:permission-create|permission-crud', 'uses' => 'PermissionController@store']);
     Route::patch('permission/{id}',['middleware' =>'permission:permission-update|permission-crud', 'uses' => 'PermissionController@update']);
     Route::delete('permission/{id}',['middleware' =>'permission:permission-delete|permission-crud', 'uses' => 'PermissionController@delete']);
+    Route::get('student','StudentController@show');
 
 });
 Route::group(['prefix' => 'auth'], function(){

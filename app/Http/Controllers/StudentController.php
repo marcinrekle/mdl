@@ -3,84 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Student;
+use App\User;
+use App\Field;
 use Illuminate\Http\Request;
+use Auth;
 
 class StudentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a student dash.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function show()
     {
-        $students = Student::whereStatus('active')->get();
-        return view('student.index', ['students' => $students]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Student $student)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Student $student)
-    {
-        //
+        $student = Auth::user()->load(['payments','hours.drive.user']);
+        $student['hoursSorted'] = $student->hours->sortByDesc('drive.date')->values()->all();
+        $costNames = Field::where("name","like",'%cost%')->orderBy('name')->get();
+        //$student['hours2'] = $student->hours->sortByDesc('drive.date')->values()->all();
+        return response()->json(['student' => $student, 'hours' => $student->hours,'costNames' => $costNames],200);
+        //return view('student.index', ['students' => $students]);
     }
 }

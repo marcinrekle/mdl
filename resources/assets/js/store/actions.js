@@ -190,5 +190,29 @@ export default {
                 console.log(error.statusText);
             })
         })
+    },fetchStudentById({ commit }, { self }){
+        //self.processing = true;
+        commit('setLoading',true);
+        return new Promise((resolve, reject) => {
+            self.$http({
+                url: 'student',
+                method: 'GET',
+                data: self.student.id
+            })
+            .then((res) => {
+                //commit(self.add ? 'addRole' : 'updateRole',res.data.role);
+                //self.processing = false;
+                //self.close();
+                commit('setLoading',false);
+                commit('fetchStudent', res.data.student);
+                commit('fetchCostNames', res.data.costNames);
+                resolve();
+            })
+            .catch((error) => {
+                //self.processing = false;
+                commit('setLoading',false);
+                console.log(error.statusText);
+            })
+        })
     },
 }

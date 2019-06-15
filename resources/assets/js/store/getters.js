@@ -14,4 +14,5 @@ export default {
 	hours: (state) => state.hours,
 	payments: state => state.payments,
 	costNames: state => state.costNames,
+	student: state => state.student,
 }

@@ -67,7 +67,7 @@
         data() {
             return {
                 error: false,
-                errors: ['email' => false, 'password' => false],
+                errors: {'email' : false, 'password' : false},
             }
         },
     }

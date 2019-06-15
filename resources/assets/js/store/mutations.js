@@ -52,4 +52,7 @@ export default {
 	fetchCostNames(state, costNames){
 		state.costNames = costNames;
 	},
+	fetchStudent(state, student){
+		state.student = student;
+	},
 }

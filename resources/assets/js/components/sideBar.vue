@@ -1,6 +1,8 @@
 <template>
-	<nav class="col-md-2 d-none d-md-block sidebar">
-		<div class="sidebar-sticky">
+	<nav class="col-md-2 d-none d-md-block">
+		<div class="sidebar-sticky sidebar">
+      Witaj <h3>{{$auth.user().name}}</h3>
+      <br>
 			<ul class="nav flex-column">
 				<li class="nav-item" v-for="(link,index) in permittedLinks">
 					<router-link :to="link.path" class="nav-link">
@@ -10,7 +12,7 @@
 				</li>
         <li class="nav-item">
           <a class="nav-link" v-if="$auth.check()" @click="$auth.logout()">
-            <i class="fa fa-sign-out-alt"></i>
+            <i class="fa fa-sign-out"></i>
             Wyloguj
           </a>
         </li>
@@ -59,7 +61,7 @@
             },{
                 name: 'Uprawnienia',
                 icon: 'fa fa-cogs',
-                path: '/permissions',
+                path: '/permission',
                 perms: ['permission-retrive','permission-crud']
             },
   				]
@@ -87,7 +89,7 @@
   		left: 0;
   		z-index: 100; /* Behind the navbar */
   		padding: 0;
-  		box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  		/* box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1); */
   	}
 	.sidebar-sticky {
 		position: sticky;

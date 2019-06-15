@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Auth;
+//use Auth;
 use JWTFactory;
 use JWTAuth;
 
@@ -50,25 +51,41 @@ class LoginController extends Controller
      *
      * @return Response
      */
-    public function login(Request $request)
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->only('email','password');
+    //     if ( ! $token = JWTAuth::attempt($credentials)) {
+    //         return response([
+    //             'status' => 'error',
+    //             'error' => 'invalid.credentials',
+    //             'msg' => 'Invalid Credentials.'
+    //         ], 401);
+    //     }
+    //     //return response()->json($token);
+    //     //$user = auth::user();
+    //     return response()->json([
+    //         'message' => 'Successfully logged in',
+    //         //'user'   => $user,
+    //         //'access_token' => $token,
+    //         //'token_type' => 'bearer',
+    //         //'expires_in' => 3600
+    //     ])->header('Authorization', "Bearer ".$token);
+    // }
+
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login()
     {
-        $credentials = $request->only('email','password');
-        if ( ! $token = JWTAuth::attempt($credentials)) {
-            return response([
-                'status' => 'error',
-                'error' => 'invalid.credentials',
-                'msg' => 'Invalid Credentials.'
-            ], 400);
+        $credentials = request(['email', 'password']);
+
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
-        //return response()->json($token);
-        //$user = auth::user();
-        return response()->json([
-            'message' => 'Successfully logged in',
-            //'user'   => $user,
-            //'access_token' => $token,
-            //'token_type' => 'bearer',
-            //'expires_in' => 3600
-        ])->header('Authorization', "Bearer ".$token);
+
+        return $this->respondWithToken($token);
     }
 
     /**
@@ -100,10 +117,32 @@ class LoginController extends Controller
         //dd($au);
         $user->role = $au->roles->pluck('name')->all();
         $user->perms = $au->roles[0]->perms->pluck('name')->all();
+        $token = JWTAuth::fromUser($user);
+        JWTAuth::setToken($token);
         return response()->json([
             'status' => 'success',
-            'data' => $user
-        ]);
+            'data' => $user,
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+        ])->header('Authorization', "Bearer ".$token);
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'role' => auth()->user()->roles[0]->name,
+        ])->header('Authorization', "Bearer ".$token);
     }
 
     /**
