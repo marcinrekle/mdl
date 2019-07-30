@@ -8,10 +8,21 @@
 require('./bootstrap');
 
 /**
+ * Vue is a modern JavaScript library for building interactive web interfaces
+ * using reactive data binding and reusable components. Vue's API is clean
+ * and simple, leaving you to focus on building your next great project.
+ */
+
+window.Vue = require('vue');
+
+/**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
+// import $ from 'jquery';
+
 import VueRouter from 'vue-router';
 import store from './store';
 import VueAxios from 'vue-axios';
@@ -20,7 +31,7 @@ import router from './routes.js';
 import App from './components/App.vue';
 import sideBar from './components/sideBar.vue';
 import loading from './components/Loading.vue';
-import deleteBtn from './components/DeleteBtn.vue';
+import deleteBtn from './components/deleteBtn.vue';
 import grid from './components/Grid.vue';
 
 Vue.use(VueRouter);
@@ -43,7 +54,7 @@ Vue.use(require('@websanova/vue-auth'), {
 });
 App.router = Vue.router;
 
-new Vue({
+const app = new Vue({
   	store, // inject store to all children
   	el: '#app',
   	render: h => h(App)

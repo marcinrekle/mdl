@@ -4,6 +4,7 @@ namespace App;
 
 //use Illuminate\Database\Eloquent\Model;
 use Zizaco\Entrust\EntrustRole;
+use Illuminate\Support\Facades\Config;
 
 use App\Permission;
 
@@ -35,5 +36,15 @@ class Role extends EntrustRole
 	{
 	    return 'name';
 	}
+
+    /**
+ * BelongsToMany relations with the user model.
+ *
+ * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+ */
+public function users()
+{
+    return $this->belongsToMany(Config::get('auth.providers.users.model'),Config::get('entrust.role_user_table'),Config::get('entrust.role_foreign_key'),Config::get('entrust.user_foreign_key'));
+}
     
 }

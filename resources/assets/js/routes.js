@@ -77,20 +77,6 @@ let routes = [
         meta: {
             auth: true,
         }
-    },{
-        name: 'Student',
-        path: '/me',
-        component: require('./components/dashboard/Student.vue').default,
-        meta: {
-            auth: true,
-        }
-    },{
-        name: 'Admin',
-        path: '/me',
-        component: require('./components/Dashboard.vue').default,
-        meta: {
-            auth: true,
-        }
     },
     {
         path: '*',

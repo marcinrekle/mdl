@@ -1,9 +1,14 @@
 <template>
 	<div class="container-fluid">
-		<div class="row justify-content-center">
+		<div class="wrapper justify-content-center">
     	    <sideBar v-if="sideBarShow"></sideBar>
     	    <!-- <main role="main" :class="[sideBarShow ? 'col-md-9 ml-sm-auto col-lg-10 pt-3 px-4' : 'col-12']"> -->
-    	    <main role="main" class="col-md-9 col-lg-10 pt-3 px-4">
+    	    <main role="main" class="w-100 pt-3 px-4">
+    	    	<button type="button" id="sidebarCollapse" class="navbar-btn d-lg-none" v-if="sideBarShow">
+                	<span></span>
+                	<span></span>
+                	<span></span>
+            	</button>
     	    	<router-view></router-view>
     	    </main>
 		</div>
