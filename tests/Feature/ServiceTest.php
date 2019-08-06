@@ -8,9 +8,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ServiceTest extends TestCase
 {
-    public function user_can_see_all()
+    public function test_user_can_see_services()
     {
-        $response = $this->withHeaders($this->headers($this->user()))->json('GET','api/permission');
+        $response = $this->json('GET','api/service');
         $response->assertStatus(200);
     }
 }
