@@ -29,7 +29,7 @@ class PermissionsTest extends TestCase
     public function test_user_can_create_permissions()
     {
         $response = $this->withHeaders($this->headers($this->user()))->json('POST','api/permission',['name' => 'Test','display_name' => 'Test dispname','description' => 'Opis','groupName' => 'Test']);
-        dd($response);
+        //dd($response);
         $response->assertStatus(201);
     }
 
