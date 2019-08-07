@@ -12,12 +12,12 @@ class Hour extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'count', 'drive_id',
+        'service_id', 'count', 'drive_id',
     ];
 
-    public function user()
+    public function services()
     {
-    	return $this->belongsTo('App\User');
+    	return $this->belongsTo('App\Services');
     }
 
     public function drive()

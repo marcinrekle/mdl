@@ -46,14 +46,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Payment')->orderByDesc('payment_date');
     }
 
-    public function drives()
-    {
-        return $this->hasMany('App\Drive');
-    }
 
-    public function hours()
+    public function services()
     {
-        return $this->hasMany('App\Hour');
+        return $this->belongsToMany('App\Service');
     }
 
     /**
