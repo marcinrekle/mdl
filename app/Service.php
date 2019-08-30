@@ -20,11 +20,6 @@ class Service extends Model
     	return $this->belongsToMany('App\User');
     }
 
-    public function drives()
-    {
-        return $this->hasMany('App\Drive');
-    }
-
     public function hours()
     {
         return $this->hasMany('App\Hour');

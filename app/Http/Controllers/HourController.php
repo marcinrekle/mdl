@@ -141,7 +141,7 @@ class HourController extends Controller
     {
         return Validator::make($data, [
             //'user_id'    => 'required|exists:users,id|unique:hours,user_id,NULL,id,drive_id,'.$data['drive_id'],
-            'user_id'    => 'required|exists:users,id',
+            'service_id'    => 'required|exists:services,id',
             'count'  => 'required|numeric|min:0|max:8',
             //'drive_id'    => 'required|exists:users,id|unique:hours,drive_id,NULL,id,user_id,'.$data['user_id'],
             'drive_id'    => 'required|exists:drives,id',
