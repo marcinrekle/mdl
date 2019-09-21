@@ -12,7 +12,7 @@ class ServiceTest extends TestCase
 {
     public function test_user_can_see_services()
     {
-        $response = $this->json('GET','api/service');
+        $response = $this->addHeaders(User::find(1))->json('GET','api/service')->dump();
         $response->assertStatus(200);
     }
 
@@ -21,10 +21,10 @@ class ServiceTest extends TestCase
         $data = [
             'name' => 'Kategoria B',
             'slug' => 'Cat-b',
-            'description' => '',
+            'description' => 'Kategoria B - samochody osobowe itp.',
             'defaults' => '{"cost_course":"$faker->numberBetween($min = 50, $max = 5000)","hours":"$faker->numberBetween($min = 28, $max = 32)","old_hours":"0","cost_doctor":"200"}'
         ];
-        $response = $this->json('POST','api/service',$data);
+        $response = $this->addHeaders(User::find(1))->json('POST','api/service',$data)->dump();
         $response->assertStatus(201);
     }
 
@@ -37,7 +37,7 @@ class ServiceTest extends TestCase
             'description' => 'asd',
             'defaults' => '{"cost_course":"$faker->numberBetween($min = 50, $max = 5000)","hours":"$faker->numberBetween($min = 28, $max = 32)","old_hours":"0","cost_doctor":"200"}'
         ];
-        $response = $this->json('PUT','api/service',$data);
+        $response = $this->addHeaders(User::find(1))->json('PUT','api/service',$data)->dump();
         $response->assertStatus(201);
     }
 

@@ -3,9 +3,9 @@
 namespace App;
 
 //use Illuminate\Database\Eloquent\Model;
-use Zizaco\Entrust\EntrustPermission;
+use Laratrust\Models\LaratrustPermission;
 
-class Permission extends EntrustPermission
+class Permission extends LaratrustPermission
 {
     
 	/**
@@ -14,7 +14,7 @@ class Permission extends EntrustPermission
      * @var array
      */
     protected $fillable = [
-        'name', 'display_name', 'description','groupName'
+        'name', 'display_name', 'description',
     ];
 
 }

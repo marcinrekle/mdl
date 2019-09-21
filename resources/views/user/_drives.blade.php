@@ -15,7 +15,7 @@
         <span>
           <a href="{{route('user.show',$hour->user->id)}} ">{{ $hour->user->name." - ".$hour->count." h" }}</a>
         </span>
-        @if( Entrust::can('hours-crud') || ( Entrust::can('hours-delete') && Auth::user()->id == $hour->user->id)) 
+        @if( Laratrust::can('hours-crud') || ( Laratrust::can('hours-delete') && Auth::user()->id == $hour->user->id)) 
         <div class="studentActions">  
           {!! Form::model($hour, [
             'method' => 'DELETE',

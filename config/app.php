@@ -178,7 +178,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Zizaco\Entrust\EntrustServiceProvider::class,
+        Laratrust\LaratrustServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
 
@@ -232,7 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Laratrust'   => Laratrust\LaratrustFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,

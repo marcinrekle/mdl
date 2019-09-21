@@ -15,7 +15,7 @@
         <span>
           <a href="{{route('user.show',$hour->user->id)}} ">{{ $hour->user->name." - ".$hour->count." h" }}</a>
         </span>
-        @if( Entrust::can('hours-crud') || Entrust::can(['hours-edit','user-delete'])) 
+        @if( Laratrust::can('hours-crud') || Laratrust::can(['hours-edit','user-delete'])) 
         <div class="studentActions">  
           @permission(['hours-crud','hours-update'])
             {{ Html::link('#', 'Edytuj', ['class' => 'btn btn-primary'])}}

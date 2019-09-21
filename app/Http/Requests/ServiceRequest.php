@@ -37,10 +37,10 @@ class ServiceRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name' => ['require', 'min:3', 'max:256',$this->getMethod() == 'POST' ? 'unique:services' : Rule::unique('services')->ignore($this->service->id)],
-            'slug' => 'require',
-            'description',
-            'defaults' => 
+            'name' => ['required', 'min:3', 'max:256',$this->getMethod() == 'POST' ? 'unique:services' : Rule::unique('services')->ignore($this->service->id)],
+            'slug' => 'string',
+            'description' =>'string',
+            //'defaults' => ''
         ];
 
         return $rules;
