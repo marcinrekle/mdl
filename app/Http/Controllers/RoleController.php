@@ -115,7 +115,7 @@ class RoleController extends Controller
      */
     public function permissionOld()
     {
-        //$rolePerm = $role->perms->pluck('name');
+        //$rolePerm = $role->permissions->pluck('name');
         $permissions = Permission::all()->sortBy('groupName');
         $perm = collect(); 
         $permissions->each(function ($item, $key) use ($perm) {
@@ -139,7 +139,7 @@ class RoleController extends Controller
      */
     public function permission()
     {
-        //$rolePerm = $role->perms->pluck('name');
+        //$rolePerm = $role->permissions->pluck('name');
         
         // $perm = collect(); 
         // $permissions->each(function ($item, $key) use ($perm) {
@@ -168,7 +168,7 @@ class RoleController extends Controller
         //$data['perms'] = isset($data['perms']) ? $data['perms']:[];
         //$perms = implode(',', $data['perms']);
         //dd($role,$data);
-        $role->perms()->sync($data);
+        $role->permissions()->sync($data);
         return response()->json(['msg' => 'Pomyslnie zaktualizowano','roleWithPerms' => $this->roleWithPerms()],200);
         //return redirect()->route('role.permission')->withSuccess('Zmieniono');
         return redirect()->back()->withSuccess('Zmieniono');
@@ -176,8 +176,8 @@ class RoleController extends Controller
 
     protected function roleWithPerms()
     {
-        return Role::with('perms')->get()->mapWithKeys(function($item){
-            return [$item->name => $item->perms()->pluck('id')->all()];
+        return Role::with('permissions')->get()->mapWithKeys(function($item){
+            return [$item->name => $item->permissions()->pluck('id')->all()];
         })->all();
     }
 

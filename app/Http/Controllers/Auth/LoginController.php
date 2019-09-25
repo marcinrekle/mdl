@@ -113,10 +113,11 @@ class LoginController extends Controller
     public function user()
     {
         $au = clone $user = auth()->user();
-        $au->load(['roles:id,name', 'roles.perms:id,name']);
         //dd($au);
+        $au->load(['roles:id,name', 'roles.permissions:id,name']);
         $user->role = $au->roles->pluck('name')->all();
-        $user->perms = $au->roles[0]->perms->pluck('name')->all();
+        //dd($au->roles[0]->perms);
+        $user->perms = $au->roles[0]->permissions->pluck('name')->all();
         $token = JWTAuth::fromUser($user);
         JWTAuth::setToken($token);
         return response()->json([

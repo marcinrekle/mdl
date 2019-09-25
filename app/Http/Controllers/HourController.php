@@ -18,8 +18,8 @@ class HourController extends Controller
      */
     public function index()
     {
-        //$userPerms = auth()->user()->roles[0]->perms->pluck('name');
-        $userPerms = auth()->user()->roles[0]->perms->where('name','hour-retrive-own')->pluck('name');
+        //$userPerms = auth()->user()->roles[0]->permissions->pluck('name');
+        $userPerms = auth()->user()->roles[0]->permissions->where('name','hour-retrive-own')->pluck('name');
         $hours = Hour::with(['user','drive.user'])->get();
         if( $userPerms->count() ){
             $hours = $hours->where('drive.user_id',auth()->user()->id);

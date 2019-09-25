@@ -8,6 +8,7 @@ use App\User;
 use App\Field;
 use App\Role;
 use App\Drive;
+use App\Service;
 
 use Validator;
 use Auth;
@@ -23,7 +24,7 @@ class UserController extends Controller
     public function index()
     {
         $fields = Field::all()->keyBy('order'); 
-        $permissions = Auth::user()->roles[0]->perms->pluck('name')->all();
+        $permissions = Auth::user()->roles[0]->permissions->pluck('name')->all();
         $roles = Role::all();
         $roles = $roles->filter(function ($item) use ($permissions) {
             $srole = strtolower($item->name);
@@ -34,7 +35,7 @@ class UserController extends Controller
         /*$users = Role::whereIn('name',$roles)->with('users')->get()->pluck('users')->flatMap(function($values){
             return $values;
         });*/
-        $relations = ['users','users.attrs', 'users.hours.drive', 'users.payments', 'users.roles'];
+        $relations = ['users','users.attrs', 'users.services.hours.drive', 'users.payments', 'users.roles'];
         $users = Role::whereIn('name',$rolesNames)->with($relations)->get()->pluck('users')->flatten()->keyBy('id')->values();
         $users = $users->sortBy('name')->values();
         //dd($users);
