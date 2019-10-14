@@ -102,8 +102,8 @@ class ServiceTest extends TestCase
             ],'request_should_no_errors' => [
                 'passed' => true,
                 'data' => [
-                    'name' => 'Kategoria C',
-                    'slug' => 'Cat-c',
+                    'name' => $faker->name,
+                    'slug' => $faker->slug,
                     'description' => 'Kategoria C - samochody cięzarowe itp.',
                     'defaults' => $defaults
                 ],
