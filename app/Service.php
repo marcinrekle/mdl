@@ -15,9 +15,9 @@ class Service extends Model
         'name', 'slug', 'description','defaults'
     ];
 
-    public function users()
+    public function user()
     {
-    	return $this->belongsToMany('App\User');
+    	return $this->belongsTo('App\User');
     }
 
     public function hours()
