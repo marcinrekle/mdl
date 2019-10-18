@@ -25,7 +25,7 @@ class Role extends LaratrustRole
      *
      * @var array
      */
-    protected $hidden = ['pivot'];
+    //protected $hidden = ['pivot'];
 
     /**
 	 * Get the route key for the model.
