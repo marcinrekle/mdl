@@ -41,8 +41,8 @@
             }
         },
         mounted() {
-            this.email = this.emails.instruktor[0];
-            this.password = this.emails.instruktor[1];
+            this.email = this.emails.admin[0];
+            this.password = this.emails.admin[1];
         },
         methods: {
             login(){
