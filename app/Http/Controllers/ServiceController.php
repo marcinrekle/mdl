@@ -71,7 +71,7 @@ class ServiceController extends Controller
      */
     public function update(ServiceRequest $request, Service $service)
     {
-        return $service->update($request->all(), 201);
+        return response()->json(['service' => $service->update($request->all()), 'msg' => 'OK'], 201);
     }
 
     /**
@@ -82,6 +82,7 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        //
+        $sevice->delete();
+        return response()->json(['msg' => 'Ok'],200);
     }
 }
