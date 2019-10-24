@@ -214,5 +214,28 @@ export default {
                 console.log(error.statusText);
             })
         })
+    },fetchServices({ commit }, { self }){
+        //self.processing = true;
+        commit('setLoading',true);
+        axios.get('service')
+            .then(res => {
+                commit('setLoading',false);
+                commit('fetchServices', res.data.services);
+                resolve();
+            })
+            .catch(err => {
+                //self.processing = false;
+                commit('setLoading',false);
+                console.log(err.statusText);
+            })
+    },deleteService({ commit }, { self }){
+        axios.delete('service/${self.id}')
+            .then(res => {
+                if(res.data === 'ok'){
+                    commit('deleteService',self.id);
+                }
+            }).catch(err => {
+                console.log(err);
+            })  
     },
 }

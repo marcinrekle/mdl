@@ -15,4 +15,5 @@ export default {
 	payments: state => state.payments,
 	costNames: state => state.costNames,
 	student: state => state.student,
+	services: state => state.services,
 }

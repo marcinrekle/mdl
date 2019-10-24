@@ -37,6 +37,12 @@
       					path: '/user',
                 perms: ['user-retrive','user-crud']
     				},
+            {
+                name: 'Usługi',
+                icon: 'fa fa-users',
+                path: '/service',
+                perms: ['service-retrive','service-crud']
+            },
     				{
       					name: 'Płatności',
       					icon: 'fa fa-dollar',

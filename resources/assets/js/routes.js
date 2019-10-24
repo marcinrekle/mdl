@@ -77,6 +77,13 @@ let routes = [
         meta: {
             auth: true,
         }
+    },{
+        name: 'service',
+        path: '/service',
+        component: require('./components/dashboard/services/Services.vue').default,
+        meta: {
+            auth: true,
+        }
     },
     {
         path: '*',

@@ -19,6 +19,7 @@ export default new Vuex.Store({
     payments: {},
     student: {},
     costNames: [],
+    services: [],
     notifications: {
     	error : [],
     	success : [],

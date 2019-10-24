@@ -55,4 +55,10 @@ export default {
 	fetchStudent(state, student){
 		state.student = student;
 	},
+	fetchServices(state, services){
+		state.services = services;
+	},
+	deleteService(state,id){
+		state.service = state.service.filter(element => element.id != id);
+	},
 }
