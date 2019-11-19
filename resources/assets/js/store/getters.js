@@ -16,4 +16,5 @@ export default {
 	costNames: state => state.costNames,
 	student: state => state.student,
 	services: state => state.services,
+	serviceById: state => id => state.services.find(service => service.id === id),
 }

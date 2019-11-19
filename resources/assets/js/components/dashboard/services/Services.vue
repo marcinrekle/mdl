@@ -32,7 +32,7 @@
     		                <button  v-if="$auth.check(['service-crud'],'perms')" type="button" class="btn btn-sm btn-primary" title="Edytuj" @click="showServiceAddEditForm(service)">
     		                    <i class="fa fa-edit"></i>
     		                </button>
-    		                <button  v-if="$auth.check(['service-crud','service-delete'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteService(service)">
+    		                <button  v-if="$auth.check(['service-crud','service-delete'],'perms')" type="button" class="btn btn-sm btn-danger" title="Usuń" @click="deleteServiceAction(service)">
     		                    <i class="fa fa-trash"></i>
     		                </button>
     		            </td>
@@ -55,13 +55,16 @@
 				//users: [],
 				//fields: [],
 				//roles: [],
+                name : 'Service',
 				ShowServiceAddEditForm : false,
 			}
 		},
 		created() {
-            this.$store.dispatch("fetchServices", { self: this });
+            //this.$store.dispatch("fetchServices", { self: this });
+            this.fetchServices();
         },
         methods: {
+            ...mapActions(['deleteService','fetchServices', 'deleteEntry']),
         	getData(){
                 this.services = this.$store.getters.services;
                 //this.users = this.$store.state.users;
@@ -78,16 +81,18 @@
                 this.ShowServiceAddEditForm = false;
                 $('body').removeClass('modal-open');
             },
-            deleteService(service){
+            deleteServiceAction(service){
                 if(confirm('Usunąć '+service.name+' ?')){
-                    this.aDeleteService(service.id);
+                    console.log(service);
+                    //this.$store.dispatch("deleteService", service);
+                    //this.deleteService(service);
+                    this.deleteEntry({model:'Service', obj:service});
                 }
             }
         },
         computed :{
         	...mapState(['services','isLoading']),
         	...mapGetters(['services']),
-            ...mapActions({aDeleteService: 'deleteService'}),
         },
 	}
 </script>

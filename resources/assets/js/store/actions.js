@@ -214,7 +214,7 @@ export default {
                 console.log(error.statusText);
             })
         })
-    },fetchServices({ commit }, { self }){
+    },fetchServices({ commit }){
         //self.processing = true;
         commit('setLoading',true);
         axios.get('service')
@@ -228,14 +228,30 @@ export default {
                 commit('setLoading',false);
                 console.log(err.statusText);
             })
-    },deleteService({ commit }, { self }){
-        axios.delete('service/${self.id}')
+    },deleteService( {commit} , service ){
+        console.log(service);
+        axios.delete('service/'+service.id)
             .then(res => {
-                if(res.data === 'ok'){
-                    commit('deleteService',self.id);
+                console.log(res);
+                if(res.data.msg === 'Ok'){
+                    console.log('Poszlo');
+                    //commit('deleteService',service.id);
                 }
             }).catch(err => {
                 console.log(err);
             })  
-    },
+    },deleteEntry( { commit }, data){
+        console.log(commit);
+        console.log(data);
+        axios.delete(data.model.toLowerCase()+'/'+data.obj.id)
+            .then(res => {
+                if (res.data.msg === 'Ok') {
+                    console.log('delete'+data.model);
+                    commit('delete'+data.model, data.obj.id);
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+
+    }
 }

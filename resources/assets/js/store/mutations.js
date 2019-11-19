@@ -58,7 +58,16 @@ export default {
 	fetchServices(state, services){
 		state.services = services;
 	},
-	deleteService(state,id){
-		state.service = state.service.filter(element => element.id != id);
+	deleteService(state, id){
+		state.services = state.services.filter(element => element.id != id);
 	},
+	fetchEntries(state, entries){
+		state[entries.name] = entries.payload;
+	},
+	updateEntry(state,entry){
+		state[entry.name] = [...state[entry.name].filter(element => element.id != entry.obj.id),entry.obj];
+	},
+	deleteEntry(state, entry){
+		state[entry.name] = state[entry.name].filter(elem => elem.id != entry.id);
+	}
 }

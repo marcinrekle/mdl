@@ -82,7 +82,7 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        $sevice->delete();
+        //$sevice->delete();
         return response()->json(['msg' => 'Ok'],200);
     }
 }
