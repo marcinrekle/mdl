@@ -10,7 +10,7 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
         "laravel/socialite": "^4.2",
-        "laravel/tinker": "^1.0",
+        "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
         "tymon/jwt-auth": "1.0.x-dev",
         "santigarcor/laratrust":"5.2.*"
