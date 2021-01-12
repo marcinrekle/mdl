@@ -16,7 +16,7 @@
         "laravelcollective/html": "^6.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "santigarcor/laratrust": "^6.0",
-        "tymon/jwt-auth": "1.0.1"
+        "tymon/jwt-auth": "1.0.2"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
